@@ -1,0 +1,393 @@
+:root {
+    /* Light Mode (Default) */
+    --primary-color: #007bff;
+    --primary-color-darker: #0056b3;
+    --text-color: #343a40;
+    --bg-color: #fff;
+    --light-bg: #f8f9fa;
+    --border-color: #dee2e6;
+    --header-color: #212529;
+    --white: #fff; /* Kept for elements that should always be white */
+    --link-color: var(--primary-color);
+    --link-hover-color: var(--primary-color-darker);
+    --footer-text-color: #6c757d;
+
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --border-radius-sm: 0.25rem;
+    --border-radius-md: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #4dabf7; /* Brighter blue for dark mode */
+        --primary-color-darker: #1e88e5;
+        --text-color: #e9ecef; /* Light text for dark mode */
+        --bg-color: #121212; /* Dark background */
+        --light-bg: #1e1e1e; /* Slightly lighter dark background for sections */
+        --border-color: #495057; /* Darker border */
+        --header-color: #f8f9fa; /* Light header text */
+        --link-color: var(--primary-color);
+        --link-hover-color: var(--primary-color-darker);
+        --footer-text-color: #adb5bd;
+
+        --shadow-sm: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.05); /* Lighter shadow */
+        --shadow-md: 0 0.5rem 1rem rgba(255, 255, 255, 0.08);
+    }
+
+    .call-to-action .btn {
+        background-color: var(--light-bg); /* Adjust button for dark mode */
+        color: var(--primary-color);
+    }
+
+    .call-to-action .btn:hover,
+    .call-to-action .btn:focus {
+        background-color: #2a2a2a;
+        color: var(--primary-color-darker);
+    }
+}
+
+
+body {
+    font-family: 'Lato', sans-serif;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color); /* Use variable */
+    color: var(--text-color); /* Use variable */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth theme transition */
+}
+
+/* Skip Link Styling */
+.skip-link {
+    position: absolute;
+    top: -40px; /* Hide off-screen */
+    left: 0;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 8px;
+    z-index: 100;
+    text-decoration: none;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: 0; /* Bring into view on focus */
+}
+
+
+.container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+header {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: var(--light-bg); /* Use variable */
+    margin-bottom: 40px;
+    transition: background-color 0.3s ease;
+}
+
+header h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3em;
+    font-weight: 700;
+    color: var(--header-color); /* Use variable */
+    margin-bottom: 20px;
+    line-height: 1.2;
+    transition: color 0.3s ease;
+}
+
+header p {
+    font-size: 1.15em;
+    color: var(--text-color); /* Adjusted for better dark mode contrast */
+    opacity: 0.85;
+    max-width: 650px;
+    margin: 0 auto;
+    transition: color 0.3s ease;
+}
+
+main > section:not(.call-to-action):not(.links-section) {
+    margin-bottom: 40px;
+}
+
+h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.4em;
+    font-weight: 600;
+    color: var(--header-color); /* Use variable */
+    margin-top: 50px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--primary-color); /* Use variable */
+    display: inline-block;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8em;
+    font-weight: 600;
+    color: var(--header-color); /* Use variable */
+    margin-top: 35px;
+    margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+p {
+    margin-bottom: 1.2em;
+    text-align: justify;
+}
+
+strong {
+    font-weight: 700;
+    color: var(--header-color); /* Use variable, or a more specific accent if needed */
+}
+
+a {
+    color: var(--link-color); /* Use variable */
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+a:hover,
+a:focus {
+    color: var(--link-hover-color); /* Use variable */
+    text-decoration: underline;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--primary-color); /* Use variable */
+    outline-offset: 3px;
+    border-radius: var(--border-radius-sm);
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 25px;
+    margin-bottom: 1.2em;
+    padding-left: 0;
+}
+
+ul li {
+    margin-bottom: 0.6em;
+}
+
+.call-to-action {
+    background-color: var(--primary-color); /* Use variable */
+    color: var(--white); /* Text should be white on primary background */
+    padding: 40px 30px;
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    box-shadow: var(--shadow-md); /* Use variable */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.call-to-action h3 {
+    color: var(--white); /* Heading text on primary background */
+    font-size: 2em;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.call-to-action .btn {
+    display: inline-block;
+    background-color: var(--white);
+    color: var(--primary-color); /* Text color should contrast with white bg */
+    padding: 15px 35px;
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: var(--shadow-sm);
+}
+
+.call-to-action .btn:hover,
+.call-to-action .btn:focus {
+    background-color: var(--light-bg);
+    color: var(--primary-color-darker);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.links-section {
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+.links-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.links-section ul li {
+    margin-bottom: 12px;
+}
+
+.links-section ul li a {
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+}
+
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 60px;
+    border-top: 1px solid var(--border-color); /* Use variable */
+    color: var(--footer-text-color); /* Use variable */
+    font-size: 0.95em;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.footnote {
+    font-size: 0.9em;
+    margin-left: 0;
+    text-indent: 0;
+    margin-top: 8px;
+    color: var(--text-color); /* Use variable */
+    opacity: 0.8;
+    transition: color 0.3s ease;
+}
+
+.footnote a {
+    text-decoration: none;
+}
+
+.footnote a:hover,
+.footnote a:focus {
+    text-decoration: underline;
+}
+
+hr {
+    display: none;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000; /* Fallback background */
+    margin-bottom: 25px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    transition: box-shadow 0.3s ease;
+}
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* --- Media Queries für mobile Optimierung --- */
+
+/* Für kleinere Tablets und große Smartphones */
+@media (max-width: 768px) {
+    header {
+        padding: 60px 15px; /* Weniger vertikales Padding */
+    }
+
+    header h1 {
+        font-size: 2.5em; /* Etwas kleinere Hauptüberschrift */
+    }
+
+    header p {
+        font-size: 1.1em;
+    }
+
+    h2 {
+        font-size: 2em; /* Kleinere Sektionsüberschriften */
+        margin-top: 40px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+
+    h3 {
+        font-size: 1.6em;
+    }
+
+    .call-to-action {
+        padding: 30px 20px;
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+
+    .call-to-action h3 {
+        font-size: 1.8em;
+    }
+
+    .call-to-action .btn {
+        padding: 12px 25px; /* Etwas kleinerer Button */
+        font-size: 0.95em;
+    }
+
+    .container {
+        padding: 0 15px; /* Weniger seitliches Padding im Container */
+    }
+}
+
+/* Speziell für kleinere Smartphones */
+@media (max-width: 480px) {
+    body {
+        line-height: 1.6; /* Evtl. Zeilenhöhe leicht anpassen */
+    }
+
+    header {
+        padding: 40px 15px;
+        margin-bottom: 30px;
+    }
+
+    header h1 {
+        font-size: 2em; /* Noch kleiner */
+        line-height: 1.15;
+    }
+
+    header p {
+        font-size: 1em;
+    }
+
+    h2 {
+        font-size: 1.7em;
+    }
+
+    h3 {
+        font-size: 1.4em;
+    }
+
+    .call-to-action h3 {
+        font-size: 1.6em;
+    }
+
+    .call-to-action ul {
+        margin-left: 15px; /* Einrückung der Liste im CTA anpassen */
+        font-size: 0.9em; /* Text in der Liste evtl. verkleinern */
+        text-align: left; /* Bessere Lesbarkeit für Listen auf Mobilgeräten im CTA */
+    }
+
+    .call-to-action .btn {
+        width: 100%; /* Button evtl. volle Breite für bessere Tippbarkeit */
+        box-sizing: border-box; /* Damit Padding nicht zur Breite addiert wird */
+        margin-top: 15px;
+    }
+
+    p {
+        font-size: 0.95em;
+        text-align: left; /* Auf sehr kleinen Bildschirmen ist linksbündig oft besser als Blocksatz */
+    }
+
+    .footnote {
+        font-size: 0.85em;
+    }
+}
