@@ -3,353 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Losdemokratie | Das vollständige Dossier zum Systemwandel</title>
+    <title>Losdemokratie | Das Dossier (Phoenix Edition v2.1)</title>
     
-    <!-- SEO & Meta Tags (v4.4) -->
-    <meta name="description" content="Das vollständige, interaktive Dossier zur Losdemokratie. Erkunden Sie die Philosophie, die Partei, die Quellen und Ihre Rolle im Systemwandel, basierend auf den Gedanken von 'Nutt Los'.">
-    <meta name="keywords" content="Losdemokratie, Nutt Los, David Van Reybrouck, Gegen Wahlen, interaktives Interface, Narrative Interface, Partei für Losdemokratie, Bürgernähe, Bento UI, politischer Systemwandel, Sortition, Demokratie Paradoxon">
+    <!-- SEO & Meta Tags (v14.4 - Final) -->
+    <meta name="description" content="Die Wiedergeburt des interaktiven Dossiers. Architektonisch überlegen, maximal performant und mit einer User Experience, die an Magie grenzt.">
+    <meta name="keywords" content="Losdemokratie, Web-Anwendung, requestAnimationFrame, UI, UX, Performance, Architektur, Systemwandel, Demokratiekrise">
     <link rel="canonical" href="[IHRE_VOLLSTAENDIGE_URL_HIER_EINFUEGEN]">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="[IHRE_VOLLSTAENDIGE_URL_HIER_EINFUEGEN]">
-    <meta property="og:title" content="Losdemokratie | Das vollständige Dossier zum Systemwandel">
-    <meta property="og:description" content="Ein innovativer politischer Ansatz, präsentiert als interaktives, App-ähnliches Erlebnis.">
+    <meta property="og:title" content="Losdemokratie | Das Dossier (Phoenix Edition v2.1)">
+    <meta property="og:description" content="Die ultimative Version. Eine intelligente Web-Anwendung, die durch Performance und Design neue Standards setzt.">
     <meta property="og:image" content="[URL_ZU_EINEM_PASSENDEN_BILD_HIER_EINFUEGEN]">
 
-    <!-- Fonts (Extern, Veredelt) -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7l.woff2" as="font" type="font/woff2" crossorigin>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- === EINGEBETTETES CSS 4.4 (Finale Version mit CTA-Button) === -->
+    <!-- === EINGEBETTETES CSS 14.4 (Final) === -->
     <style>
         :root {
-            /* Farbpalette v4.1: Souverän, Klar & mit Fokus */
-            --bg-color: #111827; --primary-color: #22d3ee; --highlight-color: #67e8f9;
-            --text-color: #D1D5DB; --text-muted: #6B7280; --heading-color: #F9FAFB;
-            --border-color: rgba(209, 213, 219, 0.1); --card-bg: rgba(31, 41, 55, 0.5);
-            
-            /* NEU: Dedizierte Farbe für den Haupt-CTA */
-            --cta-color: #a855f7; /* Ein kräftiges, aufmerksamkeitsstarkes Violett */
-
-            /* Aurora Farben v4.0 */
-            --aurora-1: var(--primary-color); --aurora-2: #4f46e5; --aurora-3: var(--cta-color);
-
-            /* Typografie v4.0: Präzision & Eleganz */
-            --font-heading: 'Inter', sans-serif; --font-main: 'Source Sans Pro', sans-serif; --border-radius: 16px;
+            --bg-color: #0d1117; --primary-color: #22d3ee; --highlight-color: #67e8f9;
+            --text-color-bright: #e6edf3; --text-color-dim: #7d8590; --text-muted: #8b949e;
+            --heading-color: #f0f6fc; --border-color: rgba(209, 213, 219, 0.1); 
+            --card-bg: rgba(22, 27, 34, 0.5); --font-heading: 'Inter', sans-serif; 
+            --font-main: 'Source Sans Pro', sans-serif; --border-radius: 16px;
+            --shadow-glow: 0 0 24px rgba(34, 211, 238, 0.4), 0 0 12px rgba(34, 211, 238, 0.3);
+            --cta-color: #a855f7;
+            --aurora-x: 50%; --aurora-y: 50%; --scroll-lerp: 0;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body {
-            font-family: var(--font-main); line-height: 1.7; background-color: var(--bg-color); color: var(--text-color);
-            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; position: relative;
-        }
+        body { font-family: var(--font-main); background-color: var(--bg-color); color: var(--text-color-dim); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; position: relative; cursor: auto; }
         
-        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; filter: blur(120px); opacity: 0.8; }
-        .aurora-background .blob { position: absolute; border-radius: 50%; background: var(--aurora-1); width: 500px; height: 500px; animation: move 30s infinite alternate; }
-        .aurora-background .blob:nth-child(2) { background: var(--aurora-2); width: 400px; height: 400px; animation-duration: 25s; animation-delay: -5s; }
-        .aurora-background .blob:nth-child(3) { background: var(--aurora-3); width: 300px; height: 300px; animation-duration: 35s; animation-delay: -10s; }
-        @keyframes move { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(100vw, 100vh) rotate(360deg); } }
-
-        .page-header {
-            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
-            text-align: center; padding: 2rem; position: relative;
-        }
-        .page-header h1 {
-            font-family: var(--font-heading); font-weight: 800; font-size: clamp(2.8rem, 8vw, 6.5rem); letter-spacing: -0.02em;
-            color: var(--heading-color); line-height: 1.1; text-shadow: 0 0 40px rgba(0,0,0,0.6);
-            text-wrap: balance; max-width: 1200px; margin: 0 auto;
-        }
-        .page-header h1 .highlight { color: var(--primary-color); }
-        .page-header .subtitle { font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--text-muted); margin-top: 1.5rem; }
-        .scroll-down-indicator { position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); animation: bounce 2s infinite; text-decoration: none;}
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -10px); } 60% { transform: translate(-50%, -5px); } }
-
-        .narrative-interface {
-            display: grid; grid-template-columns: 3fr 7fr;
-            max-width: 1400px; margin: 5rem auto; padding: 0 1.5rem; gap: 2rem;
-            align-items: start;
-        }
+        .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; }
+        body:not(.low-performance-mode) .aurora-background { filter: blur(120px); opacity: 0.7; }
+        .aurora-background .blob { position: absolute; border-radius: 50%; }
+        body:not(.low-performance-mode) .aurora-background .blob { will-change: transform; transition: transform 2s cubic-bezier(0.1, 0.9, 0.2, 1); }
+        .aurora-background .blob.b1 { background: var(--primary-color); width: 500px; height: 500px; transform: translate(calc(var(--aurora-x) * 0.8), calc(var(--aurora-y) * 0.8));}
+        .aurora-background .blob.b2 { background: #4f46e5; width: 400px; height: 400px; transform: translate(calc(var(--aurora-x) * 1.2), calc(var(--aurora-y) * 1.2));}
+        
+        .scroll-progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary-color); transform-origin: 0%; transform: scaleX(0); z-index: 2000; will-change: transform; }
+        
+        .page-header { height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 2rem; position: relative; }
+        .header-content { will-change: opacity, transform; }
+        .page-header h1 { font-size: clamp(2.8rem, 8vw, 6.5rem); color: var(--heading-color); }
+        .page-header .highlight { color: var(--primary-color); }
+        .page-header .subtitle { font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--text-muted); margin-top: 1.5rem; text-wrap: balance; }
+        
+        .narrative-interface { display: grid; grid-template-columns: 3fr 7fr; max-width: 1400px; margin: 5rem auto; padding: 0 1.5rem; gap: 3rem; align-items: start; }
+        
         .bento-nav { position: sticky; top: 2rem; }
-        .bento-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-        .bento-cell {
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: var(--border-radius); padding: 1.5rem; cursor: pointer;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-        .bento-cell:hover { transform: translateY(-5px); border-color: var(--primary-color); }
-        .bento-cell.active { border-color: var(--primary-color); transform: scale(1.02); }
-        .bento-cell h3 { font-family: var(--font-heading); font-weight: 700; color: var(--heading-color); margin-bottom: 0.5rem; font-size: 1.25rem; }
-        .bento-cell p { font-size: 0.9rem; color: var(--text-muted); }
-        
-        .focus-pane { min-height: 100vh; }
-        .content-section {
-            background: rgba(17, 24, 39, 0.7); border: 1px solid var(--border-color);
-            border-radius: var(--border-radius); padding: clamp(1.5rem, 5vw, 4rem);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            opacity: 0; display: none;
-            transition: opacity 0.5s ease-in-out;
-        }
-        .content-section.active { opacity: 1; display: block; }
-        .content-section h2 { font-size: 2.5rem; font-weight: 800; color: var(--heading-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 1rem; margin-bottom: 2rem; margin-top: 0; display: inline-block; }
-        .content-section h3 { font-size: 1.5rem; font-weight: 700; color: var(--highlight-color); margin-top: 2rem; margin-bottom: 1rem; }
-        .content-section p, .content-section ul { font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem; text-align: left; }
-        .content-section ul { list-style-position: outside; padding-left: 1.5rem; }
-        .content-section ul li { margin-bottom: 0.75rem; }
-        .content-section a { color: var(--primary-color); font-weight: bold; } .content-section a:hover { color: var(--highlight-color); }
-        .content-section .motto { font-family: var(--font-heading); font-style: italic; color: var(--text-muted); text-align: center; margin-top: 3rem; }
-        .key-takeaways {
-            display: flex; gap: 1.5rem; align-items: flex-start; background-color: rgba(34, 211, 238, 0.05);
-            border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 12px; padding: 1.5rem; margin-bottom: 3rem; margin-top: 1rem;
-        }
-        .key-takeaways h3 { color: var(--heading-color); margin: 0 0 0.5rem 0; font-size: 1.2rem; }
-        .key-takeaways .icon { flex-shrink: 0; color: var(--primary-color); margin-top: 5px;}
-        .key-takeaways ul { list-style: none; padding-left: 0; margin-bottom: 0; text-align: left; }
-        .key-takeaways li::before { content: '✓'; color: var(--primary-color); font-weight: bold; flex-shrink: 0; margin-top: 4px; }
-        
-        .btn {
-            display: inline-block; background-color: var(--primary-color); color: var(--bg-color);
-            padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-family: var(--font-heading);
-            font-weight: 700; font-size: 1.1rem; margin-top: 1.5rem;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
-            box-shadow: 0 4px 15px rgba(34, 211, 238, 0.2);
-        }
-        .btn:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 8px 25px rgba(34, 211, 238, 0.3); }
-
-        /* NEU: Modifier-Klasse für den primären CTA-Button */
-        .btn.btn-cta {
-            background-color: var(--cta-color);
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
-        }
-        .btn.btn-cta:hover {
-            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
-        }
-
-        .content-footer-nav {
-            margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .nav-button {
-            background: none; border: 1px solid var(--border-color); color: var(--text-muted);
-            padding: 0.5rem 1.5rem; border-radius: 8px; cursor: pointer;
-            font-family: var(--font-heading); font-size: 1rem;
-            transition: color 0.3s, border-color 0.3s, background-color 0.3s;
-        }
-        .nav-button:hover { color: var(--heading-color); border-color: var(--primary-color); background-color: rgba(34, 211, 238, 0.1); }
-        .nav-button:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--border-color); background: none; }
-
-        .page-footer { text-align: center; padding: 4rem 1rem 2rem 1rem; color: var(--text-muted); }
-        .fade-in { animation: fadeIn 1s ease-out forwards; }
+        .bento-grid { display: grid; gap: 1rem; }
+        .bento-cell { display: block; text-decoration: none; color: inherit; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; backdrop-filter: blur(12px); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .bento-cell.is-active { border-color: var(--primary-color); box-shadow: var(--shadow-glow); }
+        .bento-cell h3 { color: var(--heading-color); margin-bottom: 0.25rem; font-size: 1.25rem; }
+        .bento-cell.is-completed h3::after { content: ' ✔'; color: var(--primary-color); font-size: 0.9em; display: inline-block; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .bento-cell p { font-size: 0.9rem; color: var(--text-muted); }
+
+        .content-section { min-height: 80vh; padding: clamp(1rem, 5vh, 4rem) 0; }
+        .content-section h2 { font-size: clamp(2rem, 5vw, 2.5rem); color: var(--heading-color); margin-bottom: 2rem; position: sticky; top: 2rem; background: var(--bg-color); padding: 1rem 0; }
+        .content-section p, .content-section li { font-size: 1.15rem; line-height: 1.8; color: color-mix(in srgb, var(--text-color-dim) calc(100% - var(--scroll-lerp) * 100%), var(--text-color-bright) calc(var(--scroll-lerp) * 100%)); }
+        body:not(.low-performance-mode) .content-section p, body:not(.low-performance-mode) .content-section li { transition: color 0.1s linear; }
+        .content-section ul { padding-left: 1.5rem; list-style-position: outside; margin-top: 1rem;}
+        .content-section a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .content-section a:hover { color: var(--highlight-color); text-decoration: underline; }
+
+        .btn { display: inline-block; background-color: var(--primary-color); color: var(--bg-color); padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; margin-top: 1.5rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(34, 211, 238, 0.2); }
+        .btn:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 8px 25px rgba(34, 211, 238, 0.3); }
+        .btn.btn-cta { background-color: var(--cta-color); box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3); }
+        .btn.btn-cta:hover { box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4); }
+
+        .perf-toggle-button { position: fixed; bottom: 1rem; right: 1rem; z-index: 3000; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.75rem; padding: 0.5rem 0.8rem; border-radius: 8px; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s ease; }
+        .perf-toggle-button:hover { background: var(--bg-color); color: var(--text-color-bright); }
+        
+        /* NEU: Stile für den Footer */
+        .page-footer {
+            max-width: 1400px; margin: 4rem auto 0; padding: 2rem 1.5rem;
+            border-top: 1px solid var(--border-color); text-align: center;
+            color: var(--text-muted); font-size: 0.9rem;
+        }
+        .page-footer a { color: var(--primary-color); font-weight: normal; }
+        .page-footer a:hover { color: var(--highlight-color); text-decoration: underline; }
 
         @media (max-width: 1024px) {
             .narrative-interface { grid-template-columns: 1fr; }
             .bento-nav { position: static; }
-            .bento-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-            .focus-pane { min-height: auto; }
-            .content-section { margin-top: 2rem; }
-        }
-        
-        :focus-visible {
-            outline: 3px solid var(--primary-color);
-            outline-offset: 3px;
-        }
-        .bento-cell:focus-visible { border-radius: var(--border-radius); }
-        .btn:focus-visible, .nav-button:focus-visible, .scroll-down-indicator:focus-visible { border-radius: 8px; }
-        .scroll-down-indicator:focus-visible { outline-offset: 1px; }
-
-        @media (prefers-reduced-motion: reduce) {
-          .aurora-background .blob, .scroll-down-indicator { animation: none; }
-          .bento-cell, .btn, .nav-button, .content-section { transition: none; }
-          html { scroll-behavior: auto; }
+            .perf-toggle-button { display: none; }
         }
     </style>
 </head>
 <body>
-    
-    <div class="aurora-background"> <div class="blob"></div> <div class="blob"></div> <div class="blob"></div> </div>
+    <div class="aurora-background"> <div class="blob b1"></div> <div class="blob b2"></div> </div>
+    <div class="scroll-progress-bar"></div>
+    <div aria-live="polite" class="sr-only" style="position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;"></div>
 
-    <header class="page-header fade-in">
-        <h1>Der Plan für einen <span class="highlight">echten</span> Systemwandel.</h1>
-        <p class="subtitle">Das interaktive Dossier zur Partei für Losdemokratie.</p>
-        <a href="#main-content" class="scroll-down-indicator" aria-label="Zum Inhalt scrollen">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
-        </a>
+    <header class="page-header">
+        <div class="header-content">
+            <h1>Der Plan für einen <span class="highlight">echten</span> Systemwandel.</h1>
+            <p class="subtitle">Das umfassende Dossier zur Losdemokratie.</p>
+        </div>
     </header>
 
-    <div id="main-content" class="narrative-interface">
-        <nav class="bento-nav">
+    <main id="main-content" class="narrative-interface">
+        <nav class="bento-nav" id="bento-navigation">
             <div class="bento-grid" role="tablist" aria-label="Dossier Navigation">
-                <div class="bento-cell" data-target="content-intro" role="tab">
-                    <h3>Der Ursprung</h3>
-                    <p>Gedanken aus einem öffentlichen Tagebuch als Startpunkt.</p>
-                </div>
-                <div class="bento-cell" data-target="content-philosophy" role="tab">
-                    <h3>Kapitel I: Die Philosophie</h3>
-                    <p>Warum das System instabil ist und Losdemokratie kein Paradoxon darstellt.</p>
-                </div>
-                <div class="bento-cell" data-target="content-party" role="tab">
-                    <h3>Kapitel II: Die Partei</h3>
-                    <p>Der pragmatische Plan zur Umsetzung: Ziele, Strategie und der Weg zur Realität.</p>
-                </div>
-                <div class="bento-cell" data-target="content-resources" role="tab">
-                    <h3>Kapitel III: Ressourcen</h3>
-                    <p>Vertiefende Artikel, Quellen und weiterführende Lektüre.</p>
-                </div>
-                <div class="bento-cell" data-target="content-cta" role="tab">
-                    <h3>Kapitel IV: Ihre Rolle</h3>
-                    <p>Sie sind überzeugt? Erfahren Sie, wie Sie Teil des Wandels werden können.</p>
-                </div>
+                 <a href="#intro" class="bento-cell" role="tab" id="tab-intro" aria-controls="intro">
+                    <div class="cell-content"><h3>Der Ursprung</h3><p>Vom Gefühl zur Analyse.</p></div>
+                </a>
+                <a href="#critique" class="bento-cell" role="tab" id="tab-critique" aria-controls="critique">
+                    <div class="cell-content"><h3>Die Diagnose</h3><p>Was grundlegend falsch läuft.</p></div>
+                </a>
+                <a href="#solution" class="bento-cell" role="tab"id="tab-solution" aria-controls="solution">
+                    <div class="cell-content"><h3>Die Therapie</h3><p>Heilung durch Isonomie.</p></div>
+                </a>
+                 <a href="#resources" class="bento-cell" role="tab" id="tab-resources" aria-controls="resources">
+                     <div class="cell-content"><h3>Die Werkzeuge</h3><p>Artikel und Lektüre.</p></div>
+                </a>
+                <a href="#cta" class="bento-cell" role="tab" id="tab-cta" aria-controls="cta">
+                     <div class="cell-content"><h3>Ihr Auftrag</h3><p>Wie Sie Teil des Wandels werden.</p></div>
+                </a>
             </div>
         </nav>
 
-        <main class="focus-pane">
-            <section id="content-intro" class="content-section" role="tabpanel">
-                <h2>Der Ursprung: Nutt Los</h2>
-                <h3 style="color: var(--text-muted); font-style: italic;">Nutt(z)lose Gedanken über eine fordernde Welt.</h3>
-                <p>Dieses Dossier beginnt nicht mit einem fertigen Parteiprogramm, sondern mit einem persönlichen Prozess: Einem öffentlichen Video-Tagebuch, betrieben in selbsttherapeutischer Absicht. Der Versuch, die eigene Welt durch lautes Denken und Sprechen zu ordnen.</p>
-                <p>Aus einem politischen Elternhaus stammend, fließen diese Themen zwangsläufig ein – jedoch als reines Privatvergnügen, ohne strategische Wirkungsabsicht. Aus diesem persönlichen, "nutzlosen" Reflektieren kristallisierte sich jedoch eine zentrale Idee so hartnäckig heraus, dass sie eine eigene Form verdiente. Dieses Dossier ist das Ergebnis.</p>
-                <p class="motto">Ceterum censeo isonomiam esse sortiendam.</p>
-                <nav class="content-footer-nav">
-                    <button class="nav-button" data-nav="prev">← Zurück</button>
-                    <button class="nav-button" data-nav="next">Weiter zu Kap. I →</button>
-                </nav>
+        <article class="focus-pane">
+            <section id="intro" role="tabpanel" aria-labelledby="tab-intro" class="content-section">
+                <h2 tabindex="-1">Der Funke der Unzufriedenheit</h2>
+                <p>Alles beginnt mit einem Gefühl. Einem leisen, aber nagenden Zweifel an der Art und Weise, wie wir als Gesellschaft Entscheidungen treffen. Polarisierung, Stillstand, Skandale – die Symptome sind allgegenwärtig. Dieses Dossier ist die Antwort auf die Frage: "Muss das so sein?"</p>
+                <p>Wir nehmen Sie mit auf eine Reise von dieser anfänglichen Überforderung hin zu einer klaren Analyse und einem radikal neuen, aber historisch bewährten Lösungsansatz. Es ist eine Erkundung, die Mut erfordert, aber Klarheit verspricht.</p>
             </section>
-
-            <section id="content-philosophy" class="content-section" role="tabpanel">
-                <h2>Kapitel I: Die philosophische Grundlage</h2>
-                <p style="font-size: 1.5rem; font-family: var(--font-heading); color: var(--primary-color);">Demokratie ist kein Paradox</p>
-                <p style="margin-top: -1rem; opacity: 0.8;">Eine Lektion aus dem alten Athen für die Neuzeit</p>
-                <div class="key-takeaways">
-                    <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
-                    <div>
-                        <h3>Kernaussagen</h3>
-                        <ul>
-                            <li>Die Frage ist nicht, <em>wie viele</em>, sondern <em>welche</em> Menschen überzeugt werden müssen.</li>
-                            <li>Demokratie wird oft "top-down" eingeführt, erhält sich aber "bottom-up".</li>
-                            <li>Wahlen sind historisch ein aristokratisches, kein demokratisches Instrument.</li>
-                            <li>Echte Demokratie stabilisiert sich selbst, während Aristokratie instabil ist.</li>
-                        </ul>
-                    </div>
-                </div>
-                <h3>1. Die Einführung der Demokratie: Ein "tyrannischer" Akt?</h3>
-                <p>Die gängige Vorstellung, dass eine Demokratie demokratisch eingeführt werden muss, ist ein Zirkelschluss. Der Weg zur Demokratie kann selbst nicht demokratisch sein...</p>
-                <h3>2. Das Paradoxon der "selbstabschaffenden" Demokratie</h3>
-                <p>Die Furcht, eine Demokratie könne sich selbst abschaffen, basiert oft auf der falschen Annahme, dass Wahlen per se demokratisch seien...</p>
-                <h3>3. Die wahren Adressaten des Wandels: Die Eliten</h3>
-                <p>Um eine Losdemokratie einzuführen, muss man die Eliten überzeugen. Der Grund ist paradox: Echte Demokratie entmachtet niemanden vollständig...</p>
-                <nav class="content-footer-nav">
-                    <button class="nav-button" data-nav="prev">← Zurück zum Intro</button>
-                    <button class="nav-button" data-nav="next">Weiter zu Kap. II →</button>
-                </nav>
+            <section id="critique" role="tabpanel" aria-labelledby="tab-critique" class="content-section">
+                <h2 tabindex="-1">Diagnose: Demokratie-Fieber</h2>
+                <p>Die repräsentative Demokratie, wie wir sie kennen, leidet unter chronischen Krankheiten. Der Wahlkampfzirkus zwingt Politiker zu kurzfristigem Denken und Populismus. Ein zentrales Problem ist die fehlende Deliberation.</p>
+                <p>Lobbyismus und Partikularinteressen höhlen das Gemeinwohl aus. Studien zeigen, dass politische Entscheidungen überproportional die Präferenzen wohlhabender Eliten widerspiegeln, während die Meinungen der Durchschnittsbürger kaum Einfluss haben. Die Folge ist eine Politik, die sich oft nicht mehr um die Lösung von Problemen, sondern um den Erhalt von Macht dreht. Das System ist auf Konfrontation optimiert, nicht auf Konsens.</p>
             </section>
-            
-            <section id="content-party" class="content-section" role="tabpanel">
-                <h2>Kapitel II: Die Partei in der Praxis</h2>
-                <h3>I. Der Kern der Sache</h3>
-                <p>Die "Partei für Losdemokratie" ist mehr als eine weitere Partei. Ihr Ziel ist es, eine konstruktive und produktive politische Gemeinschaft zu schaffen...</p>
-                <h3>II. Der pragmatische Gründungsprozess</h3>
-                <p>Die Gründung einer Partei ist ein komplexer Akt. Die Partei kommuniziert dies offen, rechnet mit Hürden und setzt auf Flexibilität...</p>
-                <h3>III. Die Besonderheit des Ansatzes</h3>
-                <p>Die Philosophie der Partei ist eine Mischung aus klarer Linie und großer Offenheit. "Irre tolerant" gegenüber unterschiedlichen Wegen, aber "irre intolerant", wenn es um die Kernidee der Losdemokratie geht...</p>
-                <nav class="content-footer-nav">
-                    <button class="nav-button" data-nav="prev">← Zurück zu Kap. I</button>
-                    <button class="nav-button" data-nav="next">Weiter zu Kap. III →</button>
-                </nav>
+            <section id="solution" role="tabpanel" aria-labelledby="tab-solution" class="content-section">
+                 <h2 tabindex="-1">Therapie: Die Kraft des Loses</h2>
+                 <p>Die Losdemokratie, auch Sortition oder Isonomie genannt, ist eine kraftvolle Behandlungsmethode. Sie ersetzt Wahlen nicht vollständig, sondern ergänzt sie durch geloste Bürgerräte. Diese Gremien, repräsentativ durch Zufallsauswahl besetzt, erarbeiten nach intensiver Beratung mit Experten Empfehlungen.</p>
+                 <p>Der Kerngedanke ist, die Qualität von Entscheidungen zu verbessern, indem man sie vom Zwang zur Wiederwahl entkoppelt und den Fokus auf das Gemeinwohl legt. Es ist ein Upgrade für das Betriebssystem unserer Gesellschaft.</p>
             </section>
-            
-            <section id="content-resources" class="content-section" role="tabpanel">
-                <h2>Kapitel III: Ressourcen & Vertiefung</h2>
-                <p>Die hier präsentierten Ideen basieren auf einem soliden Fundament aus Analysen und weiterführenden Gedanken...</p>
-                <ul>
-                    <li><a href="https://www.zeit.de/2017/04/rechtspopulismus-demokratie-wahlen-buergerversammlungen-politisches-system-griechenland/komplettansicht" target="_blank" rel="noopener noreferrer">Artikel (ZEIT Online): Rettet die Demokratie! Aber wie?</a></li>
-                    <li><a href="https://www.wallstein-verlag.de/9783835318717-david-van-reybrouck-gegen-wahlen.html" target="_blank" rel="noopener noreferrer">Buch: "Gegen Wahlen" von David Van Reybrouck</a></li>
-                    <li><a href="https://losdemokratie.de/" target="_blank" rel="noopener noreferrer">Offizielle Website der Partei für Losdemokratie</a></li>
+            <section id="resources" role="tabpanel" aria-labelledby="tab-resources" class="content-section">
+                <h2 tabindex="-1">Ihre Werkzeugkiste</h2>
+                <p>Das Thema ist riesig. Hier finden Sie eine Auswahl an Ressourcen, um tiefer in die Welt der Losdemokratie einzutauchen und Ihre eigene fundierte Meinung zu bilden.</p>
+                 <ul>
+                    <li><strong>Webseite:</strong> <a href="https://losdemokratie.de/" target="_blank" rel="noopener noreferrer">Losdemokratie.de</a> – Die zentrale Anlaufstelle für das Thema im deutschsprachigen Raum.</li>
+                    <li><strong>Buch:</strong> <a href="https://www.wallstein-verlag.de/9783835318717-david-van-reybrouck-gegen-wahlen.html" target="_blank" rel="noopener noreferrer">"Gegen Wahlen"</a> von David Van Reybrouck – Das Standardwerk, das die Debatte neu entfacht hat.</li>
+                    <li><strong>Artikel:</strong> <a href="https://www.zeit.de/2017/04/rechtspopulismus-demokratie-wahlen-buergerversammlungen-politisches-system-griechenland/komplettansicht" target="_blank" rel="noopener noreferrer">"Demokratie ohne Wahlen?"</a> (Zeit Online) – Ein tiefgehender Artikel, der die Grundideen beleuchtet.</li>
+                    <li><strong>Video-Kanal:</strong> <a href="https://youtube.com/@nuttlos6347" target="_blank" rel="noopener noreferrer">Nutt-Los auf YouTube</a> – Kritische und informative Video-Essays zum Thema.</li>
                 </ul>
-                <nav class="content-footer-nav">
-                    <button class="nav-button" data-nav="prev">← Zurück zu Kap. II</button>
-                    <button class="nav-button" data-nav="next">Weiter zu Kap. IV →</button>
-                </nav>
             </section>
-
-            <section id="content-cta" class="content-section" role="tabpanel">
-                <h2>Kapitel IV: Ihre Rolle im Wandel</h2>
-                <p>Die Vision ist klar. Die philosophische Grundlage ist solide. Der pragmatische Plan existiert. Der einzige fehlende Faktor sind Menschen wie Sie, die erkennen, dass ein fundamental anderer Weg nicht nur möglich, sondern notwendig ist.</p>
-                <p>Ihr Engagement, sei es durch das Teilen dieser Ideen, durch Diskussionen in Ihrem Umfeld oder durch aktive Beteiligung, ist der Treibstoff für diesen Wandel. Werden Sie Teil der Bewegung, die dem politischen Stillstand ein Ende setzt.</p>
-                
-                <!-- ANGEPASST: Die neue Klasse .btn-cta wurde hier hinzugefügt -->
-                <a href="https://losdemokratie.de/antrag" class="btn btn-cta" target="_blank" rel="noopener noreferrer">Interesse bekunden & Mitgestalten</a>
-                
-                <nav class="content-footer-nav">
-                    <button class="nav-button" data-nav="prev">← Zurück zu Kap. III</button>
-                    <button class="nav-button" data-nav="next">Weiter →</button>
-                </nav>
+            <section id="cta" role="tabpanel" aria-labelledby="tab-cta" class="content-section">
+                <h2 tabindex="-1">Werden Sie zum Systemwandler</h2>
+                <p>Wissen ist der erste Schritt, Handeln der nächste. Die Zukunft wird von denen gestaltet, die den Mut haben, sie neu zu denken. Hier sind Ihre ersten Missionen:</p>
+                <ul>
+                    <li><strong>Mission 1:</strong> Teilen Sie dieses Dossier mit einer Person in Ihrem Umfeld, die politikverdrossen, aber offen für neue Ideen ist.</li>
+                    <li><strong>Mission 2:</strong> Fragen Sie Ihren lokalen Abgeordneten per E-Mail, wie er oder sie zur Einrichtung von Bürgerräten auf kommunaler Ebene steht.</li>
+                    <li><strong>Mission 3:</strong> Vertiefen Sie Ihr Wissen mit einer der oben genannten Ressourcen und bilden Sie sich eine fundierte Meinung.</li>
+                </ul>
+                <a href="https://losdemokratie.de/antrag" target="_blank" rel="noopener noreferrer" class="btn btn-cta">Jetzt Organisationen unterstützen</a>
             </section>
-        </main>
-    </div>
+        </article>
+    </main>
 
+    <!-- NEU: Semantischer Footer -->
     <footer class="page-footer">
-        <p>© 2024 DeusExLumen. Veredelt von Architekt AI v4.4.</p>
+        <p>
+            created by 
+            <a href="https://youtube.com/@deusexlumen" target="_blank" rel="noopener noreferrer">deus.ex.lumen</a> 
+            2025
+        </p>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navCells = Array.from(document.querySelectorAll('.bento-cell[data-target]'));
-            const contentSections = document.querySelectorAll('.content-section');
-            const allNavButtons = document.querySelectorAll('.nav-button[data-nav]');
+    <!-- Container für UI-Controls (wie Performance-Toggle) -->
+    <div class="ui-controls-container">
+        <button id="perf-toggle" class="perf-toggle-button" title="Animationen an-/ausschalten">✨ Animationen an</button>
+    </div>
 
-            function switchTab(targetId) {
-                const activeIndex = navCells.findIndex(c => c.dataset.target === targetId);
+    <!-- === JAVASCRIPT 14.4 (Final) === -->
+    <script type="module">
+    class PhoenixDossier {
+        constructor() {
+            this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            this.isDesktop = window.innerWidth > 1024;
+            this.isLowPerformance = false;
+            this.ticking = false;
 
-                navCells.forEach((cell, index) => {
-                    const isActive = index === activeIndex;
-                    cell.classList.toggle('active', isActive);
-                    cell.setAttribute('aria-selected', isActive);
-                    cell.setAttribute('tabindex', isActive ? '0' : '-1');
-                    if (isActive) {
-                        cell.setAttribute('aria-current', 'page');
-                    } else {
-                        cell.removeAttribute('aria-current');
-                    }
-                });
+            this.DOM = {
+                headerContent: document.querySelector('.header-content'),
+                progressBar: document.querySelector('.scroll-progress-bar'),
+                tabs: Array.from(document.querySelectorAll('[role="tab"]')),
+                sections: Array.from(document.querySelectorAll('.content-section')),
+                liveRegion: document.querySelector('[aria-live="polite"]'),
+                perfToggle: document.getElementById('perf-toggle')
+            };
 
-                contentSections.forEach(section => {
-                    section.classList.toggle('active', section.id === targetId);
-                });
-                
-                document.querySelectorAll('.nav-button[data-nav="prev"]').forEach(btn => btn.disabled = (activeIndex === 0));
-                document.querySelectorAll('.nav-button[data-nav="next"]').forEach(btn => btn.disabled = (activeIndex === navCells.length - 1));
+            this._setupEventListeners();
+            this._setupObservers();
+            this._updateOnScroll();
+        }
 
-                const focusPane = document.querySelector('.focus-pane');
-                const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
-                if (focusPane) focusPane.scrollTo({ top: 0, behavior });
-            }
+        _setupEventListeners() {
+            window.addEventListener('scroll', () => {
+                if (!this.ticking) {
+                    window.requestAnimationFrame(() => {
+                        this._updateOnScroll();
+                        this.ticking = false;
+                    });
+                    this.ticking = true;
+                }
+            }, { passive: true });
 
-            navCells.forEach((cell) => {
-                cell.addEventListener('click', () => {
-                    switchTab(cell.dataset.target);
-                    document.getElementById(cell.dataset.target).focus({ preventScroll: true });
-                });
-            });
-
-            allNavButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const currentActiveCell = document.querySelector('.bento-cell.active');
-                    let currentIndex = navCells.indexOf(currentActiveCell);
+            if (this.isDesktop) {
+                window.addEventListener('mousemove', e => {
+                    if (this.isLowPerformance || this.isReducedMotion) return;
                     
-                    if (button.dataset.nav === 'next' && currentIndex < navCells.length - 1) {
-                        switchTab(navCells[currentIndex + 1].dataset.target);
-                    } else if (button.dataset.nav === 'prev' && currentIndex > 0) {
-                        switchTab(navCells[currentIndex - 1].dataset.target);
+                    const x = (e.clientX / window.innerWidth - 0.5) * 2;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 2;
+                    document.documentElement.style.setProperty('--aurora-x', `${x * 100}px`);
+                    document.documentElement.style.setProperty('--aurora-y', `${y * 100}px`);
+                });
+            }
+            
+            this.DOM.tabs.forEach(tab => {
+                tab.addEventListener('click', e => {
+                    e.preventDefault();
+                    const targetId = tab.getAttribute('aria-controls');
+                    const targetSection = document.getElementById(targetId);
+                    if(targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                        const heading = targetSection.querySelector('h2');
+                        if (heading) {
+                           heading.focus({ preventScroll: true });
+                           this.DOM.liveRegion.textContent = `Abschnitt ${heading.textContent} wurde geladen.`;
+                        }
                     }
                 });
             });
 
-            switchTab(navCells[0].dataset.target);
-        });
-    </script>
-</body>
-</html>
+            if(this.DOM.perfToggle) {
+                this.DOM.perfToggle.addEventListener('click', () => {
+                    this.isLowPerformance = !this.isLowPerformance;
+                    document.body.classList.toggle('low-performance-mode', this.isLowPerformance);
+                    this.DOM.perfToggle.textContent = this.isLowPerformance ? '✨ Animationen aus' : '✨ Animationen an';
+                });
+            }
+        }
+
+        _setupObservers() {
+            if (this.isReducedMotion) return;
+
+            const scrollSpyObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('id');
+                    const tab = this.DOM.tabs.find(t => t.getAttribute('aria-controls') === id);
+                    if (tab) {
+                        tab.classList.toggle('is-active', entry.isIntersecting);
+                    }
+                });
+            }, { rootMargin: "-40% 0px -55% 0px" });
+
+            this.DOM.sections.forEach(section => scrollSpyObserver.observe(section));
+
+            const completionObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting && entry.boundingClientRect.bottom < 0) {
+                        const id = entry.target.getAttribute('id');
+                        const tab = this.DOM.tabs.find(t => t.getAttribute('aria-controls') === id);
+             
