@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Losdemokratie | Das Dossier (Phoenix Edition v2.1)</title>
+    <title>Losdemokratie | Das Dossier (Phoenix Edition v2.4 - Architect's Refactor)</title>
     
-    <!-- SEO & Meta Tags (v14.4 - Final) -->
+    <!-- SEO & Meta Tags (v14.5 - Final) -->
     <meta name="description" content="Die Wiedergeburt des interaktiven Dossiers. Architektonisch überlegen, maximal performant und mit einer User Experience, die an Magie grenzt.">
     <meta name="keywords" content="Losdemokratie, Web-Anwendung, requestAnimationFrame, UI, UX, Performance, Architektur, Systemwandel, Demokratiekrise">
-    <link rel="canonical" href="[IHRE_VOLLSTAENDIGE_URL_HIER_EINFUEGEN]">
+    <link rel="canonical" href="https://[IHRE_DOMAIN_HIER]/dossier-losdemokratie">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="[IHRE_VOLLSTAENDIGE_URL_HIER_EINFUEGEN]">
-    <meta property="og:title" content="Losdemokratie | Das Dossier (Phoenix Edition v2.1)">
-    <meta property="og:description" content="Die ultimative Version. Eine intelligente Web-Anwendung, die durch Performance und Design neue Standards setzt.">
+    <meta property="og:url" content="https://[IHRE_DOMAIN_HIER]/dossier-losdemokratie">
+    <meta property="og:title" content="Losdemokratie | Das Dossier (Phoenix Edition v2.4 - Architect's Refactor)">
+    <meta property="og:description" content="Ein interaktives Dossier, das die Demokratiekrise analysiert und mit der Losdemokratie einen konkreten Lösungsweg aufzeigt.">
     <meta property="og:image" content="[URL_ZU_EINEM_PASSENDEN_BILD_HIER_EINFUEGEN]">
 
     <!-- Fonts -->
@@ -26,7 +26,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- === EINGEBETTETES CSS 14.4 (Final) === -->
+    <!-- === ÜBERARBEITETES CSS 14.7 === -->
     <style>
         :root {
             --bg-color: #0d1117; --primary-color: #22d3ee; --highlight-color: #67e8f9;
@@ -60,7 +60,8 @@
         .narrative-interface { display: grid; grid-template-columns: 3fr 7fr; max-width: 1400px; margin: 5rem auto; padding: 0 1.5rem; gap: 3rem; align-items: start; }
         
         .bento-nav { position: sticky; top: 2rem; }
-        .bento-grid { display: grid; gap: 1rem; }
+        /* NEU: Stile für die semantische Liste */
+        .bento-grid { display: grid; gap: 1rem; list-style: none; }
         .bento-cell { display: block; text-decoration: none; color: inherit; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; backdrop-filter: blur(12px); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
         .bento-cell.is-active { border-color: var(--primary-color); box-shadow: var(--shadow-glow); }
         .bento-cell h3 { color: var(--heading-color); margin-bottom: 0.25rem; font-size: 1.25rem; }
@@ -76,22 +77,37 @@
         .content-section a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
         .content-section a:hover { color: var(--highlight-color); text-decoration: underline; }
 
-        .btn { display: inline-block; background-color: var(--primary-color); color: var(--bg-color); padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; margin-top: 1.5rem; transition: all 0.3s; box-shadow: 0 4px 15px rgba(34, 211, 238, 0.2); }
+        .btn { display: inline-block; background-color: var(--primary-color); color: var(--bg-color); padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; margin-top: 1.5rem; box-shadow: 0 4px 15px rgba(34, 211, 238, 0.2); 
+            /* OPTIMIERT: Gezielte Transition statt 'all' */
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s; }
         .btn:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 8px 25px rgba(34, 211, 238, 0.3); }
         .btn.btn-cta { background-color: var(--cta-color); box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3); }
         .btn.btn-cta:hover { box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4); }
 
-        .perf-toggle-button { position: fixed; bottom: 1rem; right: 1rem; z-index: 3000; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.75rem; padding: 0.5rem 0.8rem; border-radius: 8px; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s ease; }
+        .perf-toggle-button { position: fixed; bottom: 1rem; right: 1rem; z-index: 3000; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.75rem; padding: 0.5rem 0.8rem; border-radius: 8px; cursor: pointer; backdrop-filter: blur(10px); 
+            /* OPTIMIERT: Gezielte Transition statt 'all' */
+            transition: background-color 0.2s ease, color 0.2s ease; }
         .perf-toggle-button:hover { background: var(--bg-color); color: var(--text-color-bright); }
         
-        /* NEU: Stile für den Footer */
-        .page-footer {
-            max-width: 1400px; margin: 4rem auto 0; padding: 2rem 1.5rem;
-            border-top: 1px solid var(--border-color); text-align: center;
-            color: var(--text-muted); font-size: 0.9rem;
-        }
+        .page-footer { max-width: 1400px; margin: 4rem auto 0; padding: 2rem 1.5rem; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-muted); font-size: 0.9rem; }
         .page-footer a { color: var(--primary-color); font-weight: normal; }
         .page-footer a:hover { color: var(--highlight-color); text-decoration: underline; }
+
+        .audio-feature-box { background: rgba(22, 27, 34, 0.7); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem 2rem; margin: 2.5rem 0; backdrop-filter: blur(10px); }
+        .audio-feature-box h4 { color: var(--highlight-color); font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .audio-feature-box .audio-description { font-size: 1rem !important; line-height: 1.6 !important; margin-bottom: 1.5rem; color: var(--text-muted) !important; }
+        .audio-feature-box audio { width: 100%; border-radius: 8px; }
+        audio::-webkit-media-controls-panel { background-color: var(--bg-color); }
+        audio::-webkit-media-controls-play-button, audio::-webkit-media-controls-mute-button { background-color: var(--primary-color); border-radius: 50%; transition: background-color 0.2s; }
+        audio::-webkit-media-controls-play-button:hover, audio::-webkit-media-controls-mute-button:hover { background-color: var(--highlight-color); }
+        
+        .share-section { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-color); }
+        .share-section h4 { color: var(--heading-color); font-family: var(--font-heading); text-align: center; margin-bottom: 1.5rem; font-size: 1.2rem;}
+        .share-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+        .share-btn { display: inline-block; text-decoration: none; color: var(--text-color-bright); background: var(--card-bg); border: 1px solid var(--border-color); padding: 0.7rem 1.5rem; border-radius: 8px; font-family: var(--font-main); font-weight: 700; 
+            /* OPTIMIERT: Gezielte Transition statt 'all' */
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease; }
+        .share-btn:hover { background: var(--bg-color); border-color: var(--primary-color); color: var(--primary-color); transform: translateY(-2px); }
 
         @media (max-width: 1024px) {
             .narrative-interface { grid-template-columns: 1fr; }
@@ -113,43 +129,63 @@
     </header>
 
     <main id="main-content" class="narrative-interface">
-        <nav class="bento-nav" id="bento-navigation">
-            <div class="bento-grid" role="tablist" aria-label="Dossier Navigation">
-                 <a href="#intro" class="bento-cell" role="tab" id="tab-intro" aria-controls="intro">
-                    <div class="cell-content"><h3>Der Ursprung</h3><p>Vom Gefühl zur Analyse.</p></div>
-                </a>
-                <a href="#critique" class="bento-cell" role="tab" id="tab-critique" aria-controls="critique">
-                    <div class="cell-content"><h3>Die Diagnose</h3><p>Was grundlegend falsch läuft.</p></div>
-                </a>
-                <a href="#solution" class="bento-cell" role="tab"id="tab-solution" aria-controls="solution">
-                    <div class="cell-content"><h3>Die Therapie</h3><p>Heilung durch Isonomie.</p></div>
-                </a>
-                 <a href="#resources" class="bento-cell" role="tab" id="tab-resources" aria-controls="resources">
-                     <div class="cell-content"><h3>Die Werkzeuge</h3><p>Artikel und Lektüre.</p></div>
-                </a>
-                <a href="#cta" class="bento-cell" role="tab" id="tab-cta" aria-controls="cta">
-                     <div class="cell-content"><h3>Ihr Auftrag</h3><p>Wie Sie Teil des Wandels werden.</p></div>
-                </a>
-            </div>
+        <!-- === ÜBERARBEITETES HTML für bessere Semantik === -->
+        <nav class="bento-nav" id="bento-navigation" aria-label="Dossier Navigation">
+            <ul class="bento-grid">
+                 <li>
+                    <a href="#intro" class="bento-cell" id="nav-intro">
+                        <div class="cell-content"><h3>Der Ursprung</h3><p>Vom Gefühl zur Analyse.</p></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#critique" class="bento-cell" id="nav-critique">
+                        <div class="cell-content"><h3>Die Diagnose</h3><p>Was grundlegend falsch läuft.</p></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#solution" class="bento-cell" id="nav-solution">
+                        <div class="cell-content"><h3>Die Therapie</h3><p>Heilung durch Isonomie.</p></div>
+                    </a>
+                </li>
+                 <li>
+                    <a href="#resources" class="bento-cell" id="nav-resources">
+                         <div class="cell-content"><h3>Die Werkzeuge</h3><p>Artikel und Lektüre.</p></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#cta" class="bento-cell" id="nav-cta">
+                         <div class="cell-content"><h3>Ihr Auftrag</h3><p>Wie Sie Teil des Wandels werden.</p></div>
+                    </a>
+                </li>
+            </ul>
         </nav>
 
         <article class="focus-pane">
-            <section id="intro" role="tabpanel" aria-labelledby="tab-intro" class="content-section">
+            <section id="intro" aria-labelledby="nav-intro" class="content-section">
                 <h2 tabindex="-1">Der Funke der Unzufriedenheit</h2>
                 <p>Alles beginnt mit einem Gefühl. Einem leisen, aber nagenden Zweifel an der Art und Weise, wie wir als Gesellschaft Entscheidungen treffen. Polarisierung, Stillstand, Skandale – die Symptome sind allgegenwärtig. Dieses Dossier ist die Antwort auf die Frage: "Muss das so sein?"</p>
                 <p>Wir nehmen Sie mit auf eine Reise von dieser anfänglichen Überforderung hin zu einer klaren Analyse und einem radikal neuen, aber historisch bewährten Lösungsansatz. Es ist eine Erkundung, die Mut erfordert, aber Klarheit verspricht.</p>
             </section>
-            <section id="critique" role="tabpanel" aria-labelledby="tab-critique" class="content-section">
+            <section id="critique" aria-labelledby="nav-critique" class="content-section">
                 <h2 tabindex="-1">Diagnose: Demokratie-Fieber</h2>
                 <p>Die repräsentative Demokratie, wie wir sie kennen, leidet unter chronischen Krankheiten. Der Wahlkampfzirkus zwingt Politiker zu kurzfristigem Denken und Populismus. Ein zentrales Problem ist die fehlende Deliberation.</p>
+                
+                <div class="audio-feature-box">
+                    <h4>Audio-Essay: Selbstoptimierung als Politikvermeidung</h4>
+                    <p class="audio-description">Hören Sie einen kurzen Essay darüber, wie der Fokus auf persönliche Perfektion von strukturellen politischen Problemen ablenken kann.</p>
+                    <audio controls preload="metadata" src="https://github.com/deusexlumen/losdemokratie/raw/refs/heads/main/Warum%20Selbstoptimierung%20eine%20Politikvermeidung%20ist%20(1).wav">
+                        Ihr Browser unterstützt das Audio-Element nicht.
+                    </audio>
+                </div>
+
                 <p>Lobbyismus und Partikularinteressen höhlen das Gemeinwohl aus. Studien zeigen, dass politische Entscheidungen überproportional die Präferenzen wohlhabender Eliten widerspiegeln, während die Meinungen der Durchschnittsbürger kaum Einfluss haben. Die Folge ist eine Politik, die sich oft nicht mehr um die Lösung von Problemen, sondern um den Erhalt von Macht dreht. Das System ist auf Konfrontation optimiert, nicht auf Konsens.</p>
             </section>
-            <section id="solution" role="tabpanel" aria-labelledby="tab-solution" class="content-section">
+            <section id="solution" aria-labelledby="nav-solution" class="content-section">
                  <h2 tabindex="-1">Therapie: Die Kraft des Loses</h2>
                  <p>Die Losdemokratie, auch Sortition oder Isonomie genannt, ist eine kraftvolle Behandlungsmethode. Sie ersetzt Wahlen nicht vollständig, sondern ergänzt sie durch geloste Bürgerräte. Diese Gremien, repräsentativ durch Zufallsauswahl besetzt, erarbeiten nach intensiver Beratung mit Experten Empfehlungen.</p>
                  <p>Der Kerngedanke ist, die Qualität von Entscheidungen zu verbessern, indem man sie vom Zwang zur Wiederwahl entkoppelt und den Fokus auf das Gemeinwohl legt. Es ist ein Upgrade für das Betriebssystem unserer Gesellschaft.</p>
             </section>
-            <section id="resources" role="tabpanel" aria-labelledby="tab-resources" class="content-section">
+            <section id="resources" aria-labelledby="nav-resources" class="content-section">
                 <h2 tabindex="-1">Ihre Werkzeugkiste</h2>
                 <p>Das Thema ist riesig. Hier finden Sie eine Auswahl an Ressourcen, um tiefer in die Welt der Losdemokratie einzutauchen und Ihre eigene fundierte Meinung zu bilden.</p>
                  <ul>
@@ -159,7 +195,7 @@
                     <li><strong>Video-Kanal:</strong> <a href="https://youtube.com/@nuttlos6347" target="_blank" rel="noopener noreferrer">Nutt-Los auf YouTube</a> – Kritische und informative Video-Essays zum Thema.</li>
                 </ul>
             </section>
-            <section id="cta" role="tabpanel" aria-labelledby="tab-cta" class="content-section">
+            <section id="cta" aria-labelledby="nav-cta" class="content-section">
                 <h2 tabindex="-1">Werden Sie zum Systemwandler</h2>
                 <p>Wissen ist der erste Schritt, Handeln der nächste. Die Zukunft wird von denen gestaltet, die den Mut haben, sie neu zu denken. Hier sind Ihre ersten Missionen:</p>
                 <ul>
@@ -167,12 +203,20 @@
                     <li><strong>Mission 2:</strong> Fragen Sie Ihren lokalen Abgeordneten per E-Mail, wie er oder sie zur Einrichtung von Bürgerräten auf kommunaler Ebene steht.</li>
                     <li><strong>Mission 3:</strong> Vertiefen Sie Ihr Wissen mit einer der oben genannten Ressourcen und bilden Sie sich eine fundierte Meinung.</li>
                 </ul>
-                <a href="https://losdemokratie.de/antrag" target="_blank" rel="noopener noreferrer" class="btn btn-cta">Jetzt Organisationen unterstützen</a>
+                <a href="https://losdemokratie.de/antrag" target="_blank" rel="noopener noreferrer" class="btn btn-cta">Werde Teil der Bewegung</a>
+                
+                <div class="share-section">
+                    <h4>Verbreiten Sie die Idee</h4>
+                    <div class="share-buttons">
+                        <a href="#" id="share-email" class="share-btn" role="button" aria-label="Dossier per E-Mail teilen" target="_blank" rel="noopener noreferrer">E-Mail</a>
+                        <a href="#" id="share-x" class="share-btn" role="button" aria-label="Dossier auf X teilen" target="_blank" rel="noopener noreferrer">X / Twitter</a>
+                        <a href="#" id="share-facebook" class="share-btn" role="button" aria-label="Dossier auf Facebook teilen" target="_blank" rel="noopener noreferrer">Facebook</a>
+                    </div>
+                </div>
             </section>
         </article>
     </main>
 
-    <!-- NEU: Semantischer Footer -->
     <footer class="page-footer">
         <p>
             created by 
@@ -181,99 +225,18 @@
         </p>
     </footer>
 
-    <!-- Container für UI-Controls (wie Performance-Toggle) -->
     <div class="ui-controls-container">
         <button id="perf-toggle" class="perf-toggle-button" title="Animationen an-/ausschalten">✨ Animationen an</button>
     </div>
 
-    <!-- === JAVASCRIPT 14.4 (Final) === -->
+    <!-- === ÜBERARBEITETES JAVASCRIPT 14.7 (Robuster & Semantisch korrekt) === -->
     <script type="module">
     class PhoenixDossier {
         constructor() {
-            this.isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            this.isDesktop = window.innerWidth > 1024;
-            this.isLowPerformance = false;
-            this.ticking = false;
-
             this.DOM = {
-                headerContent: document.querySelector('.header-content'),
                 progressBar: document.querySelector('.scroll-progress-bar'),
-                tabs: Array.from(document.querySelectorAll('[role="tab"]')),
-                sections: Array.from(document.querySelectorAll('.content-section')),
                 liveRegion: document.querySelector('[aria-live="polite"]'),
-                perfToggle: document.getElementById('perf-toggle')
-            };
-
-            this._setupEventListeners();
-            this._setupObservers();
-            this._updateOnScroll();
-        }
-
-        _setupEventListeners() {
-            window.addEventListener('scroll', () => {
-                if (!this.ticking) {
-                    window.requestAnimationFrame(() => {
-                        this._updateOnScroll();
-                        this.ticking = false;
-                    });
-                    this.ticking = true;
-                }
-            }, { passive: true });
-
-            if (this.isDesktop) {
-                window.addEventListener('mousemove', e => {
-                    if (this.isLowPerformance || this.isReducedMotion) return;
-                    
-                    const x = (e.clientX / window.innerWidth - 0.5) * 2;
-                    const y = (e.clientY / window.innerHeight - 0.5) * 2;
-                    document.documentElement.style.setProperty('--aurora-x', `${x * 100}px`);
-                    document.documentElement.style.setProperty('--aurora-y', `${y * 100}px`);
-                });
-            }
-            
-            this.DOM.tabs.forEach(tab => {
-                tab.addEventListener('click', e => {
-                    e.preventDefault();
-                    const targetId = tab.getAttribute('aria-controls');
-                    const targetSection = document.getElementById(targetId);
-                    if(targetSection) {
-                        targetSection.scrollIntoView({ behavior: 'smooth' });
-                        const heading = targetSection.querySelector('h2');
-                        if (heading) {
-                           heading.focus({ preventScroll: true });
-                           this.DOM.liveRegion.textContent = `Abschnitt ${heading.textContent} wurde geladen.`;
-                        }
-                    }
-                });
-            });
-
-            if(this.DOM.perfToggle) {
-                this.DOM.perfToggle.addEventListener('click', () => {
-                    this.isLowPerformance = !this.isLowPerformance;
-                    document.body.classList.toggle('low-performance-mode', this.isLowPerformance);
-                    this.DOM.perfToggle.textContent = this.isLowPerformance ? '✨ Animationen aus' : '✨ Animationen an';
-                });
-            }
-        }
-
-        _setupObservers() {
-            if (this.isReducedMotion) return;
-
-            const scrollSpyObserver = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    const id = entry.target.getAttribute('id');
-                    const tab = this.DOM.tabs.find(t => t.getAttribute('aria-controls') === id);
-                    if (tab) {
-                        tab.classList.toggle('is-active', entry.isIntersecting);
-                    }
-                });
-            }, { rootMargin: "-40% 0px -55% 0px" });
-
-            this.DOM.sections.forEach(section => scrollSpyObserver.observe(section));
-
-            const completionObserver = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting && entry.boundingClientRect.bottom < 0) {
-                        const id = entry.target.getAttribute('id');
-                        const tab = this.DOM.tabs.find(t => t.getAttribute('aria-controls') === id);
-             
+                sections: Array.from(document.querySelectorAll('.content-section')),
+                // GEÄNDERT: Korrekter Selektor für Navigationslinks
+                navLinks: Array.from(document.querySelectorAll('.bento-nav .bento-cell')),
+          
