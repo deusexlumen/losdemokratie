@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Losdemokratie | Das Dossier (Phoenix Edition v3.6 - Expert Review)</title>
+    <title>Losdemokratie | Das Dossier (Phoenix Edition v3.7 - Expert Review)</title>
     
     <!-- Meta-Tags für SEO & Social Media -->
     <meta name="description" content="Ein interaktives Dossier zur Isonomie. Architektonisch überlegen, maximal performant und mit einer User Experience, die an Magie grenzt.">
@@ -11,7 +11,7 @@
     <link rel="canonical" href="https://deusexlumen.github.io/losdemokratie/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://deusexlumen.github.io/losdemokratie/">
-    <meta property="og:title" content="Losdemokratie | Das Dossier (Phoenix Edition v3.6)">
+    <meta property="og:title" content="Losdemokratie | Das Dossier (Phoenix Edition v3.7)">
     <meta property="og:description" content="Ein interaktives Dossier, das die Demokratiekrise analysiert und mit der Losdemokratie einen konkreten Lösungsweg aufzeigt.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80">
     
@@ -343,6 +343,7 @@
             this.setupIntersectionObserver(); 
             this.checkInitialPerfMode();
             this.setupCustomAudioPlayers();
+            // Animations are now set up by default, unless low-perf mode is detected
             if (!this.state.isLowPerfMode) {
                 this.setupAnimations();
             }
@@ -621,7 +622,7 @@
         togglePerformanceMode() {
             this.state.isLowPerfMode = !this.state.isLowPerfMode;
             this.DOM.body.classList.toggle('low-performance-mode', this.state.isLowPerfMode);
-            localStorage.setItem('lowPerfMode', this.state.isLowPerfMode);
+            localStorage.setItem('lowPerfMode', this.state.isLowPerfMode.toString());
             this.DOM.perfToggleBtn.textContent = this.state.isLowPerfMode ? '✨ Animationen aus' : '✨ Animationen an';
             this.DOM.perfToggleBtn.setAttribute('aria-pressed', this.state.isLowPerfMode.toString());
             this.DOM.liveRegion.textContent = `Animationen wurden ${this.state.isLowPerfMode ? 'deaktiviert' : 'aktiviert'}.`;
@@ -632,12 +633,19 @@
             }
         }
 
-        checkInitialPerfMode() { 
-            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (localStorage.getItem('lowPerfMode') === 'true' || prefersReducedMotion) { 
-                this.state.isLowPerfMode = false;
-                this.togglePerformanceMode(); 
-            } 
+        // *** ÄNDERUNG HIER ***
+        // Die Logik wurde vereinfacht, um die Intention klarer zu machen.
+        // Animationen sind standardmäßig AN. Nur wenn der Nutzer explizit reduzierte Bewegung wünscht
+        // (per Betriebssystem oder vorherigem Klick), werden sie deaktiviert.
+        checkInitialPerfMode() {
+            const wantsReducedMotion = localStorage.getItem('lowPerfMode') === 'true' 
+                                      || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
+            if (wantsReducedMotion) {
+                // Der Standardzustand ist `isLowPerfMode = false` (Animationen an).
+                // Der `togglePerformanceMode` schaltet diesen Zustand um.
+                this.togglePerformanceMode();
+            }
         }
 
         setupShareLinks() {
