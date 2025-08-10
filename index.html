@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Losdemokratie | Das Dossier (Phoenix Edition v3.7 - Expert Review)</title>
-    
-    <!-- Meta-Tags für SEO & Social Media -->
-    <meta name="description" content="Ein interaktives Dossier zur Isonomie. Architektonisch überlegen, maximal performant und mit einer User Experience, die an Magie grenzt.">
-    <meta name="keywords" content="Isonomie, Losdemokratie, Web-Anwendung, Stasis, Tyrannei, UX, Performance, Architektur, Systemwandel, Demokratiekrise">
-    <link rel="canonical" href="https://deusexlumen.github.io/losdemokratie/">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://deusexlumen.github.io/losdemokratie/">
-    <meta property="og:title" content="Losdemokratie | Das Dossier (Phoenix Edition v3.7)">
-    <meta property="og:description" content="Ein interaktives Dossier, das die Demokratiekrise analysiert und mit der Losdemokratie einen konkreten Lösungsweg aufzeigt.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80">
-    
-    <!-- Sicherheits-Header: Content Security Policy (CSP) -->
-    <meta http-equiv="Content-Security-Policy" content="
+  <html lang="de">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>
+        Losdemokratie | Das Dossier (Phoenix Edition v4.0 - Final & Complete)
+      </title>
+      <!-- Meta-Tags für SEO & Social Media -->
+        <meta name="description" content="Ein interaktives Dossier zur Isonomie. Architektonisch überlegen, maximal performant und mit einer User Experience, die an Magie grenzt.">
+        <meta name="keywords" content="Isonomie, Losdemokratie, Web-Anwendung, Stasis, Tyrannei, UX, Performance, Architektur, Systemwandel, Demokratiekrise">
+        <link rel="canonical" href="https://deusexlumen.github.io/losdemokratie/">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://deusexlumen.github.io/losdemokratie/">
+        <meta property="og:title" content="Losdemokratie | Das Dossier (Phoenix Edition v4.0)">
+        <meta property="og:description" content="Ein interaktives Dossier, das die Demokratiekrise analysiert und mit der Losdemokratie einen konkreten Lösungsweg aufzeigt.">
+        <meta property="og:image" content="https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80">
+        <!-- Sicherheits-Header: Content Security Policy (CSP) -->
+          <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
@@ -28,21 +28,20 @@
         base-uri 'self';
         form-action 'self';
     ">
-
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%2322d3ee%22/></svg>">
-
-    <!-- Font Preloading & Preconnecting für Performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7l.woff2" as="font" type="font/woff2" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Source+Sans+Pro:wght@400;700&display=swap"></noscript>
-    
-    <style>
-        /* HINWEIS: Für eine Produktionsumgebung sollten diese Stile in eine separate, minifizierte CSS-Datei ausgelagert werden, um das Caching zu verbessern. */
-        :root {
+          <!-- Favicon -->
+            <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>
+            <circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%2322d3ee%22/>
+          </svg>
+          ">
+          <!-- Font Preloading & Preconnecting mit variablen Fonts -->
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Source+Sans+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+            <noscript>
+              <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Source+Sans+Pro:ital,wght@0,200..900;1,200..900&display=swap">
+            </noscript>
+            <style>
+              :root {
             --bg-color: #0d1117; 
             --primary-color: #22d3ee; 
             --secondary-color: #4f46e5;
@@ -57,7 +56,7 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { font-family: var(--font-main); background-color: var(--bg-color); color: var(--text-color-dim); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; position: relative; cursor: auto; }
+        body { font-family: var(--font-main); background-color: var(--bg-color); color: var(--text-color-dim); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; position: relative; cursor: auto; font-synthesis: none; }
         .aurora-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; }
         body:not(.low-performance-mode) .aurora-background { filter: blur(120px); opacity: 0.7; }
         .aurora-background .blob { position: absolute; border-radius: 50%; }
@@ -67,18 +66,19 @@
         .scroll-progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary-color); transform-origin: 0%; transform: scaleX(0); z-index: 2000; will-change: transform; transition: background-color 1.5s ease; }
         .page-header { height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 2rem; position: relative; }
         .header-content { will-change: opacity, transform; }
-        .page-header h1 { font-size: clamp(2.8rem, 8vw, 6.5rem); color: var(--heading-color); }
+        .page-header h1 { font-size: clamp(2.8rem, 8vw, 6.5rem); color: var(--heading-color); font-weight: 800; }
         .page-header .highlight { color: var(--primary-color); transition: color 1.5s ease;}
-        .page-header .subtitle { font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--text-muted); margin-top: 1.5rem; text-wrap: balance; }
+        .page-header .subtitle { font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--text-muted); margin-top: 1.5rem; text-wrap: balance; font-weight: 400; }
         .narrative-interface { display: grid; grid-template-columns: 3fr 7fr; max-width: 1400px; margin: 5rem auto; padding: 0 1.5rem; gap: 3rem; align-items: start; }
         .bento-nav { position: sticky; top: 2rem; }
         .bento-grid { display: grid; gap: 1rem; list-style: none; }
-        .bento-cell { display: block; text-decoration: none; color: inherit; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; backdrop-filter: blur(12px); transition: border-color 1.5s ease, box-shadow 1.5s ease; position: relative; }
+        .bento-cell { display: block; text-decoration: none; color: inherit; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; backdrop-filter: blur(12px); transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease; position: relative; }
         .bento-cell.is-active { border-color: var(--primary-color); box-shadow: var(--shadow-glow); }
+        .bento-cell:not(.is-active):hover { box-shadow: 0 0 16px var(--primary-color-translucent, rgba(34, 211, 238, 0.2)); transform: translateY(-3px); }
         .bento-cell:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
-        .bento-cell h3 { color: var(--heading-color); margin-bottom: 0.25rem; font-size: 1.25rem; padding-right: 30px; }
-        .bento-cell p { font-size: 0.9rem; color: var(--text-muted); }
-        .bento-icon-wrapper { position: absolute; top: 1.5rem; right: 1.5rem; width: 24px; height: 24px; }
+        .bento-cell h3 { color: var(--heading-color); margin-bottom: 0.25rem; font-size: 1.25rem; padding-right: 30px; font-weight: 700; }
+        .bento-cell p { font-size: 0.9rem; color: var(--text-muted); font-weight: 400; }
+        .bento-icon-wrapper { position: absolute; top: 1.5rem; right: 1.5rem; width: 24px; height: 24px; will-change: transform; }
         .bento-checkmark, .bento-progress-circle { position: absolute; top: 0; left: 0; width: 100%; height: 100%; fill: none; }
         .bento-checkmark { stroke: var(--primary-color); stroke-width: 3; transition: stroke 1.5s ease; opacity: 0; }
         .bento-checkmark path { stroke-dasharray: 25; stroke-dashoffset: 25; }
@@ -86,13 +86,13 @@
         .bento-progress-circle .progress-track { stroke: var(--border-color); stroke-width: 2; }
         .bento-progress-circle .progress-path { stroke: var(--primary-color); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 63; stroke-dashoffset: 63; transition: stroke 1.5s ease; }
         .content-section { min-height: 80vh; padding: clamp(1rem, 5vh, 4rem) 0; }
-        .content-section h2 { font-size: clamp(2rem, 5vw, 2.5rem); color: var(--heading-color); margin-bottom: 2rem; position: sticky; top: 2rem; background: var(--bg-color); padding: 1rem 0; z-index: 10; }
-        .content-section h4 { font-family: var(--font-heading); color: var(--highlight-color); font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; transition: color 1.5s ease;}
-        .content-section p, .content-section li { font-size: 1.15rem; line-height: 1.8; color: color-mix(in srgb, var(--text-color-dim) calc(100% - var(--scroll-lerp) * 100%), var(--text-color-bright) calc(var(--scroll-lerp) * 100%)); }
+        .content-section h2 { font-size: clamp(2rem, 5vw, 2.5rem); color: var(--heading-color); margin-bottom: 2rem; position: sticky; top: 2rem; background: var(--bg-color); padding: 1rem 0; z-index: 10; font-weight: 800; }
+        .content-section h4 { font-family: var(--font-heading); color: var(--highlight-color); font-size: 1.4rem; margin-top: 2.5rem; margin-bottom: 1rem; transition: color 1.5s ease; font-weight: 700; }
+        .content-section p, .content-section li { font-size: 1.15rem; line-height: 1.8; color: color-mix(in srgb, var(--text-color-dim) calc(100% - var(--scroll-lerp) * 100%), var(--text-color-bright) calc(var(--scroll-lerp) * 100%)); font-weight: 400; }
         .content-section p + p, .content-section h4 + p { margin-top: 1.5rem; }
         body:not(.low-performance-mode) .content-section p, body:not(.low-performance-mode) .content-section li { transition: color 0.1s linear; }
         .content-section ul { padding-left: 1.5rem; list-style-position: outside; margin-top: 1.5rem; }
-        .content-section a { color: var(--primary-color); text-decoration: none; font-weight: bold; transition: color 1.5s ease;}
+        .content-section a { color: var(--primary-color); text-decoration: none; font-weight: 700; transition: color 1.5s ease;}
         .content-section a:hover, .content-section a:focus-visible { color: var(--highlight-color); text-decoration: underline; }
         .btn { display: inline-block; background-color: var(--primary-color); color: var(--bg-color); padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; margin-top: 1.5rem; box-shadow: 0 4px 15px rgba(34, 211, 238, 0.2); transition: transform 0.3s, box-shadow 0.3s, background-color 1.5s, color 0.3s; }
         .btn:hover, .btn:focus-visible { transform: scale(1.05) translateY(-2px); box-shadow: 0 8px 25px rgba(34, 211, 238, 0.3); }
@@ -104,28 +104,38 @@
         .page-footer a { color: var(--primary-color); font-weight: normal; transition: color 1.5s ease;}
         .page-footer a:hover, .page-footer a:focus-visible { color: var(--highlight-color); text-decoration: underline; }
         .audio-feature-box { background: rgba(22, 27, 34, 0.7); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem 2rem; margin: 2.5rem 0; backdrop-filter: blur(10px); }
-        .audio-feature-box h4 { color: var(--highlight-color); font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 0.5rem; margin-top: 0; transition: color 1.5s ease;}
+        .audio-feature-box h4 { color: var(--highlight-color); font-family: var(--font-heading); font-size: 1.2rem; margin-bottom: 0.5rem; margin-top: 0; transition: color 1.5s ease; font-weight: 700;}
         .audio-feature-box .audio-description { font-size: 1rem !important; line-height: 1.6 !important; margin-bottom: 1.5rem; color: var(--text-muted) !important; }
         .audio-player-hidden { display: none; }
         .custom-audio-player { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
-        .play-pause-btn { background: none; border: 2px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0; flex-shrink: 0; transition: background-color 0.3s, border-color 1.5s; }
-        .play-pause-btn:hover, .play-pause-btn:focus-visible { background-color: rgba(255,255,255,0.1); }
-        .play-pause-btn:disabled { cursor: not-allowed; opacity: 0.5; }
-        .play-pause-btn svg { fill: var(--primary-color); width: 18px; height: 18px; transition: fill 1.5s ease; }
+        .skip-btn, .play-pause-btn { background: none; border: 2px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; padding: 0; flex-shrink: 0; transition: background-color 0.3s, border-color 1.5s, opacity 0.3s; }
+        .skip-btn:hover, .play-pause-btn:hover, .skip-btn:focus-visible, .play-pause-btn:focus-visible { background-color: rgba(255,255,255,0.1); }
+        .skip-btn:disabled, .play-pause-btn:disabled { cursor: not-allowed; opacity: 0.5; }
+        .skip-btn svg, .play-pause-btn svg { fill: var(--primary-color); width: 22px; height: 22px; transition: fill 1.5s ease; }
+        .play-pause-btn svg { width: 18px; height: 18px; }
         .play-pause-btn .icon-play { display: block; }
         .play-pause-btn .icon-pause { display: none; }
         .custom-audio-player.is-playing .icon-play { display: none; }
         .custom-audio-player.is-playing .icon-pause { display: block; }
-        .audio-progress-container { flex-grow: 1; height: 8px; background-color: rgba(255,255,255,0.1); border-radius: 4px; cursor: pointer; transition: background-color 0.3s ease; }
+        .speed-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-family: var(--font-heading); font-weight: 700; font-size: 0.9rem; padding: 0.5rem; border-radius: 4px; min-width: 50px; text-align: center; transition: background-color 0.2s ease, color 0.2s ease, opacity 0.3s; font-variant-numeric: tabular-nums;}
+        .speed-btn:hover, .speed-btn:focus-visible { background-color: rgba(255,255,255,0.1); color: var(--text-color-bright); }
+        .speed-btn:disabled { cursor: not-allowed; opacity: 0.5; }
+        .audio-progress-container { flex-grow: 1; height: 8px; background-color: rgba(255,255,255,0.1); border-radius: 4px; cursor: pointer; transition: background-color 0.3s ease, pointer-events 0.3s; }
         .audio-progress-bar { width: 0%; height: 100%; background-color: var(--primary-color); border-radius: 4px; transition: background-color 1.5s ease; }
-        .audio-time { font-size: 0.85rem; color: var(--text-muted); min-width: 45px; text-align: center; font-variant-numeric: tabular-nums; }
+        .audio-time { font-size: 0.85rem; color: var(--text-muted); min-width: 90px; display: flex; justify-content: center; font-variant-numeric: tabular-nums; gap: 0.25rem; }
         .custom-audio-player.has-error .audio-progress-container { background-color: #402020; }
         .audio-visualizer { width: 100px; height: 30px; flex-shrink: 0; opacity: 0.6; transition: opacity 0.3s ease; }
         .custom-audio-player:hover .audio-visualizer { opacity: 1; }
+        #knowledge-distillate { margin-top: 5rem; padding: 3rem 0; border-top: 1px solid var(--border-color); opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; }
+        #knowledge-distillate.is-visible { opacity: 1; transform: translateY(0); }
+        #distillate-title { font-size: clamp(2rem, 5vw, 2.5rem); color: var(--heading-color); margin-bottom: 2rem; font-weight: 800; }
+        #knowledge-distillate ul { list-style: none; padding: 0; counter-reset: takeaway-counter; }
+        #knowledge-distillate li { font-size: 1.2rem; line-height: 1.7; color: var(--text-color-bright); margin-bottom: 1.5rem; padding-left: 2.5rem; position: relative; }
+        #knowledge-distillate li::before { counter-increment: takeaway-counter; content: counter(takeaway-counter); position: absolute; left: 0; top: 0.2rem; width: 1.8rem; height: 1.8rem; background: var(--primary-color); color: var(--bg-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-weight: 700; transition: background-color 1.5s ease; }
         .final-actions { margin-top: 5rem; }
         .final-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2rem; }
-        #final-cta { font-size: clamp(2rem, 5vw, 2.5rem); color: var(--heading-color); }
-        .final-actions-grid h3 { font-family: var(--font-heading); color: var(--highlight-color); font-size: 1.4rem; margin-bottom: 1rem; transition: color 1.5s ease; }
+        #final-cta { font-size: clamp(2rem, 5vw, 2.5rem); color: var(--heading-color); font-weight: 800;}
+        .final-actions-grid h3 { font-family: var(--font-heading); color: var(--highlight-color); font-size: 1.4rem; margin-bottom: 1rem; transition: color 1.5s ease; font-weight: 700; }
         .final-actions-grid p, .final-actions-grid li { font-size: 1.1rem; line-height: 1.7; }
         .final-actions-grid ul { list-style: none; padding: 0; margin-top: 1.5rem; }
         .final-actions-grid li { margin-bottom: 1rem; transition: transform 0.3s ease, color 0.3s ease; }
@@ -135,7 +145,6 @@
         .share-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: bold; transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s; }
         .share-btn:hover, .share-btn:focus-visible { background-color: var(--bg-color); color: var(--text-color-bright); border-color: var(--primary-color); transform: translateY(-2px); }
         .share-btn svg { transition: fill 0.3s ease; }
-        /* Visually hidden class for accessibility */
         .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
         @media (max-width: 1024px) {
             .narrative-interface { grid-template-columns: 1fr; }
@@ -143,159 +152,787 @@
             .perf-toggle-button { display: none; }
             .final-actions-grid { grid-template-columns: 1fr; }
             .audio-visualizer { display: none; }
+            .custom-audio-player { flex-wrap: wrap; }
+            .audio-progress-container { order: -1; width: 100%; margin-bottom: 1rem; }
         }
-    </style>
-</head>
-<body>
-    <div class="aurora-background" aria-hidden="true">
-        <div class="blob b1"></div>
-        <div class="blob b2"></div>
-    </div>
-    <div class="scroll-progress-bar" aria-hidden="true"></div>
-    <div aria-live="polite" class="sr-only"></div>
-    
-    <header class="page-header">
-        <div class="header-content">
-            <h1>Der Plan für einen <span class="highlight">echten</span> Systemwandel.</h1>
-            <p class="subtitle">Das umfassende Dossier zur Isonomie.</p>
-        </div>
-    </header>
-
-    <main id="main-content" class="narrative-interface">
-        <nav class="bento-nav" id="bento-navigation" aria-label="Dossier Navigation">
-            <ul class="bento-grid">
-                <li><a href="#part1" class="bento-cell" id="nav-part1"><div class="bento-icon-wrapper"><svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true"><circle class="progress-track" cx="12" cy="12" r="10"></circle><circle class="progress-path" cx="12" cy="12" r="10"></circle></svg><svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.75L9 17.75L20 6.75"></path></svg></div><h3>1. Der Ursprung</h3><p>Die Krise der Gegenwart.</p></a></li>
-                <li><a href="#part2" class="bento-cell" id="nav-part2"><div class="bento-icon-wrapper"><svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true"><circle class="progress-track" cx="12" cy="12" r="10"></circle><circle class="progress-path" cx="12" cy="12" r="10"></circle></svg><svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.75L9 17.75L20 6.75"></path></svg></div><h3>2. Die Diagnose</h3><p>Stasis & Tyrannei.</p></a></li>
-                <li><a href="#part3" class="bento-cell" id="nav-part3"><div class="bento-icon-wrapper"><svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true"><circle class="progress-track" cx="12" cy="12" r="10"></circle><circle class="progress-path" cx="12" cy="12" r="10"></circle></svg><svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.75L9 17.75L20 6.75"></path></svg></div><h3>3. Die Therapie</h3><p>Die vergessene Lösung.</p></a></li>
-                <li><a href="#part4" class="bento-cell" id="nav-part4"><div class="bento-icon-wrapper"><svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true"><circle class="progress-track" cx="12" cy="12" r="10"></circle><circle class="progress-path" cx="12" cy="12" r="10"></circle></svg><svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.75L9 17.75L20 6.75"></path></svg></div><h3>4. Die Heilung</h3><p>Isonomie in Aktion.</p></a></li>
-                <li><a href="#part5" class="bento-cell" id="nav-part5"><div class="bento-icon-wrapper"><svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true"><circle class="progress-track" cx="12" cy="12" r="10"></circle><circle class="progress-path" cx="12" cy="12" r="10"></circle></svg><svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.75L9 17.75L20 6.75"></path></svg></div><h3>5. Die Hürden</h3><p>Falsche Feindbilder.</p></a></li>
-                <li><a href="#part6" class="bento-cell" id="nav-part6"><div class="bento-icon-wrapper"><svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true"><circle class="progress-track" cx="12" cy="12" r="10"></circle><circle class="progress-path" cx="12" cy="12" r="10"></circle></svg><svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.75L9 17.75L20 6.75"></path></svg></div><h3>6. Der Ausblick</h3><p>Politische Mündigkeit.</p></a></li>
-            </ul>
-        </nav>
-        <article class="focus-pane">
-            <section id="part1" aria-labelledby="nav-part1" class="content-section">
-                <h2 tabindex="-1">Die Krise unserer Zeit</h2>
-                <div class="audio-feature-box">
-                    <h4>Audio-Essay Teil 1: Ein System am Limit</h4>
-                    <p class="audio-description">Eine Analyse der Machtkonzentration, überforderter Idealisten und der lähmenden Konsequenzen unseres politischen Systems.</p>
-                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20EINS__Isonomie__Entlarvt_die_faktische_Aristokratie_und_die_Falle_der_Politik.m4a" playsinline crossorigin="anonymous"></audio>
-                    <div class="custom-audio-player"><button class="play-pause-btn" aria-label="Audio-Essay Teil 1 abspielen"><svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg><svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button><div class="audio-progress-container"><div class="audio-progress-bar"></div></div><canvas class="audio-visualizer" width="100" height="40" aria-hidden="true"></canvas><span class="audio-time current-time">00:00</span><span class="audio-time total-time">00:00</span></div>
-                </div>
-                <p>Alles beginnt mit einem Gefühl. Einem leisen, aber nagenden Zweifel an der Art und Weise, wie wir als Gesellschaft Entscheidungen treffen. Polarisierung, Stillstand, Skandale – die Symptome sind allgegenwärtig.</p>
-                <p>Dieses Dossier ist die Antwort auf die Frage: "Muss das so sein?" Wir nehmen Sie mit auf eine Reise von dieser anfänglichen Überforderung hin zu einer klaren Analyse und einem radikal neuen, aber historisch bewährten Lösungsansatz.</p>
-                <h4>Das Problem der Machtkonzentration</h4>
-                <p>Moderne Gesellschaften sind faktisch <strong>Aristokratien</strong>, in denen die politische Macht in den Händen Weniger liegt. Die Rolle von Wahlen und Parteien fungiert dabei oft als bloßer inneraristokratischer Machtkampf, der keine echte Demokratisierung bewirkt.</p>
-            </section>
-            
-            <section id="part2" aria-labelledby="nav-part2" class="content-section">
-                <h2 tabindex="-1">Diagnose: Stasis & Tyrannei</h2>
-                <div class="audio-feature-box">
-                    <h4>Audio-Essay Teil 2: Die düstere Abwärtsspirale</h4>
-                    <p class="audio-description">Wie der ewige Parteienkampf (Stasis) den Ruf nach dem "starken Mann" (Tyrannei) erzeugt und unsere Gesellschaft lähmt.</p>
-                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20ZWEI__Stasis%2C_Tyrannis%2C_Idiotie__Die_d%C3%BCstere_Abw%C3%A4rtsspirale_der_Demokratie.m4a" playsinline crossorigin="anonymous"></audio>
-                    <div class="custom-audio-player"><button class="play-pause-btn" aria-label="Audio-Essay Teil 2 abspielen"><svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg><svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button><div class="audio-progress-container"><div class="audio-progress-bar"></div></div><canvas class="audio-visualizer" width="100" height="40" aria-hidden="true"></canvas><span class="audio-time current-time">00:00</span><span class="audio-time total-time">00:00</span></div>
-                </div>
-                <p>Die repräsentative Demokratie, wie wir sie kennen, leidet unter chronischen Krankheiten. Der Wahlkampfzirkus zwingt Politiker zu kurzfristigem Denken und Populismus. Ein zentrales Problem ist die fehlende Deliberation, die zu <strong>massiver Handlungsunfähigkeit</strong> führt.</p>
-                <div class="audio-feature-box">
-                    <h4>Exkurs: Selbstoptimierung als Politikvermeidung</h4>
-                    <p class="audio-description">Ein Symptom der Krise: Wie der Fokus auf persönliche Perfektion von strukturellen politischen Problemen ablenkt und den Status quo zementiert.</p>
-                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/Warum_Selbstoptimierung_eine_Politikvermeidung_ist.m4a" playsinline crossorigin="anonymous"></audio>
-                    <div class="custom-audio-player"><button class="play-pause-btn" aria-label="Audio-Exkurs zur Selbstoptimierung abspielen"><svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg><svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button><div class="audio-progress-container"><div class="audio-progress-bar"></div></div><canvas class="audio-visualizer" width="100" height="40" aria-hidden="true"></canvas><span class="audio-time current-time">00:00</span><span class="audio-time total-time">00:00</span></div>
-                </div>
-                <h4>Das Problem der ungleichen Machtverteilung</h4>
-                <p>Sobald Sesshaftigkeit und Eigentum entstehen, bilden sich Gesellschaften tendenziell als <strong>Aristokratien</strong> aus. Dies führt zu <strong>beständigen Parteikämpfen</strong> (Stasis), die systemisch unproduktiv sind und zu gesellschaftlicher Lähmung führen.</p>
-            </section>
-            
-            <!-- Weitere Sektionen (3-6) folgen dem gleichen, korrigierten Muster -->
-            <section id="part3" aria-labelledby="nav-part3" class="content-section">
-                <h2 tabindex="-1">Therapie: Die vergessene Lösung</h2>
-                <div class="audio-feature-box">
-                    <h4>Audio-Essay Teil 3: Die vergessene Lösung</h4>
-                    <p class="audio-description">Was Isonomie wirklich ist und warum das Losverfahren der Schlüssel zur Auflösung politischer Privilegien und zur Herstellung echter Gleichheit ist.</p>
-                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20DREI__Isonomie_%26_Losverfahren__Die_vergessene_L%C3%B6sung_f%C3%BCr_politische_Gleichheit_.m4a" playsinline crossorigin="anonymous"></audio>
-                    <div class="custom-audio-player"><button class="play-pause-btn" aria-label="Audio-Essay Teil 3 abspielen"><svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg><svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button><div class="audio-progress-container"><div class="audio-progress-bar"></div></div><canvas class="audio-visualizer" width="100" height="40" aria-hidden="true"></canvas><span class="audio-time current-time">00:00</span><span class="audio-time total-time">00:00</span></div>
-                </div>
-                <p>Die Losdemokratie, auch Sortition oder <strong>Isonomie</strong> genannt, ist eine kraftvolle Behandlungsmethode. Sie ergänzt Wahlen durch <strong>geloste Bürgerräte</strong>, die repräsentativ durch Zufallsauswahl besetzt sind und nach intensiver Beratung Empfehlungen erarbeiten.</p>
-            </section>
-
-            <section id="part4" aria-labelledby="nav-part4" class="content-section">
-                <h2 tabindex="-1">Heilung: Isonomie in Aktion</h2>
-                <div class="audio-feature-box">
-                    <h4>Audio-Essay Teil 4: Eine Heilung für Gesellschaft und Psyche</h4>
-                    <p class="audio-description">Wie Isonomie die Gesellschaft heilt, indem sie Stasis auflöst, Vertrauen schafft und den Einzelnen vom Druck der Selbstoptimierung entlastet.</p>
-                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20VIER__Isonomie_durch_Losverfahren__Eine_Heilung_f%C3%BCr_Gesellschaft_und_Psyche_.m4a" playsinline crossorigin="anonymous"></audio>
-                    <div class="custom-audio-player"><button class="play-pause-btn" aria-label="Audio-Essay Teil 4 abspielen"><svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg><svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button><div class="audio-progress-container"><div class="audio-progress-bar"></div></div><canvas class="audio-visualizer" width="100" height="40" aria-hidden="true"></canvas><span class="audio-time current-time">00:00</span><span class="audio-time total-time">00:00</span></div>
-                </div>
-                <p>Isonomie beendet die unproduktiven Parteienkämpfe und schafft einen <strong>herrschaftsfreien Raum</strong> (Anarchie, aber nicht Anomie). Dadurch wird die kollektive Handlungsfähigkeit wiederhergestellt.</p>
-            </section>
-
-            <section id="part5" aria-labelledby="nav-part5" class="content-section">
-                <h2 tabindex="-1">Die Hürden: Falsche Feindbilder</h2>
-                <div class="audio-feature-box">
-                    <h4>Audio-Essay Teil 5: Risiken & Missverständnisse</h4>
-                    <p class="audio-description">Warum wir die Antike vergaßen, die Angst vor dem "Rule of the Mob" eine Illusion ist und welche Bürgerpflichten mit echter Freiheit einhergehen.</p>
-                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20F%C3%9CNF__Isonomie__Warum_wir_politische_Gleichheit_durch_Losverfahren_vergessen_haben_%E2%80%93_Risiken%2C_Missverst%C3%A4nd.m4a" playsinline crossorigin="anonymous"></audio>
-                    <div class="custom-audio-player"><button class="play-pause-btn" aria-label="Audio-Essay Teil 5 abspielen"><svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg><svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button><div class="audio-progress-container"><div class="audio-progress-bar"></div></div><canvas class="audio-visualizer" width="100" height="40" aria-hidden="true"></canvas><span class="audio-time current-time">00:00</span><span class="audio-time total-time">00:00</span></div>
-                </div>
-                <p>Die moderne Zeit verwechselt oft Anarchie (Herrschaftsfreiheit) mit Anomie (Gesetzlosigkeit) und fürchtet, dass allgemeine politische Beteiligung zu Chaos führt. Dies ist eine <strong>aristokratische Illusion</strong>, die den Weg zur Isonomie versperrt.</p>
-            </section>
-
-            <section id="part6" aria-labelledby="nav-part6" class="content-section">
-                <h2 tabindex="-1">Ausblick: Der Quantensprung</h2>
-                <div class="audio-feature-box">
-                    <h4>Audio-Essay Teil 6: Der Quantensprung zur Mündigkeit</h4>
-                    <p class="audio-description">Eine Vision für eine wahrhaft politische, stabile und freie Gesellschaft, die die Last und Lust der Politik gerecht auf alle verteilt.</p>
-                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20SECHS__Isonomie_und_Losverfahren__Der_Quantensprung_zur_politischen_M%C3%BCndigkeit.m4a" playsinline crossorigin="anonymous"></audio>
-                    <div class="custom-audio-player"><button class="play-pause-btn" aria-label="Audio-Essay Teil 6 abspielen"><svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg><svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg></button><div class="audio-progress-container"><div class="audio-progress-bar"></div></div><canvas class="audio-visualizer" width="100" height="40" aria-hidden="true"></canvas><span class="audio-time current-time">00:00</span><span class="audio-time total-time">00:00</span></div>
-                </div>
-                <p>Die Isonomie, basierend auf dem Losverfahren, ist der einzige Weg, die Probleme der Machtkonzentration dauerhaft zu lösen. Sie verteilt die <strong>Last und Lust des Politischen</strong> gerecht auf alle erwachsenen Mitglieder der Gesellschaft, wodurch die Verantwortung <em>sehr gut tragbar</em> wird.</p>
-            </section>
-            
-            <div class="final-actions"><h2 id="final-cta">Werden Sie zum Systemwandler</h2>
-                <div class="final-actions-grid">
-                    <div>
-                        <h3>Ihre Mission</h3>
-                        <p>Wissen ist der erste Schritt, Handeln der nächste. Hier sind Ihre ersten Missionen:</p>
-                        <ul>
-                            <li><strong>Teilen:</strong> Senden Sie dieses Dossier an eine Person, die politikverdrossen, aber offen für neue Ideen ist.</li>
-                            <li><strong>Fragen:</strong> Kontaktieren Sie Ihren lokalen Abgeordneten und fragen Sie, wie er oder sie zur Einrichtung von Bürgerräten steht.</li>
-                            <li><strong>Vertiefen:</strong> Nutzen Sie die Ressourcen, um sich eine fundierte Meinung zu bilden.</li>
-                        </ul>
-                        <a href="https://losdemokratie.de/antrag" target="_blank" rel="noopener noreferrer" class="btn btn-cta">Teil der Bewegung werden</a>
-                        <div class="share-buttons">
-                            <a href="#" id="share-email" class="share-btn" role="button" aria-label="Dieses Dossier per E-Mail teilen" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"></path></svg><span>E-Mail</span></a>
-                            <a href="#" id="share-x" class="share-btn" role="button" aria-label="Dieses Dossier auf X/Twitter teilen" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg><span>X/Twitter</span></a>
-                            <a href="#" id="share-facebook" class="share-btn" role="button" aria-label="Dieses Dossier auf Facebook teilen" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"></path></svg><span>Facebook</span></a>
-                        </div>
-                    </div>
-                    <div>
-                        <h3>Ihre Werkzeugkiste</h3>
-                        <p>Hier finden Sie eine Auswahl an Ressourcen, um tiefer in die Welt der Losdemokratie einzutauchen:</p>
-                        <ul>
-                            <li><strong>Webseite:</strong><a href="https://losdemokratie.de/" target="_blank" rel="noopener noreferrer"> Losdemokratie.de</a> – Die zentrale Anlaufstelle.</li>
-                            <li><strong>Buch:</strong><a href="https://www.wallstein-verlag.de/9783835318717-david-van-reybrouck-gegen-wahlen.html" target="_blank" rel="noopener noreferrer"> "Gegen Wahlen"</a> von David Van Reybrouck.</li>
-                            <li><strong>Artikel:</strong><a href="https://www.zeit.de/2017/04/rechtspopulismus-demokratie-wahlen-buergerversammlungen-politisches-system-griechenland/komplettansicht" target="_blank" rel="noopener noreferrer"> "Demokratie ohne Wahlen?"</a> (Zeit Online).</li>
-                            <li><strong>Video-Kanal:</strong><a href="https://youtube.com/@nuttlos6347" target="_blank" rel="noopener noreferrer"> Nutt-Los auf YouTube</a>.</li>
-                        </ul>
-                    </div>
-                </div>
+            </style>
+          </head>
+          <body>
+            <div class="aurora-background" aria-hidden="true">
+              <div class="blob b1">
+              </div>
+              <div class="blob b2">
+              </div>
             </div>
-        </article>
-    </main>
-
-    <footer class="page-footer">
-        <p>created by <a href="https://youtube.com/@deusexlumen" target="_blank" rel="noopener noreferrer">deus.ex.lumen</a> 2025</p>
-    </footer>
-
-    <div class="ui-controls-container">
-        <button id="perf-toggle" class="perf-toggle-button" title="Animationen an-/ausschalten" aria-pressed="false">✨ Animationen an</button>
-    </div>
-
-    <!-- HINWEIS: Für eine Produktionsumgebung sollten diese Skripte in eine separate, minifizierte JS-Datei ausgelagert werden. -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script type="module">
-      class PhoenixDossier {
+            <div class="scroll-progress-bar" aria-hidden="true">
+            </div>
+            <div aria-live="polite" class="sr-only">
+            </div>
+            <header class="page-header">
+              <div class="header-content">
+                <h1>
+                  Der Plan für einen
+                  <span class="highlight">
+                    echten
+                  </span>
+                  Systemwandel.
+                </h1>
+                <p class="subtitle">
+                  Das umfassende Dossier zur Isonomie.
+                </p>
+              </div>
+            </header>
+            <main id="main-content" class="narrative-interface">
+              <nav class="bento-nav" id="bento-navigation" aria-label="Dossier Navigation">
+                <ul class="bento-grid">
+                  <li>
+                    <a href="#part1" class="bento-cell" id="nav-part1">
+                      <div class="bento-icon-wrapper">
+                        <svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle class="progress-track" cx="12" cy="12" r="10">
+                          </circle>
+                          <circle class="progress-path" cx="12" cy="12" r="10">
+                          </circle>
+                        </svg>
+                        <svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M4 12.75L9 17.75L20 6.75">
+                          </path>
+                        </svg>
+                      </div>
+                      <h3>
+                        1. Der Ursprung
+                      </h3>
+                      <p>
+                        Die Krise der Gegenwart.
+                      </p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#part2" class="bento-cell" id="nav-part2">
+                      <div class="bento-icon-wrapper">
+                        <svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle class="progress-track" cx="12" cy="12" r="10">
+                          </circle>
+                          <circle class="progress-path" cx="12" cy="12" r="10">
+                          </circle>
+                        </svg>
+                        <svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M4 12.75L9 17.75L20 6.75">
+                          </path>
+                        </svg>
+                      </div>
+                      <h3>
+                        2. Die Diagnose
+                      </h3>
+                      <p>
+                        Stasis & Tyrannei.
+                      </p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#part3" class="bento-cell" id="nav-part3">
+                      <div class="bento-icon-wrapper">
+                        <svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle class="progress-track" cx="12" cy="12" r="10">
+                          </circle>
+                          <circle class="progress-path" cx="12" cy="12" r="10">
+                          </circle>
+                        </svg>
+                        <svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M4 12.75L9 17.75L20 6.75">
+                          </path>
+                        </svg>
+                      </div>
+                      <h3>
+                        3. Die Therapie
+                      </h3>
+                      <p>
+                        Die vergessene Lösung.
+                      </p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#part4" class="bento-cell" id="nav-part4">
+                      <div class="bento-icon-wrapper">
+                        <svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle class="progress-track" cx="12" cy="12" r="10">
+                          </circle>
+                          <circle class="progress-path" cx="12" cy="12" r="10">
+                          </circle>
+                        </svg>
+                        <svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M4 12.75L9 17.75L20 6.75">
+                          </path>
+                        </svg>
+                      </div>
+                      <h3>
+                        4. Die Heilung
+                      </h3>
+                      <p>
+                        Isonomie in Aktion.
+                      </p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#part5" class="bento-cell" id="nav-part5">
+                      <div class="bento-icon-wrapper">
+                        <svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle class="progress-track" cx="12" cy="12" r="10">
+                          </circle>
+                          <circle class="progress-path" cx="12" cy="12" r="10">
+                          </circle>
+                        </svg>
+                        <svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M4 12.75L9 17.75L20 6.75">
+                          </path>
+                        </svg>
+                      </div>
+                      <h3>
+                        5. Die Hürden
+                      </h3>
+                      <p>
+                        Falsche Feindbilder.
+                      </p>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#part6" class="bento-cell" id="nav-part6">
+                      <div class="bento-icon-wrapper">
+                        <svg class="bento-progress-circle" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle class="progress-track" cx="12" cy="12" r="10">
+                          </circle>
+                          <circle class="progress-path" cx="12" cy="12" r="10">
+                          </circle>
+                        </svg>
+                        <svg class="bento-checkmark" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M4 12.75L9 17.75L20 6.75">
+                          </path>
+                        </svg>
+                      </div>
+                      <h3>
+                        6. Der Ausblick
+                      </h3>
+                      <p>
+                        Politische Mündigkeit.
+                      </p>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+              <article class="focus-pane">
+                <section id="part1" aria-labelledby="nav-part1" class="content-section" data-takeaway="Die Konzentration politischer Macht in den Händen Weniger (Aristokratie) ist das Kernproblem moderner Gesellschaften und führt zu systemischem Stillstand.">
+                  <h2 tabindex="-1">
+                    Die Krise unserer Zeit
+                  </h2>
+                  <div class="audio-feature-box">
+                    <h4>
+                      Audio-Essay Teil 1: Ein System am Limit
+                    </h4>
+                    <p class="audio-description">
+                      Eine Analyse der Machtkonzentration, überforderter Idealisten und der lähmenden Konsequenzen unseres politischen Systems.
+                    </p>
+                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20EINS__Isonomie__Entlarvt_die_faktische_Aristokratie_und_die_Falle_der_Politik.m4a" playsinline crossorigin="anonymous">
+                    </audio>
+                    <div class="custom-audio-player">
+                      <button class="skip-btn" data-skip="-15" aria-label="15 Sekunden zurückspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12.5 6.07V4.58c0-.85-.88-1.33-1.61-.87l-7.79 4.44c-.6.34-.6.99 0 1.33l7.79 4.44c.73.46 1.61-.02 1.61-.87v-1.49c4.81.4 8.21 3.25 9.5 7.5-.6-2.5-2.79-4.5-5.5-5.52-2.31-.87-4.62-.87-7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="play-pause-btn" aria-label="Audio-Essay Teil 1 abspielen">
+                        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M8 5v14l11-7z">
+                          </path>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="skip-btn" data-skip="15" aria-label="15 Sekunden vorspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M11.5 6.07V4.58c0-.85.88-1.33 1.61-.87l7.79 4.44c.6.34.6.99 0 1.33l-7.79 4.44c-.73.46-1.61-.02-1.61-.87v-1.49c-4.81.4-8.21 3.25-9.5 7.5.6-2.5 2.79-4.5 5.5-5.52 2.31-.87 4.62-.87 7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <div class="audio-progress-container">
+                        <div class="audio-progress-bar">
+                        </div>
+                      </div>
+                      <canvas class="audio-visualizer" width="100" height="40" aria-hidden="true">
+                      </canvas>
+                      <div class="audio-time">
+                        <span class="current-time">
+                          00:00
+                        </span>
+                        &nbsp;/&nbsp;
+                        <span class="total-time">
+                          00:00
+                        </span>
+                      </div>
+                      <button class="speed-btn" aria-label="Wiedergabegeschwindigkeit ändern">
+                        1x
+                      </button>
+                    </div>
+                  </div>
+                  <p>
+                    Alles beginnt mit einem Gefühl. Einem leisen, aber nagenden Zweifel an der Art und Weise, wie wir als Gesellschaft Entscheidungen treffen. Polarisierung, Stillstand, Skandale – die Symptome sind allgegenwärtig.
+                  </p>
+                  <p>
+                    Dieses Dossier ist die Antwort auf die Frage: "Muss das so sein?" Wir nehmen Sie mit auf eine Reise von dieser anfänglichen Überforderung hin zu einer klaren Analyse und einem radikal neuen, aber historisch bewährten Lösungsansatz.
+                  </p>
+                  <h4>
+                    Das Problem der Machtkonzentration
+                  </h4>
+                  <p>
+                    Moderne Gesellschaften sind faktisch
+                    <strong>
+                      Aristokratien
+                    </strong>
+                    , in denen die politische Macht in den Händen Weniger liegt. Die Rolle von Wahlen und Parteien fungiert dabei oft als bloßer inneraristokratischer Machtkampf, der keine echte Demokratisierung bewirkt.
+                  </p>
+                </section>
+                <section id="part2" aria-labelledby="nav-part2" class="content-section" data-takeaway="Stasis (permanenter Parteienkampf) und die daraus resultierende Handlungsunfähigkeit erzeugen den Ruf nach Tyrannei (dem 'starken Mann') als vermeintliche Lösung.">
+                  <h2 tabindex="-1">
+                    Diagnose: Stasis & Tyrannei
+                  </h2>
+                  <div class="audio-feature-box">
+                    <h4>
+                      Audio-Essay Teil 2: Die düstere Abwärtsspirale
+                    </h4>
+                    <p class="audio-description">
+                      Wie der ewige Parteienkampf (Stasis) den Ruf nach dem "starken Mann" (Tyrannei) erzeugt und unsere Gesellschaft lähmt.
+                    </p>
+                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20ZWEI__Stasis%2C_Tyrannis%2C_Idiotie__Die_d%C3%BCstere_Abw%C3%A4rtsspirale_der_Demokratie.m4a" playsinline crossorigin="anonymous">
+                    </audio>
+                    <div class="custom-audio-player">
+                      <button class="skip-btn" data-skip="-15" aria-label="15 Sekunden zurückspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12.5 6.07V4.58c0-.85-.88-1.33-1.61-.87l-7.79 4.44c-.6.34-.6.99 0 1.33l7.79 4.44c.73.46 1.61-.02 1.61-.87v-1.49c4.81.4 8.21 3.25 9.5 7.5-.6-2.5-2.79-4.5-5.5-5.52-2.31-.87-4.62-.87-7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="play-pause-btn" aria-label="Audio-Essay Teil 2 abspielen">
+                        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M8 5v14l11-7z">
+                          </path>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="skip-btn" data-skip="15" aria-label="15 Sekunden vorspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M11.5 6.07V4.58c0-.85.88-1.33 1.61-.87l7.79 4.44c.6.34.6.99 0 1.33l-7.79 4.44c-.73.46-1.61-.02-1.61-.87v-1.49c-4.81.4-8.21 3.25-9.5 7.5.6-2.5 2.79-4.5 5.5-5.52 2.31-.87 4.62-.87 7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <div class="audio-progress-container">
+                        <div class="audio-progress-bar">
+                        </div>
+                      </div>
+                      <canvas class="audio-visualizer" width="100" height="40" aria-hidden="true">
+                      </canvas>
+                      <div class="audio-time">
+                        <span class="current-time">
+                          00:00
+                        </span>
+                        &nbsp;/&nbsp;
+                        <span class="total-time">
+                          00:00
+                        </span>
+                      </div>
+                      <button class="speed-btn" aria-label="Wiedergabegeschwindigkeit ändern">
+                        1x
+                      </button>
+                    </div>
+                  </div>
+                  <p>
+                    Die repräsentative Demokratie, wie wir sie kennen, leidet unter chronischen Krankheiten. Der Wahlkampfzirkus zwingt Politiker zu kurzfristigem Denken und Populismus. Ein zentrales Problem ist die fehlende Deliberation, die zu
+                    <strong>
+                      massiver Handlungsunfähigkeit
+                    </strong>
+                    führt.
+                  </p>
+                  <div class="audio-feature-box">
+                    <h4>
+                      Exkurs: Selbstoptimierung als Politikvermeidung
+                    </h4>
+                    <p class="audio-description">
+                      Ein Symptom der Krise: Wie der Fokus auf persönliche Perfektion von strukturellen politischen Problemen ablenkt und den Status quo zementiert.
+                    </p>
+                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/Warum_Selbstoptimierung_eine_Politikvermeidung_ist.m4a" playsinline crossorigin="anonymous">
+                    </audio>
+                    <div class="custom-audio-player">
+                      <button class="skip-btn" data-skip="-15" aria-label="15 Sekunden zurückspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12.5 6.07V4.58c0-.85-.88-1.33-1.61-.87l-7.79 4.44c-.6.34-.6.99 0 1.33l7.79 4.44c.73.46 1.61-.02 1.61-.87v-1.49c4.81.4 8.21 3.25 9.5 7.5-.6-2.5-2.79-4.5-5.5-5.52-2.31-.87-4.62-.87-7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="play-pause-btn" aria-label="Audio-Exkurs zur Selbstoptimierung abspielen">
+                        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M8 5v14l11-7z">
+                          </path>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="skip-btn" data-skip="15" aria-label="15 Sekunden vorspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M11.5 6.07V4.58c0-.85.88-1.33 1.61-.87l7.79 4.44c.6.34.6.99 0 1.33l-7.79 4.44c-.73.46-1.61-.02-1.61-.87v-1.49c-4.81.4-8.21 3.25-9.5 7.5.6-2.5 2.79-4.5 5.5-5.52 2.31-.87 4.62-.87 7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <div class="audio-progress-container">
+                        <div class="audio-progress-bar">
+                        </div>
+                      </div>
+                      <canvas class="audio-visualizer" width="100" height="40" aria-hidden="true">
+                      </canvas>
+                      <div class="audio-time">
+                        <span class="current-time">
+                          00:00
+                        </span>
+                        &nbsp;/&nbsp;
+                        <span class="total-time">
+                          00:00
+                        </span>
+                      </div>
+                      <button class="speed-btn" aria-label="Wiedergabegeschwindigkeit ändern">
+                        1x
+                      </button>
+                    </div>
+                  </div>
+                  <h4>
+                    Das Problem der ungleichen Machtverteilung
+                  </h4>
+                  <p>
+                    Sobald Sesshaftigkeit und Eigentum entstehen, bilden sich Gesellschaften tendenziell als
+                    <strong>
+                      Aristokratien
+                    </strong>
+                    aus. Dies führt zu
+                    <strong>
+                      beständigen Parteikämpfen
+                    </strong>
+                    (Stasis), die systemisch unproduktiv sind und zu gesellschaftlicher Lähmung führen.
+                  </p>
+                </section>
+                <section id="part3" aria-labelledby="nav-part3" class="content-section" data-takeaway="Die Therapie ist die Isonomie (Gleichheit vor dem Gesetz), die durch das Losverfahren von Bürgerräten erreicht wird, um politische Privilegien aufzulösen.">
+                  <h2 tabindex="-1">
+                    Therapie: Die vergessene Lösung
+                  </h2>
+                  <div class="audio-feature-box">
+                    <h4>
+                      Audio-Essay Teil 3: Die vergessene Lösung
+                    </h4>
+                    <p class="audio-description">
+                      Was Isonomie wirklich ist und warum das Losverfahren der Schlüssel zur Auflösung politischer Privilegien und zur Herstellung echter Gleichheit ist.
+                    </p>
+                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20DREI__Isonomie_%26_Losverfahren__Die_vergessene_L%C3%B6sung_f%C3%BCr_politische_Gleichheit_.m4a" playsinline crossorigin="anonymous">
+                    </audio>
+                    <div class="custom-audio-player">
+                      <button class="skip-btn" data-skip="-15" aria-label="15 Sekunden zurückspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12.5 6.07V4.58c0-.85-.88-1.33-1.61-.87l-7.79 4.44c-.6.34-.6.99 0 1.33l7.79 4.44c.73.46 1.61-.02 1.61-.87v-1.49c4.81.4 8.21 3.25 9.5 7.5-.6-2.5-2.79-4.5-5.5-5.52-2.31-.87-4.62-.87-7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="play-pause-btn" aria-label="Audio-Essay Teil 3 abspielen">
+                        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M8 5v14l11-7z">
+                          </path>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="skip-btn" data-skip="15" aria-label="15 Sekunden vorspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M11.5 6.07V4.58c0-.85.88-1.33 1.61-.87l7.79 4.44c.6.34.6.99 0 1.33l-7.79 4.44c-.73.46-1.61-.02-1.61-.87v-1.49c-4.81.4-8.21 3.25-9.5 7.5.6-2.5 2.79-4.5 5.5-5.52 2.31-.87 4.62-.87 7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <div class="audio-progress-container">
+                        <div class="audio-progress-bar">
+                        </div>
+                      </div>
+                      <canvas class="audio-visualizer" width="100" height="40" aria-hidden="true">
+                      </canvas>
+                      <div class="audio-time">
+                        <span class="current-time">
+                          00:00
+                        </span>
+                        &nbsp;/&nbsp;
+                        <span class="total-time">
+                          00:00
+                        </span>
+                      </div>
+                      <button class="speed-btn" aria-label="Wiedergabegeschwindigkeit ändern">
+                        1x
+                      </button>
+                    </div>
+                  </div>
+                  <p>
+                    Die Losdemokratie, auch Sortition oder
+                    <strong>
+                      Isonomie
+                    </strong>
+                    genannt, ist eine kraftvolle Behandlungsmethode. Sie ergänzt Wahlen durch
+                    <strong>
+                      geloste Bürgerräte
+                    </strong>
+                    , die repräsentativ durch Zufallsauswahl besetzt sind und nach intensiver Beratung Empfehlungen erarbeiten.
+                  </p>
+                </section>
+                <section id="part4" aria-labelledby="nav-part4" class="content-section" data-takeaway="Isonomie heilt die Gesellschaft, indem sie einen herrschaftsfreien Raum für Deliberation schafft, Vertrauen wiederherstellt und kollektive Handlungsfähigkeit ermöglicht.">
+                  <h2 tabindex="-1">
+                    Heilung: Isonomie in Aktion
+                  </h2>
+                  <div class="audio-feature-box">
+                    <h4>
+                      Audio-Essay Teil 4: Eine Heilung für Gesellschaft und Psyche
+                    </h4>
+                    <p class="audio-description">
+                      Wie Isonomie die Gesellschaft heilt, indem sie Stasis auflöst, Vertrauen schafft und den Einzelnen vom Druck der Selbstoptimierung entlastet.
+                    </p>
+                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20VIER__Isonomie_durch_Losverfahren__Eine_Heilung_f%C3%BCr_Gesellschaft_und_Psyche_.m4a" playsinline crossorigin="anonymous">
+                    </audio>
+                    <div class="custom-audio-player">
+                      <button class="skip-btn" data-skip="-15" aria-label="15 Sekunden zurückspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12.5 6.07V4.58c0-.85-.88-1.33-1.61-.87l-7.79 4.44c-.6.34-.6.99 0 1.33l7.79 4.44c.73.46 1.61-.02 1.61-.87v-1.49c4.81.4 8.21 3.25 9.5 7.5-.6-2.5-2.79-4.5-5.5-5.52-2.31-.87-4.62-.87-7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="play-pause-btn" aria-label="Audio-Essay Teil 4 abspielen">
+                        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M8 5v14l11-7z">
+                          </path>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="skip-btn" data-skip="15" aria-label="15 Sekunden vorspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M11.5 6.07V4.58c0-.85.88-1.33 1.61-.87l7.79 4.44c.6.34.6.99 0 1.33l-7.79 4.44c-.73.46-1.61-.02-1.61-.87v-1.49c-4.81.4-8.21 3.25-9.5 7.5.6-2.5 2.79-4.5 5.5-5.52 2.31-.87 4.62-.87 7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <div class="audio-progress-container">
+                        <div class="audio-progress-bar">
+                        </div>
+                      </div>
+                      <canvas class="audio-visualizer" width="100" height="40" aria-hidden="true">
+                      </canvas>
+                      <div class="audio-time">
+                        <span class="current-time">
+                          00:00
+                        </span>
+                        &nbsp;/&nbsp;
+                        <span class="total-time">
+                          00:00
+                        </span>
+                      </div>
+                      <button class="speed-btn" aria-label="Wiedergabegeschwindigkeit ändern">
+                        1x
+                      </button>
+                    </div>
+                  </div>
+                  <p>
+                    Isonomie beendet die unproduktiven Parteienkämpfe und schafft einen
+                    <strong>
+                      herrschaftsfreien Raum
+                    </strong>
+                    (Anarchie, aber nicht Anomie). Dadurch wird die kollektive Handlungsfähigkeit wiederhergestellt.
+                  </p>
+                </section>
+                <section id="part5" aria-labelledby="nav-part5" class="content-section" data-takeaway="Die größten Hürden sind falsche Feindbilder und die aristokratische Illusion, dass eine breite politische Beteiligung der Bürger zwangsläufig zu Chaos führt.">
+                  <h2 tabindex="-1">
+                    Die Hürden: Falsche Feindbilder
+                  </h2>
+                  <div class="audio-feature-box">
+                    <h4>
+                      Audio-Essay Teil 5: Risiken & Missverständnisse
+                    </h4>
+                    <p class="audio-description">
+                      Warum wir die Antike vergaßen, die Angst vor dem "Rule of the Mob" eine Illusion ist und welche Bürgerpflichten mit echter Freiheit einhergehen.
+                    </p>
+                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20F%C3%9CNF__Isonomie__Warum_wir_politische_Gleichheit_durch_Losverfahren_vergessen_haben_%E2%80%93_Risiken%2C_Missverst%C3%A4nd.m4a" playsinline crossorigin="anonymous">
+                    </audio>
+                    <div class="custom-audio-player">
+                      <button class="skip-btn" data-skip="-15" aria-label="15 Sekunden zurückspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12.5 6.07V4.58c0-.85-.88-1.33-1.61-.87l-7.79 4.44c-.6.34-.6.99 0 1.33l7.79 4.44c.73.46 1.61-.02 1.61-.87v-1.49c4.81.4 8.21 3.25 9.5 7.5-.6-2.5-2.79-4.5-5.5-5.52-2.31-.87-4.62-.87-7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="play-pause-btn" aria-label="Audio-Essay Teil 5 abspielen">
+                        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M8 5v14l11-7z">
+                          </path>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="skip-btn" data-skip="15" aria-label="15 Sekunden vorspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M11.5 6.07V4.58c0-.85.88-1.33 1.61-.87l7.79 4.44c.6.34.6.99 0 1.33l-7.79 4.44c-.73.46-1.61-.02-1.61-.87v-1.49c-4.81.4-8.21 3.25-9.5 7.5.6-2.5 2.79-4.5 5.5-5.52 2.31-.87 4.62-.87 7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <div class="audio-progress-container">
+                        <div class="audio-progress-bar">
+                        </div>
+                      </div>
+                      <canvas class="audio-visualizer" width="100" height="40" aria-hidden="true">
+                      </canvas>
+                      <div class="audio-time">
+                        <span class="current-time">
+                          00:00
+                        </span>
+                        &nbsp;/&nbsp;
+                        <span class="total-time">
+                          00:00
+                        </span>
+                      </div>
+                      <button class="speed-btn" aria-label="Wiedergabegeschwindigkeit ändern">
+                        1x
+                      </button>
+                    </div>
+                  </div>
+                  <p>
+                    Die moderne Zeit verwechselt oft Anarchie (Herrschaftsfreiheit) mit Anomie (Gesetzlosigkeit) und fürchtet, dass allgemeine politische Beteiligung zu Chaos führt. Dies ist eine
+                    <strong>
+                      aristokratische Illusion
+                    </strong>
+                    , die den Weg zur Isonomie versperrt.
+                  </p>
+                </section>
+                <section id="part6" aria-labelledby="nav-part6" class="content-section" data-takeaway="Der Quantensprung zur politischen Mündigkeit gelingt, indem die Last und die Lust der Politik durch das Losverfahren gerecht auf alle verteilt und so für jeden tragbar wird.">
+                  <h2 tabindex="-1">
+                    Ausblick: Der Quantensprung
+                  </h2>
+                  <div class="audio-feature-box">
+                    <h4>
+                      Audio-Essay Teil 6: Der Quantensprung zur Mündigkeit
+                    </h4>
+                    <p class="audio-description">
+                      Eine Vision für eine wahrhaft politische, stabile und freie Gesellschaft, die die Last und Lust der Politik gerecht auf alle verteilt.
+                    </p>
+                    <audio class="audio-player-hidden" preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20SECHS__Isonomie_und_Losverfahren__Der_Quantensprung_zur_politischen_M%C3%BCndigkeit.m4a" playsinline crossorigin="anonymous">
+                    </audio>
+                    <div class="custom-audio-player">
+                      <button class="skip-btn" data-skip="-15" aria-label="15 Sekunden zurückspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M12.5 6.07V4.58c0-.85-.88-1.33-1.61-.87l-7.79 4.44c-.6.34-.6.99 0 1.33l7.79 4.44c.73.46 1.61-.02 1.61-.87v-1.49c4.81.4 8.21 3.25 9.5 7.5-.6-2.5-2.79-4.5-5.5-5.52-2.31-.87-4.62-.87-7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="play-pause-btn" aria-label="Audio-Essay Teil 6 abspielen">
+                        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M8 5v14l11-7z">
+                          </path>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z">
+                          </path>
+                        </svg>
+                      </button>
+                      <button class="skip-btn" data-skip="15" aria-label="15 Sekunden vorspringen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M11.5 6.07V4.58c0-.85.88-1.33 1.61-.87l7.79 4.44c.6.34.6.99 0 1.33l-7.79 4.44c-.73.46-1.61-.02-1.61-.87v-1.49c-4.81.4-8.21 3.25-9.5 7.5.6-2.5 2.79-4.5 5.5-5.52 2.31-.87 4.62-.87-7-1.07z">
+                          </path>
+                        </svg>
+                      </button>
+                      <div class="audio-progress-container">
+                        <div class="audio-progress-bar">
+                        </div>
+                      </div>
+                      <canvas class="audio-visualizer" width="100" height="40" aria-hidden="true">
+                      </canvas>
+                      <div class="audio-time">
+                        <span class="current-time">
+                          00:00
+                        </span>
+                        &nbsp;/&nbsp;
+                        <span class="total-time">
+                          00:00
+                        </span>
+                      </div>
+                      <button class="speed-btn" aria-label="Wiedergabegeschwindigkeit ändern">
+                        1x
+                      </button>
+                    </div>
+                  </div>
+                  <p>
+                    Die Isonomie, basierend auf dem Losverfahren, ist der einzige Weg, die Probleme der Machtkonzentration dauerhaft zu lösen. Sie verteilt die
+                    <strong>
+                      Last und Lust des Politischen
+                    </strong>
+                    gerecht auf alle erwachsenen Mitglieder der Gesellschaft, wodurch die Verantwortung
+                    <em>
+                      sehr gut tragbar
+                    </em>
+                    wird.
+                  </p>
+                </section>
+                <section id="knowledge-distillate" aria-labelledby="distillate-title">
+                  <h2 id="distillate-title">
+                    Ihr Wissens-Destillat
+                  </h2>
+                  <p>
+                    Sie haben das Dossier gemeistert. Hier sind die sechs Kernargumente auf einen Blick:
+                  </p>
+                  <ul>
+                    <!-- Dieser Bereich wird dynamisch gefüllt -->
+                    </ul>
+                  </section>
+                  <div class="final-actions">
+                    <h2 id="final-cta">
+                      Werden Sie zum Systemwandler
+                    </h2>
+                    <div class="final-actions-grid">
+                      <div>
+                        <h3>
+                          Ihre Mission
+                        </h3>
+                        <p>
+                          Wissen ist der erste Schritt, Handeln der nächste. Hier sind Ihre ersten Missionen:
+                        </p>
+                        <ul>
+                          <li>
+                            <strong>
+                              Teilen:
+                            </strong>
+                            Senden Sie dieses Dossier an eine Person, die politikverdrossen, aber offen für neue Ideen ist.
+                          </li>
+                          <li>
+                            <strong>
+                              Fragen:
+                            </strong>
+                            Kontaktieren Sie Ihren lokalen Abgeordneten und fragen Sie, wie er oder sie zur Einrichtung von Bürgerräten steht.
+                          </li>
+                          <li>
+                            <strong>
+                              Vertiefen:
+                            </strong>
+                            Nutzen Sie die Ressourcen, um sich eine fundierte Meinung zu bilden.
+                          </li>
+                        </ul>
+                        <a href="https://losdemokratie.de/antrag" target="_blank" rel="noopener noreferrer" class="btn btn-cta">
+                          Teil der Bewegung werden
+                        </a>
+                        <div class="share-buttons">
+                          <a href="#" id="share-email" class="share-btn" role="button" aria-label="Dieses Dossier per E-Mail teilen" target="_blank" rel="noopener noreferrer">
+                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                              <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z">
+                              </path>
+                            </svg>
+                            <span>
+                              E-Mail
+                            </span>
+                          </a>
+                          <a href="#" id="share-x" class="share-btn" role="button" aria-label="Dieses Dossier auf X/Twitter teilen" target="_blank" rel="noopener noreferrer">
+                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+                              </path>
+                            </svg>
+                            <span>
+                              X/Twitter
+                            </span>
+                          </a>
+                          <a href="#" id="share-facebook" class="share-btn" role="button" aria-label="Dieses Dossier auf Facebook teilen" target="_blank" rel="noopener noreferrer">
+                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                              <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z">
+                              </path>
+                            </svg>
+                            <span>
+                              Facebook
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                      <div>
+                        <h3>
+                          Ihre Werkzeugkiste
+                        </h3>
+                        <p>
+                          Hier finden Sie eine Auswahl an Ressourcen, um tiefer in die Welt der Losdemokratie einzutauchen:
+                        </p>
+                        <ul>
+                          <li>
+                            <strong>
+                              Webseite:
+                            </strong>
+                            <a href="https://losdemokratie.de/" target="_blank" rel="noopener noreferrer">
+                              Losdemokratie.de
+                            </a>
+                            – Die zentrale Anlaufstelle.
+                          </li>
+                          <li>
+                            <strong>
+                              Buch:
+                            </strong>
+                            <a href="https://www.wallstein-verlag.de/9783835318717-david-van-reybrouck-gegen-wahlen.html" target="_blank" rel="noopener noreferrer">
+                              "Gegen Wahlen"
+                            </a>
+                            von David Van Reybrouck.
+                          </li>
+                          <li>
+                            <strong>
+                              Artikel:
+                            </strong>
+                            <a href="https://www.zeit.de/2017/04/rechtspopulismus-demokratie-wahlen-buergerversammlungen-politisches-system-griechenland/komplettansicht" target="_blank" rel="noopener noreferrer">
+                              "Demokratie ohne Wahlen?"
+                            </a>
+                            (Zeit Online).
+                          </li>
+                          <li>
+                            <strong>
+                              Video-Kanal:
+                            </strong>
+                            <a href="https://youtube.com/@nuttlos6347" target="_blank" rel="noopener noreferrer">
+                              Nutt-Los auf YouTube
+                            </a>
+                            .
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </main>
+              <footer class="page-footer">
+                <p>
+                  created by
+                  <a href="https://youtube.com/@deusexlumen" target="_blank" rel="noopener noreferrer">
+                    deus.ex.lumen
+                  </a>
+                  2025
+                </p>
+              </footer>
+              <div class="ui-controls-container">
+                <button id="perf-toggle" class="perf-toggle-button" title="Animationen an-/ausschalten" aria-pressed="false">
+                  ✨ Animationen an
+                </button>
+              </div>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js">
+              </script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js">
+              </script>
+              <script type="module">
+                class PhoenixDossier {
         constructor() {
             gsap.registerPlugin(ScrollTrigger);
 
@@ -309,7 +946,9 @@
                 perfToggleBtn: document.getElementById('perf-toggle'),
                 aurora: document.querySelector('.aurora-background'),
                 headerContent: document.querySelector('.header-content'),
-                audioPlayers: document.querySelectorAll('.custom-audio-player'),
+                mainContent: document.getElementById('main-content'),
+                distillateContainer: document.querySelector('#knowledge-distillate'),
+                distillateList: document.querySelector('#knowledge-distillate ul'),
             };
             
             this.narrativeColors = {
@@ -335,21 +974,40 @@
 
             this.resizeTimeout = null;
             this.debouncedRefresh = this.debounce(this.onResize.bind(this), 250);
-            this.init();
+            
+            if (this.DOM.distillateList) {
+                this.init();
+            } else {
+                console.error("Initialisierung fehlgeschlagen: Wissens-Destillat-Liste nicht gefunden.");
+            }
         }
       
         init() {
             this.setupEventListeners(); 
             this.setupIntersectionObserver(); 
-            this.checkInitialPerfMode();
             this.setupCustomAudioPlayers();
-            // Animations are now set up by default, unless low-perf mode is detected
-            if (!this.state.isLowPerfMode) {
-                this.setupAnimations();
-            }
+            this.checkInitialPerfMode();
         }
       
         setupAnimations() {
+            if (this.DOM.mainContent) {
+                this.DOM.navLinks.forEach(cell => {
+                    const icon = cell.querySelector('.bento-icon-wrapper');
+                    if (icon) {
+                        gsap.to(icon, {
+                            y: -25,
+                            ease: "none",
+                            scrollTrigger: {
+                                trigger: this.DOM.mainContent,
+                                start: "top top",
+                                end: "bottom bottom",
+                                scrub: true
+                            }
+                        });
+                    }
+                });
+            }
+
             gsap.to(this.DOM.headerContent, {
                 scrollTrigger: { trigger: ".page-header", start: "top top", end: "bottom top", scrub: 1, },
                 y: 200, opacity: 0, ease: 'none'
@@ -423,17 +1081,23 @@
         }
 
         setupCustomAudioPlayers() {
-            this.DOM.audioPlayers.forEach(container => {
-                const audio = container.previousElementSibling;
+            document.querySelectorAll('.custom-audio-player').forEach(container => {
+                const audio = container.closest('.audio-feature-box').querySelector('audio');
                 const playPauseBtn = container.querySelector('.play-pause-btn');
+                const skipBtns = container.querySelectorAll('.skip-btn');
+                const speedBtn = container.querySelector('.speed-btn');
                 const progressContainer = container.querySelector('.audio-progress-container');
                 const progressBar = container.querySelector('.audio-progress-bar');
                 const currentTimeEl = container.querySelector('.current-time');
                 const totalTimeEl = container.querySelector('.total-time');
                 const canvas = container.querySelector('.audio-visualizer');
                 
-                if(!audio || !playPauseBtn || !progressContainer || !canvas) return;
-                const canvasCtx = canvas.getContext('2d');
+                if(!audio || !playPauseBtn || !progressContainer) return;
+                
+                const controlsToToggle = [playPauseBtn, speedBtn, ...skipBtns];
+
+                controlsToToggle.forEach(control => control.disabled = true);
+                progressContainer.style.pointerEvents = 'none';
 
                 const formatTime = (time) => {
                     if (isNaN(time) || time === Infinity) return '00:00';
@@ -441,6 +1105,13 @@
                     const seconds = Math.floor(time % 60);
                     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 };
+                
+                audio.addEventListener('loadedmetadata', () => {
+                    controlsToToggle.forEach(control => control.disabled = false);
+                    progressContainer.style.pointerEvents = 'auto';
+                    if (totalTimeEl) totalTimeEl.textContent = formatTime(audio.duration);
+                    if (currentTimeEl) currentTimeEl.textContent = formatTime(0);
+                });
 
                 playPauseBtn.addEventListener('click', () => {
                     if(!this.audioContext || this.audioContext.state === 'suspended') {
@@ -451,64 +1122,63 @@
                     }
                     if (audio.paused) {
                         document.querySelectorAll('audio').forEach(a => { if (a !== audio && !a.paused) a.pause(); });
-                        audio.play().catch(e => {
-                            console.error("Abspielfehler:", e);
-                            container.classList.add('has-error');
-                            playPauseBtn.disabled = true;
-                        });
+                        audio.play().catch(e => console.error("Abspielfehler:", e));
                     } else {
                         audio.pause();
                     }
                 });
-                
+
                 audio.addEventListener('play', () => {
-                  container.classList.add('is-playing');
-                  playPauseBtn.setAttribute('aria-label', playPauseBtn.getAttribute('aria-label').replace('abspielen', 'pausieren'));
-                  this.drawVisualization(audio, canvas, canvasCtx);
+                    container.classList.add('is-playing');
+                    playPauseBtn.setAttribute('aria-label', playPauseBtn.getAttribute('aria-label').replace('abspielen', 'pausieren'));
+                    if (canvas) this.drawVisualization(audio, canvas, canvas.getContext('2d'));
                 });
                 audio.addEventListener('pause', () => {
-                  container.classList.remove('is-playing');
-                  playPauseBtn.setAttribute('aria-label', playPauseBtn.getAttribute('aria-label').replace('pausieren', 'abspielen'));
-                });
-                audio.addEventListener('ended', () => {
                     container.classList.remove('is-playing');
+                    playPauseBtn.setAttribute('aria-label', playPauseBtn.getAttribute('aria-label').replace('pausieren', 'abspielen'));
                 });
-
+                
                 audio.addEventListener('timeupdate', () => {
                     const progress = (audio.currentTime / audio.duration) * 100;
-                    progressBar.style.width = `${progress}%`;
-                    currentTimeEl.textContent = formatTime(audio.currentTime);
-                });
-
-                audio.addEventListener('loadedmetadata', () => {
-                    totalTimeEl.textContent = formatTime(audio.duration);
+                    if(progressBar) progressBar.style.width = `${progress}%`;
+                    if(currentTimeEl) currentTimeEl.textContent = formatTime(audio.currentTime);
                 });
 
                 progressContainer.addEventListener('click', (e) => {
                     const rect = progressContainer.getBoundingClientRect();
                     const offsetX = e.clientX - rect.left;
-                    const newTime = (offsetX / rect.width) * audio.duration;
-                    audio.currentTime = newTime;
+                    audio.currentTime = (offsetX / rect.width) * audio.duration;
                 });
 
-                audio.addEventListener('error', (e) => {
-                    container.classList.add('has-error');
-                    playPauseBtn.disabled = true;
-                    totalTimeEl.textContent = 'Fehler';
-                    console.error('Audio-Fehler:', e.target.error);
-                    if (this.DOM.liveRegion) {
-                        this.DOM.liveRegion.textContent = `Die Audiodatei "${audio.previousElementSibling.textContent}" konnte nicht geladen werden.`;
-                    }
+                skipBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const skipTime = parseFloat(btn.dataset.skip);
+                        audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + skipTime));
+                    });
                 });
+                
+                if (speedBtn) {
+                    let currentSpeedIndex = 0;
+                    const speeds = [1.0, 1.25, 1.5, 0.75];
+                    speedBtn.addEventListener('click', () => {
+                        currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
+                        const newSpeed = speeds[currentSpeedIndex];
+                        audio.playbackRate = newSpeed;
+                        const speedText = `${newSpeed.toFixed(2)}x`.replace('.00', '');
+                        speedBtn.textContent = speedText;
+                        if (this.DOM.liveRegion) {
+                            this.DOM.liveRegion.textContent = `Wiedergabegeschwindigkeit auf ${speedText} gesetzt.`;
+                        }
+                    });
+                }
             });
         }
       
         drawVisualization(audioElement, canvas, canvasCtx) {
             if (audioElement.paused || this.state.isLowPerfMode || !this.analysers.has(audioElement)) {
-                canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+                if (canvasCtx) canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
                 return;
             }
-
             const analyser = this.analysers.get(audioElement);
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
@@ -518,18 +1188,20 @@
             let barHeight;
             let x = 0;
             const primaryColor = this.state.currentColor;
-            for (let i = 0; i < bufferLength; i++) {
+            for (let i = 0; i
+                < bufferLength; i++) {
                 barHeight = dataArray[i] / 2.5;
                 canvasCtx.fillStyle = primaryColor;
                 canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
                 x += barWidth + 2;
             }
-            requestAnimationFrame(() => this.drawVisualization(audioElement, canvas, canvasCtx));
+            requestAnimationFrame(() =>
+                  this.drawVisualization(audioElement, canvas, canvasCtx));
         }
 
         setupEventListeners() {
             window.addEventListener('scroll', this.onScroll.bind(this), { passive: true });
-            this.DOM.perfToggleBtn.addEventListener('click', this.togglePerformanceMode.bind(this));
+            if (this.DOM.perfToggleBtn) this.DOM.perfToggleBtn.addEventListener('click', this.togglePerformanceMode.bind(this));
             if (this.DOM.aurora) { window.addEventListener('mousemove', this.onMouseMove.bind(this)); }
             this.setupShareLinks();
             window.addEventListener('resize', this.debouncedRefresh);
@@ -549,9 +1221,7 @@
                     const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
                     const scrollTop = document.documentElement.scrollTop;
                     const progress = (scrollTop / scrollHeight);
-                    if (this.DOM.progressBar) {
-                        gsap.to(this.DOM.progressBar, { scaleX: progress, duration: 0.1, ease: 'linear' });
-                    }
+                    if (this.DOM.progressBar) gsap.to(this.DOM.progressBar, { scaleX: progress, duration: 0.1, ease: 'linear' });
                     this.state.isTicking = false; 
                 }); 
                 this.state.isTicking = true; 
@@ -575,7 +1245,7 @@
                 entries.forEach(entry => {
                     const id = entry.target.id;
                     const navLink = this.DOM.navLinks.find(link => link.hash === `#${id}`);
-                    if (entry.isIntersecting) { this.setActiveSection(id, navLink); }
+                    if (entry.isIntersecting) this.setActiveSection(id, navLink);
                     if(entry.target.id === this.state.activeSectionId) {
                         const lerp = Math.max(0, Math.min(1, entry.intersectionRatio * 2));
                         this.DOM.body.style.setProperty('--scroll-lerp', lerp);
@@ -599,9 +1269,8 @@
                 navLink.setAttribute('aria-current', 'step');
                 this.state.activeSectionId = id;
                 const navText = navLink.querySelector('h3').textContent;
-                if(this.DOM.liveRegion) {
-                    this.DOM.liveRegion.textContent = `Abschnitt ${navText} ist jetzt aktiv.`;
-                }
+                if(this.DOM.liveRegion) this.DOM.liveRegion.textContent = `Abschnitt ${navText} ist jetzt aktiv.`;
+                
                 if (!this.state.completedSections.has(id)) {
                     this.state.completedSections.add(id);
                     const checkmark = navLink.querySelector('.bento-checkmark');
@@ -615,36 +1284,48 @@
                         checkmark.style.opacity = '1';
                         if(progressCircle) progressCircle.style.opacity = '0';
                     }
+                    
+                    const sectionElement = document.getElementById(id);
+                    if (sectionElement) {
+                        const takeawayText = sectionElement.dataset.takeaway;
+                        if (takeawayText && this.DOM.distillateContainer && !document.getElementById(`takeaway-${id}`)) {
+                            this.DOM.distillateContainer.classList.add('is-visible');
+                            const newLi = document.createElement('li');
+                            newLi.id = `takeaway-${id}`;
+                            newLi.textContent = takeawayText;
+                            this.DOM.distillateList.appendChild(newLi);
+                            gsap.from(newLi, { opacity: 0, x: -30, duration: 0.7, ease: 'power2.out' });
+                        }
+                    }
                 }
             }
         }
-
+        
         togglePerformanceMode() {
             this.state.isLowPerfMode = !this.state.isLowPerfMode;
             this.DOM.body.classList.toggle('low-performance-mode', this.state.isLowPerfMode);
             localStorage.setItem('lowPerfMode', this.state.isLowPerfMode.toString());
             this.DOM.perfToggleBtn.textContent = this.state.isLowPerfMode ? '✨ Animationen aus' : '✨ Animationen an';
             this.DOM.perfToggleBtn.setAttribute('aria-pressed', this.state.isLowPerfMode.toString());
-            this.DOM.liveRegion.textContent = `Animationen wurden ${this.state.isLowPerfMode ? 'deaktiviert' : 'aktiviert'}.`;
-            ScrollTrigger.getAll().forEach(t => t.enabled(!this.state.isLowPerfMode));
-            gsap.globalTimeline.paused(this.state.isLowPerfMode);
-            if (!this.state.isLowPerfMode && !ScrollTrigger.getAll().length) {
+            if (this.DOM.liveRegion) this.DOM.liveRegion.textContent = `Animationen wurden ${this.state.isLowPerfMode ? 'deaktiviert' : 'aktiviert'}.`;
+            
+            if (this.state.isLowPerfMode) {
+                ScrollTrigger.getAll().forEach(t => t.kill());
+                gsap.globalTimeline.paused(true);
+            } else {
+                gsap.globalTimeline.paused(false);
                 this.setupAnimations();
+                ScrollTrigger.refresh();
             }
         }
-
-        // *** ÄNDERUNG HIER ***
-        // Die Logik wurde vereinfacht, um die Intention klarer zu machen.
-        // Animationen sind standardmäßig AN. Nur wenn der Nutzer explizit reduzierte Bewegung wünscht
-        // (per Betriebssystem oder vorherigem Klick), werden sie deaktiviert.
+        
         checkInitialPerfMode() {
-            const wantsReducedMotion = localStorage.getItem('lowPerfMode') === 'true' 
-                                      || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const wantsReducedMotion = localStorage.getItem('lowPerfMode') === 'true' || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             
             if (wantsReducedMotion) {
-                // Der Standardzustand ist `isLowPerfMode = false` (Animationen an).
-                // Der `togglePerformanceMode` schaltet diesen Zustand um.
                 this.togglePerformanceMode();
+            } else {
+                this.setupAnimations();
             }
         }
 
@@ -659,7 +1340,8 @@
             if(shareFacebook) shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
         }
     }
+    
     document.addEventListener('DOMContentLoaded', () => new PhoenixDossier());
-    </script>
-</body>
-</html>
+                </script>
+              </body>
+            </html>
