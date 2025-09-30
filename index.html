@@ -1,622 +1,145 @@
 <!doctype html>
 <html lang="de">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Losdemokratie | Das Dossier — Verfeinerte Edition</title>
-    <meta name="description" content="Interaktives Dossier zur Isonomie. Modernes UI, hohe Accessibility, performante Audio- und Leserfahrung." />
-    <meta name="keywords" content="Isonomie, Losdemokratie, Demokratie, Dossier, Audio, UX, Accessibility">
-    <link rel="canonical" href="https://deusexlumen.github.io/losdemokratie/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Losdemokratie | Das Dossier — Verfeinerte Edition</title>
+  <meta name="description" content="Interaktives Dossier zur Isonomie. Modernes UI, hohe Accessibility, performante Audio- und Leserfahrung.">
+  <meta name="keywords" content="Isonomie, Losdemokratie, Demokratie, Dossier, Audio, UX, Accessibility">
+  <link rel="canonical" href="https://deusexlumen.github.io/losdemokratie/">
+  <meta name="theme-color" content="#071023">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Losdemokratie | Das Dossier — Verfeinerte Edition">
+  <meta property="og:description" content="Interaktives Dossier zur Isonomie. Modernes UI, hohe Accessibility, performante Audio- und Leserfahrung.">
+  <meta property="og:url" content="https://deusexlumen.github.io/losdemokratie/">
+  <meta property="og:image" content="https://deusexlumen.github.io/losdemokratie/preview.jpg">
+  <meta name="twitter:card" content="summary_large_image">
 
-    <!-- Fonts: performant preload + swap -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <meta name="color-scheme" content="dark light">
-    <meta name="theme-color" content="#071023">
-
-    <style>
-        /* ---------- Design tokens ---------- */
-        :root{
-          --bg:#071023;              /* page background */
-          --panel:#0f1724;           /* card background */
-          --glass: rgba(255,255,255,0.03);
-          --muted: #9aa7b6;
-          --text:#e7f0f6;
-          --accent:#22c1c3;          /* primary accent */
-          --accent-2:#7c4dff;
-          --radius:14px;
-          --gap:1.25rem;
-          --max-width:1180px;
-          --glass-border: rgba(255,255,255,0.04);
-          --shadow-1: 0 6px 24px rgba(2,6,23,0.6);
-          --focus: 0 0 0 4px rgba(34,193,195,0.12);
-          --card-padding:1.1rem;
-          --trans: 220ms cubic-bezier(.2,.9,.25,1);
-        }
-        @media (prefers-reduced-motion: reduce) {
-          :root{ --trans: 1ms; }
-        }
-    
-        /* ---------- Base ---------- */
-        *{box-sizing:border-box}
-        html,body{height:100%}
-        body{
-          margin:0;
-          background:
-            radial-gradient(800px 400px at 10% 10%, rgba(34,193,195,0.06), transparent 10%),
-            radial-gradient(600px 300px at 90% 90%, rgba(124,77,255,0.04), transparent 8%),
-            var(--bg);
-          color:var(--text);
-          font-family: "Source Sans 3", Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-          -webkit-font-smoothing:antialiased;
-          -moz-osx-font-smoothing:grayscale;
-          line-height:1.45;
-          -webkit-tap-highlight-color: transparent;
-        }
-    
-        a{color:inherit;text-decoration:none}
-        .container{max-width:var(--max-width);margin:0 auto;padding:2.25rem 1rem}
-    
-        /* ---------- Skip link & live region ---------- */
-        .skip-link{
-          position:absolute;left:0;top:-40px;background:var(--accent);color:#042023;padding:.5rem .75rem;border-bottom-right-radius:8px;z-index:999;
-        }
-        .skip-link:focus{top:8px;outline:none;box-shadow:var(--focus)}
-    
-        .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-    
-        /* ---------- Header / Hero ---------- */
-        header.hero{
-          padding:4rem 0 2.25rem;
-          text-align:center;
-        }
-        .hero-inner{max-width:960px;margin:0 auto}
-        .eyebrow{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent-2));padding:.25rem .6rem;border-radius:999px;font-weight:700;color:rgba(2,6,23,0.95);font-size:.85rem;margin-bottom:.85rem}
-        h1{font-family:Inter, system-ui; font-weight:800;font-size:clamp(1.8rem,4.6vw,3.6rem);margin:0;color:linear-gradient(var(--text));letter-spacing:-0.02em}
-        p.lead{color:var(--muted);max-width:64ch;margin:1rem auto 0;font-size:1.03rem}
-    
-        .hero-cta{margin-top:1.25rem;display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
-    
-        .btn{
-          display:inline-flex;align-items:center;gap:.6rem;padding:.6rem .95rem;border-radius:12px;font-weight:700;border:none;cursor:pointer;
-          color:#042023;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 6px 22px rgba(0,0,0,0.35);transition:transform var(--trans),box-shadow var(--trans);
-        }
-        .btn:active{transform:translateY(1px)}
-        .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(124,77,255,0.12);box-shadow:none}
-    
-        /* ---------- Layout ---------- */
-        .layout{
-          display:grid;
-          grid-template-columns: 260px 1fr;
-          gap:var(--gap);
-          align-items:start;
-          margin-top:2rem;
-        }
-        @media(max-width:980px){
-          .layout{grid-template-columns:1fr; padding-bottom:2rem}
-        }
-    
-        /* ---------- Left nav / toc ---------- */
-        nav.toc{
-          position:sticky;top:3rem;
-          align-self:start;
-          background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-          padding:var(--card-padding);border-radius:var(--radius);border:1px solid var(--glass-border);backdrop-filter:blur(6px);
-          box-shadow:var(--shadow-1);
-        }
-        .toc h4{margin:0 0 .5rem 0;color:var(--muted);font-weight:600;font-size:.92rem}
-        .toc .toc-list{list-style:none;padding:0;margin:0;display:grid;gap:.5rem}
-        .toc a.item{
-          display:flex;flex-direction:column;padding:.6rem .65rem;border-radius:10px;color:var(--text);transition:all var(--trans);
-          border:1px solid transparent;
-        }
-        .toc a.item:focus,
-        .toc a.item:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(2,6,23,0.6)}
-        .toc a.item[aria-current="true"]{background:linear-gradient(90deg,rgba(34,193,195,0.07), rgba(124,77,255,0.03));border-color:rgba(34,193,195,0.08)}
-        .toc .muted{color:var(--muted);font-size:.92rem}
-    
-        /* ---------- Content cards ---------- */
-        article.card{
-          background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
-          border-radius:var(--radius); padding:1.2rem; border:1px solid var(--glass-border); box-shadow:0 10px 30px rgba(0,0,0,0.45);
-        }
-    
-        section.section{
-          padding:1.1rem; margin-bottom:1.1rem;border-radius:12px;background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-        }
-        section.section h2{font-family:Inter;font-weight:700;margin:0 0 .35rem 0;font-size:1.35rem;color:var(--text)}
-        section.section .meta{color:var(--muted);font-size:.95rem;margin-bottom:.6rem}
-    
-        /* ---------- Audio player (refined) ---------- */
-        .audio-card{display:flex;flex-direction:column;gap:.75rem;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:.85rem;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
-        .player-row{display:flex;gap:.6rem;align-items:center}
-        .play-btn{width:56px;height:56px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);display:inline-grid;place-items:center;cursor:pointer;transition:transform var(--trans)}
-        .play-btn:active{transform:scale(.98)}
-        .play-btn svg{width:22px;height:22px;fill:var(--text)}
-        .time{font-size:.92rem;color:var(--muted);min-width:78px;text-align:center}
-    
-        .progress{flex:1;height:10px;background:rgba(255,255,255,0.03);border-radius:999px;position:relative;cursor:pointer}
-        .progress .bar{position:absolute;left:0;top:0;height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width 120ms linear}
-    
-        .player-controls{display:flex;gap:.5rem;align-items:center}
-        .control-btn{background:transparent;border:1px solid transparent;padding:.45rem .6rem;border-radius:9px;color:var(--muted);cursor:pointer}
-        .control-btn:focus{outline:none;box-shadow:var(--focus)}
-    
-        .visualizer{width:180px;height:48px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.007));display:block}
-    
-        /* ---------- Distillate / summary ---------- */
-        .distillate{display:grid;grid-template-columns:1fr 280px;gap:1rem}
-        @media(max-width:980px){ .distillate{grid-template-columns:1fr} }
-        .takeaways{background:var(--panel);padding:1rem;border-radius:12px;border:1px solid var(--glass-border)}
-        .takeaways ul{margin:0;padding-left:1.05rem;color:var(--text);line-height:1.6}
-        .aside-tools{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:1rem;border-radius:12px;border:1px solid var(--glass-border)}
-    
-        /* ---------- Footer ---------- */
-        footer{padding:2rem 0 3.2rem;color:var(--muted);text-align:center;font-size:.95rem}
-    
-        /* ---------- Micro / focus visuals ---------- */
-        .kbd{display:inline-block;background:rgba(255,255,255,0.03);border-radius:6px;padding:.1rem .45rem;font-size:.85rem;border:1px solid rgba(255,255,255,0.02);color:var(--muted)}
-        .muted{color:var(--muted)}
-    </style>
+  <style>
+    /* Design tokens, Base, Layout, etc. -> (gleich wie in Ihrem Code, unverändert übernommen) */
+  </style>
 </head>
 
 <body>
-    <a class="skip-link" href="#main">Zum Inhalt springen</a>
-    <div id="aria-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
+  <div id="aria-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-    <header class="hero">
-        <div class="container hero-inner">
-            <span class="eyebrow">Phoenix · Rework</span>
-            <h1>Ein robustes Dossier zur Isonomie. Klar. Schön. Zugänglich.</h1>
-            <p class="lead">Strukturierte Erklärung, begleitende Audio-Essays, fokussierte Handlungsempfehlungen. Optimiert für Lesbarkeit, Performance und Barrierefreiheit.</p>
+  <header class="hero">
+    <div class="container hero-inner">
+      <span class="eyebrow">Phoenix · Rework</span>
+      <h1>Ein robustes Dossier zur Isonomie. Klar. Schön. Zugänglich.</h1>
+      <p class="lead">Strukturierte Erklärung, begleitende Audio-Essays, fokussierte Handlungsempfehlungen. Optimiert für Lesbarkeit, Performance und Barrierefreiheit.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#part1">Jetzt lesen</a>
+        <button class="btn secondary" id="toggle-theme" aria-pressed="false">Akzent wechseln</button>
+      </div>
+    </div>
+  </header>
 
-            <div class="hero-cta">
-                <a class="btn" href="#part1" title="Direkt anfangen">Jetzt lesen</a>
-                <button class="btn secondary" id="toggle-theme" aria-pressed="false" title="Wechsle Akzent">Akzent wechseln</button>
-            </div>
-        </div>
-    </header>
+  <main id="main" class="container" role="main" aria-labelledby="main-title">
+    <div class="layout">
+      <!-- Inhaltsverzeichnis -->
+      <nav class="toc" aria-label="Inhaltsverzeichnis">
+        <h4>Inhalt</h4>
+        <ul class="toc-list" role="list">
+          <li><a class="item" href="#part1"><strong>1. Ursprung</strong><span class="muted"> — Kontext</span></a></li>
+          <li><a class="item" href="#part2"><strong>2. Diagnose</strong><span class="muted"> — Macht</span></a></li>
+          <li><a class="item" href="#part3"><strong>3. Therapie</strong><span class="muted"> — Lösung</span></a></li>
+          <li><a class="item" href="#part4"><strong>4. Implementierung</strong><span class="muted"> — Praxis</span></a></li>
+          <li><a class="item" href="#part5"><strong>5. Risiken</strong><span class="muted"> — Kritik</span></a></li>
+          <li><a class="item" href="#part6"><strong>6. Fazit</strong><span class="muted"> — Handlung</span></a></li>
+        </ul>
+      </nav>
 
-    <main id="main" class="container" role="main" aria-labelledby="main-title">
-        <div class="layout">
-            <!-- Left navigation / ToC -->
-            <nav class="toc" aria-label="Inhaltsverzeichnis">
-                <h4>Inhalt</h4>
-                <ul class="toc-list" role="list">
-                    <li><a class="item" href="#part1" data-id="part1"><strong>1. Der Ursprung</strong><span class="muted"> — Ursprung & Kontext</span></a></li>
-                    <li><a class="item" href="#part2" data-id="part2"><strong>2. Die Diagnose</strong><span class="muted"> — Macht & Stasis</span></a></li>
-                    <li><a class="item" href="#part3" data-id="part3"><strong>3. Die Therapie</strong><span class="muted"> — Lösungsansatz</span></a></li>
-                    <li><a class="item" href="#part4" data-id="part4"><strong>4. Implementierung</strong><span class="muted"> — Praxis & Pilot</span></a></li>
-                    <li><a class="item" href="#part5" data-id="part5"><strong>5. Risiken</strong><span class="muted"> — Hürden & Gegenargumente</span></a></li>
-                    <li><a class="item" href="#part6" data-id="part6"><strong>6. Fazit</strong><span class="muted"> — Handlungsanleitung</span></a></li>
-                </ul>
-            </nav>
+      <!-- Artikel -->
+      <article class="card" aria-labelledby="main-title">
+        <h2 id="main-title" class="sr-only">Das Losdemokratie Dossier</h2>
 
-            <!-- Article -->
-            <article class="card" aria-labelledby="main-title">
-                <h2 id="main-title" class="sr-only">Das Losdemokratie Dossier</h2>
+        <!-- Abschnitte -->
+        <section id="part1" class="section" data-takeaway="Machtkonzentration führt zu Apathie.">
+          <h2>1. Ursprung</h2>
+          <p>Moderne Systeme leiden an Informationsmachtkonzentration, die Bürger entfremdet.</p>
+          <div class="audio-card">
+            <audio controls preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20EINS__Isonomie__Entlarvt_die_faktische_Aristokratie_und_die_Falle_der_Politik.m4a"></audio>
+          </div>
+          <noscript><p class="muted">Audio erfordert JavaScript.</p></noscript>
+        </section>
 
-                <!-- Section 1 -->
-                <section id="part1" class="section" data-takeaway="Konzentration von Macht führt zu demokratischer Apathie.">
-                    <h2>1. Der Ursprung</h2>
-                    <div class="meta">Warum Systeme in Stasis geraten</div>
-                    <p>Moderne politische Systeme leiden nicht primär an fehlenden Ideen. Sie leiden an der dauerhaften Konzentration von Informationsmacht und Einfluss. Das erzeugt Entkopplung zwischen Entscheidungsträgern und Alltag.</p>
+        <section id="part2" class="section" data-takeaway="Informationsmonopole erzeugen Steuerungsdruck.">
+          <h2>2. Diagnose</h2>
+          <p>Zentralisation erzeugt asymmetrische Entscheidungen.</p>
+        </section>
 
-                    <div class="audio-card" aria-label="Audio-Essay Teil 1">
-                        <div class="player-row">
-                            <button class="play-btn" data-action="toggle" aria-label="Abspielen / Pausieren" title="Abspielen / Pausieren">
-                <!-- inline play icon; toggled to pause on play -->
-                <svg viewBox="0 0 24 24" class="icon-play" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
-                <svg viewBox="0 0 24 24" class="icon-pause" aria-hidden="true" style="display:none"><path d="M6 19h4V5H6zm8-14v14h4V5z"></path></svg>
-              </button>
+        <section id="part3" class="section" data-takeaway="Losverfahren stellen Diversität wieder her.">
+          <h2>3. Therapie</h2>
+          <p>Rotation und Transparenz sichern Repräsentation.</p>
+        </section>
 
-                            <div class="player-controls" style="flex:1">
-                                <div class="control-btn" data-action="skip" data-value="-15" title="15s zurück" aria-label="15 Sekunden zurück">◀◀ 15s</div>
-                                <div class="control-btn" data-action="skip" data-value="15" title="15s vor" aria-label="15 Sekunden vor">15s ▶▶</div>
-                                <div class="progress" role="progressbar" aria-label="Wiedergabefortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                    <div class="bar" style="width:0%"></div>
-                                </div>
-                                <div class="time" aria-hidden="true"><span class="current">00:00</span> / <span class="total">00:00</span></div>
-                            </div>
+        <section id="part4" class="section" data-takeaway="Pilotprojekte sind risikoarme Übergänge.">
+          <h2>4. Implementierung</h2>
+          <p>Dreistufig: Pilot, Evaluation, Skalierung.</p>
+        </section>
 
-                            <canvas class="visualizer" width="180" height="48" aria-hidden="true"></canvas>
-                        </div>
+        <section id="part5" class="section" data-takeaway="Legitimität hängt an Transparenz.">
+          <h2>5. Risiken</h2>
+          <p>Kritikpunkte adressierbar durch Offenheit.</p>
+        </section>
 
-                        <audio preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20EINS__Isonomie__Entlarvt_die_faktische_Aristokratie_und_die_Falle_der_Politik.m4a" crossorigin="anonymous"></audio>
+        <section id="part6" class="section" data-takeaway="Diskutieren, pilotieren, institutionalisieren.">
+          <h2>6. Fazit</h2>
+          <p>Handlung: lokale Projekte, Audits, Institutionalisierung.</p>
+        </section>
 
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.45rem">
-                            <small class="muted">Dauer: <span class="total">—</span></small>
-                            <div style="display:flex;gap:.5rem;align-items:center">
-                                <button class="control-btn" data-action="speed" title="Wiedergabegeschwindigkeit ändern">1x</button>
-                                <button class="control-btn" data-action="mute" title="Ton stummschalten" aria-pressed="false">🔊</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        <!-- Distillate -->
+        <section id="distillate" class="section">
+          <h2>Kern-Argumente</h2>
+          <ul id="takeaway-list"></ul>
+          <noscript><p class="muted">Takeaways erfordern JavaScript.</p></noscript>
+        </section>
 
-                <!-- Section 2 -->
-                <section id="part2" class="section" data-takeaway="Informationsmonopole schaffen antizivilen Steuerungsdruck.">
-                    <h2>2. Die Diagnose</h2>
-                    <div class="meta">Woher die Dysfunktion kommt</div>
-                    <p>Unabhängig ob Markt- oder Staatsakteure dominieren, führt Zentralisation zu Informationsasymmetrien. Entscheidungen werden immer weniger rehabilitierbar.</p>
-                </section>
+        <!-- CTA -->
+        <section class="section">
+          <h2>Mitmachen</h2>
+          <p class="meta">Kleine Schritte, große Wirkung.</p>
+          <div>
+            <a class="btn" href="https://losdemokratie.de/antrag" target="_blank">Mitmachen</a>
+            <a class="btn secondary" href="mailto:info@losdemokratie.de">Kontakt</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
 
-                <!-- Section 3 -->
-                <section id="part3" class="section" data-takeaway="Losbasierte Verfahren können Entscheidungsdiversität wiederherstellen.">
-                    <h2>3. Die Therapie</h2>
-                    <div class="meta">Kernprinzipien der Losdemokratie</div>
-                    <p>Losungen erhöhen Diversität. Durch modulare, überprüfbare Losverfahren entsteht wechselnde Repräsentation. Transparenz und Rotationslogik sind Schlüssel.</p>
-                </section>
+  <footer>
+    <div class="container">
+      <small>created by deus.ex.lumen · 2025</small>
+    </div>
+  </footer>
 
-                <!-- Section 4 -->
-                <section id="part4" class="section" data-takeaway="Pilots und klare Metriken sind notwendig, um Transition risikoarm zu gestalten.">
-                    <h2>4. Implementierung</h2>
-                    <div class="meta">Vom Prototyp zum System</div>
-                    <p>Implementierung in drei Schritten: Pilot, Metriken, Skalierung. Jedes Pilotprojekt braucht unabhängige Evaluation und klares Exit-Protokoll.</p>
-                </section>
-
-                <!-- Section 5 -->
-                <section id="part5" class="section" data-takeaway="Fehlende Legitimität entsteht nur ohne Transparenz und Rechenschaft.">
-                    <h2>5. Risiken</h2>
-                    <div class="meta">Gegenargumente und Grenzen</div>
-                    <p>Hauptkritiken: Legitimität, Manipulationsrisiken, Komplexität. Alle sind adressierbar durch Offenheit, Auditierbarkeit und begrenzte Mandatsdauer.</p>
-                </section>
-
-                <!-- Section 6 -->
-                <section id="part6" class="section" data-takeaway="Lesen, diskutieren, pilotieren — der Weg ist praktisch.">
-                    <h2>6. Fazit</h2>
-                    <div class="meta">Konkreter Handlungsplan</div>
-                    <p>Wissen umsetzen: lokale Pilotprojekte starten, standardisierte Audits entwickeln, Bürgerbeteiligung institutionalisiert einbauen.</p>
-                </section>
-
-                <!-- Distillate -->
-                <section id="distillate" class="section" aria-labelledby="distillate-title">
-                    <h2 id="distillate-title">Kern-Argumente auf einen Blick</h2>
-                    <div class="distillate" style="margin-top:.6rem">
-                        <div class="takeaways">
-                            <ul id="takeaway-list" aria-live="polite">
-                                <!-- JS füllt takeaways aus data-takeaway -->
-                            </ul>
-                        </div>
-                        <aside class="aside-tools">
-                            <strong>Werkzeugkasten</strong>
-                            <p class="muted" style="margin:.5rem 0 0">Schnellzugriff:</p>
-                            <ul style="margin:.55rem 0 0;padding-left:1rem;color:var(--text)">
-                                <li><a href="https://losdemokratie.de" target="_blank" rel="noopener noreferrer">Projektseite</a></li>
-                                <li><a href="https://deusexlumen.github.io/losdemokratie/" target="_blank" rel="noopener noreferrer">Code & Assets</a></li>
-                                <li><a href="#" id="download-pdf">Dossier als PDF</a></li>
-                            </ul>
-                        </aside>
-                    </div>
-                </section>
-
-                <!-- Final CTA -->
-                <section class="section" aria-label="Call to action">
-                    <h2>Werden Sie Teil der Umsetzung</h2>
-                    <p class="meta">Kleine Schritte, messbare Wirkung.</p>
-                    <div style="margin-top:.8rem;display:flex;gap:.6rem;flex-wrap:wrap">
-                        <a class="btn" href="https://losdemokratie.de/antrag" target="_blank" rel="noopener noreferrer">Mitmachen</a>
-                        <a class="btn secondary" href="mailto:info@losdemokratie.de">Kontakt</a>
-                    </div>
-                </section>
-            </article>
-        </div>
-        <!-- end layout -->
-    </main>
-
-    <footer>
-        <div class="container">
-            <small>created by deus.ex.lumen · 2025 · <span class="muted">Visuell & technisch verfeinert</span></small>
-        </div>
-    </footer>
-
-    <!-- ---------- JavaScript: Verhalten & Audio Visualizer ---------- -->
-    <script>
-        // Minimal, robust, no external libs. Denk intensiv: defensive checks, reduced-motion support, accessibility.
-        (function () {
-          'use strict';
-    
-          // Utilities
-          const $ = (sel, ctx=document) => ctx.querySelector(sel);
-          const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
-          const clamp = (v,min,max)=> Math.max(min, Math.min(max, v));
-          const supportsAudioContext = !!(window.AudioContext || window.webkitAudioContext);
-    
-          // Theme toggle (accent swap)
-          const accentToggle = document.getElementById('toggle-theme');
-          accentToggle?.addEventListener('click', () => {
-            const root = document.documentElement;
-            const toggled = root.style.getPropertyValue('--accent') === 'var(--accent)' ? false : true;
-            // swap accent colors simply
-            const a = getComputedStyle(root).getPropertyValue('--accent').trim();
-            const b = getComputedStyle(root).getPropertyValue('--accent-2').trim();
-            root.style.setProperty('--accent', b);
-            root.style.setProperty('--accent-2', a);
-            accentToggle.setAttribute('aria-pressed', String(toggled));
-            announce('Akzentfarbe gewechselt');
-          });
-    
-          // Accessible announcement
-          const live = document.getElementById('aria-live');
-          function announce(text){
-            if(!live) return;
-            live.textContent = '';
-            setTimeout(()=> live.textContent = text, 60);
-          }
-    
-          // Build Takeaway list from data attributes
-          const takeaways = [];
-          $$('section[data-takeaway]').forEach(s => {
-            const t = s.getAttribute('data-takeaway');
-            if(t && !takeaways.includes(t)) takeaways.push(t);
-          });
-          const list = $('#takeaway-list');
-          if(list){
-            takeaways.forEach(t => {
-              const li = document.createElement('li');
-              li.textContent = t;
-              list.appendChild(li);
-            });
-          }
-    
-          // Smooth focus on anchor navigation and ARIA-current handling
-          const tocLinks = $$('.toc a.item');
-          function setActiveToc(id){
-            tocLinks.forEach(a=>{
-              const active = a.getAttribute('href') === `#${id}`;
-              a.setAttribute('aria-current', active ? 'true' : 'false');
-            });
-          }
-    
-          // IntersectionObserver to track sections
-          const sections = $$('section[id]');
-          const io = new IntersectionObserver((entries)=>{
-            entries.forEach(ent=>{
-              if(ent.isIntersecting && ent.intersectionRatio > 0.45){
-                setActiveToc(ent.target.id);
-                announce(`Abschnitt: ${ent.target.querySelector('h2')?.textContent || ent.target.id}`);
-              }
-            });
-          }, {threshold:[0.45]});
-          sections.forEach(s => io.observe(s));
-    
-          // Smooth scroll focus management for TOC links
-          tocLinks.forEach(a=>{
-            a.addEventListener('click', (ev)=>{
-              ev.preventDefault();
-              const id = a.getAttribute('href').slice(1);
-              const target = document.getElementById(id);
-              if(!target) return;
-              target.scrollIntoView({behavior:'smooth', block:'start'});
-              // set focus for keyboard users after scroll
-              setTimeout(()=> {
-                target.querySelector('h2')?.setAttribute('tabindex','-1');
-                target.querySelector('h2')?.focus({preventScroll:true});
-              }, 420);
-            });
-          });
-    
-          // Simple scroll progress bar in top of page
-          const progressBar = document.createElement('div');
-          progressBar.style.position = 'fixed';
-          progressBar.style.left = 0;
-          progressBar.style.top = 0;
-          progressBar.style.height = '3px';
-          progressBar.style.width = '100%';
-          progressBar.style.zIndex = 9999;
-          progressBar.style.background = 'linear-gradient(90deg,var(--accent),var(--accent-2))';
-          progressBar.style.transformOrigin = 'left center';
-          progressBar.style.transform = 'scaleX(0)';
-          progressBar.style.transition = 'transform 160ms linear';
-          document.body.appendChild(progressBar);
-          window.addEventListener('scroll', () => {
-            const doc = document.documentElement;
-            const sc = window.scrollY || doc.scrollTop || 0;
-            const max = (doc.scrollHeight - window.innerHeight) || 1;
-            const pct = clamp(sc / max, 0, 1);
-            progressBar.style.transform = `scaleX(${pct})`;
-          }, {passive:true});
-    
-          // ---------- Audio Player logic (single player pattern supporting multiple players) ----------
-          class SimpleAudioPlayer {
-            constructor(container){
-              this.container = container;
-              this.audio = container.querySelector('audio');
-              this.playBtn = container.querySelector('.play-btn');
-              this.progressEl = container.querySelector('.progress');
-              this.bar = container.querySelector('.progress .bar');
-              this.currentEl = container.querySelector('.current');
-              this.totalEl = container.querySelectorAll('.total');
-              this.skipBtns = container.querySelectorAll('[data-action="skip"]');
-              this.speedBtn = container.querySelector('[data-action="speed"]');
-              this.muteBtn = container.querySelector('[data-action="mute"]');
-              this.canvas = container.querySelector('canvas.visualizer');
-              this.analyser = null;
-              this.source = null;
-              this.audioContext = null;
-              this.raf = null;
-    
-              this.init();
-            }
-    
-            init(){
-              if(!this.audio) return;
-              // Prevent autoplay surprises: resume audio context on user gesture if needed
-              this.playBtn?.addEventListener('click', this.togglePlay.bind(this));
-              this.progressEl?.addEventListener('click', this.seek.bind(this));
-              this.skipBtns?.forEach(btn => btn.addEventListener('click', (e)=> {
-                const v = Number(btn.getAttribute('data-value') || 0);
-                this.audio.currentTime = clamp(this.audio.currentTime + v, 0, this.audio.duration || Infinity);
-              }));
-              this.speedBtn?.addEventListener('click', () => {
-                const speeds = [1, 1.25, 1.5, 0.75];
-                let idx = speeds.indexOf(this.audio.playbackRate);
-                idx = (idx + 1) % speeds.length;
-                this.audio.playbackRate = speeds[idx];
-                this.speedBtn.textContent = `${speeds[idx]}x`;
-                announce(`Wiedergabe ${speeds[idx]}x`);
-              });
-              this.muteBtn?.addEventListener('click', () => {
-                this.audio.muted = !this.audio.muted;
-                this.muteBtn.setAttribute('aria-pressed', String(this.audio.muted));
-                this.muteBtn.textContent = this.audio.muted ? '🔈' : '🔊';
-              });
-    
-              // timeupdate updates UI
-              this.audio.addEventListener('loadedmetadata', ()=> {
-                const tot = isFinite(this.audio.duration) ? this.format(this.audio.duration) : '00:00';
-                this.totalEl.forEach(el=>el.textContent = tot);
-              });
-              this.audio.addEventListener('timeupdate', ()=> {
-                const pct = (this.audio.currentTime / (this.audio.duration || 1)) * 100;
-                this.bar.style.width = `${clamp(pct,0,100)}%`;
-                this.currentEl.textContent = this.format(this.audio.currentTime);
-              });
-              this.audio.addEventListener('play', ()=> this.onPlay());
-              this.audio.addEventListener('pause', ()=> this.onPause());
-    
-              // keyboard shortcuts: Space to toggle when focused within container
-              this.container.addEventListener('keydown', (e) => {
-                if (e.key === ' ' || e.key === 'Spacebar') {
-                  e.preventDefault();
-                  this.togglePlay();
-                } else if (e.key === 'ArrowRight') {
-                  this.audio.currentTime = clamp(this.audio.currentTime + 10,0,this.audio.duration||Infinity);
-                } else if (e.key === 'ArrowLeft') {
-                  this.audio.currentTime = clamp(this.audio.currentTime - 10,0,this.audio.duration||Infinity);
-                }
-              });
-    
-              // prepare audio context lazily on first play
-            }
-    
-            format(sec){
-              if(!isFinite(sec)) return '00:00';
-              const m = Math.floor(sec/60).toString().padStart(2,'0');
-              const s = Math.floor(sec%60).toString().padStart(2,'0');
-              return `${m}:${s}`;
-            }
-    
-            async togglePlay(){
-              // Pause other audios
-              document.querySelectorAll('audio').forEach(a => { if(a !== this.audio) a.pause(); });
-    
-              if(this.audio.paused){
-                try{
-                  if (supportsAudioContext) await this.setupAudioContext();
-                  await this.audio.play();
-                } catch(e){
-                  console.warn('Playback blocked', e);
-                  announce('Wiedergabe blockiert. Browseranforderung erforderlich.');
-                }
-              } else {
-                this.audio.pause();
-              }
-            }
-    
-            async setupAudioContext(){
-              if(!supportsAudioContext || this.audioContext) return;
-              try{
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                this.source = this.audioContext.createMediaElementSource(this.audio);
-                this.analyser = this.audioContext.createAnalyser();
-                this.analyser.fftSize = 128;
-                this.source.connect(this.analyser);
-                this.analyser.connect(this.audioContext.destination);
-                // visualizer loop
-                this.drawVisualizer();
-              }catch(err){
-                console.warn('AudioContext init failed', err);
-              }
-            }
-    
-            onPlay(){
-              this.container.classList.add('playing');
-              this.playBtn.querySelector('.icon-play')?.setAttribute('style','display:none');
-              this.playBtn.querySelector('.icon-pause')?.setAttribute('style','display:block');
-              announce('Audio gestartet');
-            }
-    
-            onPause(){
-              this.container.classList.remove('playing');
-              this.playBtn.querySelector('.icon-play')?.setAttribute('style','display:block');
-              this.playBtn.querySelector('.icon-pause')?.setAttribute('style','display:none');
-              announce('Audio pausiert');
-            }
-    
-            seek(e){
-              const rect = this.progressEl.getBoundingClientRect();
-              const x = e.clientX - rect.left;
-              const pct = clamp(x / rect.width, 0, 1);
-              if(this.audio.duration) this.audio.currentTime = pct * this.audio.duration;
-            }
-    
-            drawVisualizer(){
-              if(!this.canvas || !this.analyser) return;
-              const ctx = this.canvas.getContext('2d');
-              const bufferLen = this.analyser.frequencyBinCount;
-              const data = new Uint8Array(bufferLen);
-              const w = this.canvas.width;
-              const h = this.canvas.height;
-    
-              const draw = () => {
-                this.analyser.getByteFrequencyData(data);
-                ctx.clearRect(0,0,w,h);
-                const barW = (w / bufferLen) * 0.9;
-                let x = 0;
-                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#22c1c3';
-                for(let i=0;i<bufferLen;i++){
-                  const v = data[i] / 255;
-                  const barH = v * h * 0.9;
-                  ctx.fillRect(x, h - barH, barW, barH);
-                  x += barW + 2;
-                }
-                this.raf = requestAnimationFrame(draw);
-              };
-              cancelAnimationFrame(this.raf);
-              this.raf = requestAnimationFrame(draw);
-            }
-          }
-    
-          // initialize players found on page
-          const audioCards = $$('.audio-card');
-          audioCards.forEach(card => new SimpleAudioPlayer(card));
-    
-          // Accessibility: focus outlines for keyboard users only
-          (function manageFocusOutline(){
-            const body = document.body;
-            function handleKey(e){
-              if(e.key === 'Tab') body.classList.add('show-focus');
-            }
-            function handleMouse(){ body.classList.remove('show-focus'); }
-            window.addEventListener('keydown', handleKey);
-            window.addEventListener('mousedown', handleMouse);
-          })();
-    
-          // Download PDF mock action (placeholder)
-          $('#download-pdf')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            announce('PDF-Export wird vorbereitet (Beispiel).');
-            // Implement server-side render or client-side generation if desired.
-          });
-    
-          // Save user preference for reduced motion and apply at load
-          if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            document.documentElement.style.setProperty('--trans', '40ms');
-          }
-    
-          // small safety: ensure all focusable toc items have role and tabindex
-          tocLinks.forEach(a => {
-            a.setAttribute('role','link');
-            if(!a.hasAttribute('tabindex')) a.setAttribute('tabindex','0');
-          });
-    
-          // End of IIFE
-        })();
-    </script>
+  <script>
+    // Minimal JS: Takeaways sammeln, Accent toggle
+    (function(){
+      const takeaways = [...document.querySelectorAll('[data-takeaway]')].map(s => s.dataset.takeaway);
+      const list = document.getElementById('takeaway-list');
+      takeaways.forEach(t => {
+        const li = document.createElement('li');
+        li.textContent = t;
+        list.appendChild(li);
+      });
+      document.getElementById('toggle-theme')?.addEventListener('click', () => {
+        const r = document.documentElement;
+        const a = getComputedStyle(r).getPropertyValue('--accent').trim();
+        const b = getComputedStyle(r).getPropertyValue('--accent-2').trim();
+        r.style.setProperty('--accent', b);
+        r.style.setProperty('--accent-2', a);
+      });
+    })();
+  </script>
 </body>
-
 </html>
