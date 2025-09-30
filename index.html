@@ -1,117 +1,96 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Losdemokratie | Das Dossier — Verfeinerte Edition</title>
-  <meta name="description" content="Interaktives Dossier zur Isonomie. Modernes UI, hohe Accessibility, performante Audio- und Leserfahrung.">
-  <meta name="keywords" content="Isonomie, Losdemokratie, Demokratie, Dossier, Audio, UX, Accessibility">
-  <link rel="canonical" href="https://deusexlumen.github.io/losdemokratie/">
-  <meta name="theme-color" content="#071023">
-  <meta name="color-scheme" content="dark light">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Losdemokratie | Das Dossier — Verfeinerte Edition">
-  <meta property="og:description" content="Interaktives Dossier zur Isonomie. Modernes UI, hohe Accessibility, performante Audio- und Leserfahrung.">
-  <meta property="og:url" content="https://deusexlumen.github.io/losdemokratie/">
-  <meta property="og:image" content="https://deusexlumen.github.io/losdemokratie/preview.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    /* Design tokens, Base, Layout, etc. -> (gleich wie in Ihrem Code, unverändert übernommen) */
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Losdemokratie | Das Dossier — Isonomie</title>
+  <meta name="description" content="Interaktives Dossier zur Isonomie: Warum Losverfahren, wie sie funktionieren und wie sie ein System heilen können." />
+  <link rel="stylesheet" href="main.css" />
 </head>
-
 <body>
   <a class="skip-link" href="#main">Zum Inhalt springen</a>
-  <div id="aria-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
   <header class="hero">
     <div class="container hero-inner">
       <span class="eyebrow">Phoenix · Rework</span>
-      <h1>Ein robustes Dossier zur Isonomie. Klar. Schön. Zugänglich.</h1>
-      <p class="lead">Strukturierte Erklärung, begleitende Audio-Essays, fokussierte Handlungsempfehlungen. Optimiert für Lesbarkeit, Performance und Barrierefreiheit.</p>
+      <h1 id="site-title">Ein robustes Dossier zur Isonomie</h1>
+      <p class="lead">Warum echte Gleichheit in der Gesetzgebung (Isonomie) unsere Systeme krisenfest macht — und wie das Losverfahren das ermöglicht.</p>
       <div class="hero-cta">
         <a class="btn" href="#part1">Jetzt lesen</a>
-        <button class="btn secondary" id="toggle-theme" aria-pressed="false">Akzent wechseln</button>
+        <a class="btn transparent" href="onepager.html" target="_blank" rel="noopener">One-Pager (Druck)</a>
       </div>
     </div>
   </header>
 
-  <main id="main" class="container" role="main" aria-labelledby="main-title">
+  <main id="main" class="container">
     <div class="layout">
-      <!-- Inhaltsverzeichnis -->
       <nav class="toc" aria-label="Inhaltsverzeichnis">
         <h4>Inhalt</h4>
-        <ul class="toc-list" role="list">
-          <li><a class="item" href="#part1"><strong>1. Ursprung</strong><span class="muted"> — Kontext</span></a></li>
-          <li><a class="item" href="#part2"><strong>2. Diagnose</strong><span class="muted"> — Macht</span></a></li>
-          <li><a class="item" href="#part3"><strong>3. Therapie</strong><span class="muted"> — Lösung</span></a></li>
-          <li><a class="item" href="#part4"><strong>4. Implementierung</strong><span class="muted"> — Praxis</span></a></li>
-          <li><a class="item" href="#part5"><strong>5. Risiken</strong><span class="muted"> — Kritik</span></a></li>
-          <li><a class="item" href="#part6"><strong>6. Fazit</strong><span class="muted"> — Handlung</span></a></li>
+        <ul>
+          <li><a class="toc-link" href="#part1" data-preview="Machtkonzentration und politische Apathie führen zu Stasis: wenige tragen Verantwortung, viele schauen zu.">1. Die Krise unserer Zeit</a></li>
+          <li><a class="toc-link" href="#part2" data-preview="Isonomie bedeutet Gleichheit in der Gesetzgebung; das Losverfahren verteilt politische Macht wirklich.">2. Was ist Isonomie?</a></li>
+          <li><a class="toc-link" href="#part3" data-preview="Losbasierte Beteiligung reduziert Machtkämpfe, erhöht Krisenresilienz und führt zu besseren, inklusiveren Regeln.">3. Wie Isonomie heilt</a></li>
+          <li><a class="toc-link" href="#part4" data-preview="Pragmatische Pilotprojekte: lokal geloste Bürgerversammlungen mit bindenden Kompetenzen als Startpunkt.">4. Implementierung</a></li>
+          <li><a class="toc-link" href="#part5" data-preview="Hauptbedenken: Amnesie, Angst vor Mob-Rule und der Aufwand; adressierbar durch Design und Bildung.">5. Herausforderungen</a></li>
+          <li><a class="toc-link" href="#part6" data-preview="Empfehlung: lokal beginnen, transparent evaluieren, sukzessiv verfassungsrechtlich verankern.">6. Fazit & Ausblick</a></li>
         </ul>
       </nav>
 
-      <!-- Artikel -->
-      <article class="card" aria-labelledby="main-title">
-        <h2 id="main-title" class="sr-only">Das Losdemokratie Dossier</h2>
-
-        <!-- Abschnitte -->
-        <section id="part1" class="section" data-takeaway="Machtkonzentration führt zu Apathie.">
-          <h2>1. Ursprung</h2>
-          <p>Moderne Systeme leiden an Informationsmachtkonzentration, die Bürger entfremdet.</p>
-          <div class="audio-card">
-            <audio controls preload="metadata" src="https://cdn.jsdelivr.net/gh/deusexlumen/losdemokratie@main/TEIL%20EINS__Isonomie__Entlarvt_die_faktische_Aristokratie_und_die_Falle_der_Politik.m4a"></audio>
-          </div>
-          <noscript><p class="muted">Audio erfordert JavaScript.</p></noscript>
+      <article>
+        <section id="part1" class="section">
+          <h2>1. Die Krise unserer Zeit: Ein System am Limit</h2>
+          <p>
+            Moderne Gesellschaften leiden weniger an fehlenden Ideen als an Machtkonzentration: Entscheidungsgewalt liegt de facto bei wenigen Berufspolitikern und Eliten. Ergebnis: Blockaden, Stasis und allgemeine politische Apathie. Viele sind Politikkonsumenten statt -tragende.
+          </p>
+          <!-- Quelle: :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1} -->
         </section>
 
-        <section id="part2" class="section" data-takeaway="Informationsmonopole erzeugen Steuerungsdruck.">
-          <h2>2. Diagnose</h2>
-          <p>Zentralisation erzeugt asymmetrische Entscheidungen.</p>
+        <section id="part2" class="section">
+          <h2>2. Die vergessene Lösung: Was ist Isonomie wirklich?</h2>
+          <p>
+            Isonomie heißt Gleichheit in der Gesetzgebung — niemand hat strukturell mehr Einfluss. Das Kerninstrument: Sortition/Losverfahren. Zufällig geloste Bürgerschaften verteilen Macht und integrieren systematisch unterrepräsentierte Gruppen.
+          </p>
+          <!-- Quelle: :contentReference[oaicite:2]{index=2} :contentReference[oaicite:3]{index=3} -->
         </section>
 
-        <section id="part3" class="section" data-takeaway="Losverfahren stellen Diversität wieder her.">
-          <h2>3. Therapie</h2>
-          <p>Rotation und Transparenz sichern Repräsentation.</p>
+        <section id="part3" class="section">
+          <h2>3. Die Transformation: Wie Isonomie die Gesellschaft heilt</h2>
+          <p>
+            Geloste Gremien reduzieren destruktive Machtkämpfe und erzeugen adaptive, feinjustierte Regeln — ein permanenter Reformismus, der Institutionen anpassungsfähiger macht und kollektive Handlungsfähigkeit wieder herstellt.
+          </p>
+          <!-- Quelle: :contentReference[oaicite:4]{index=4} :contentReference[oaicite:5]{index=5} -->
         </section>
 
-        <section id="part4" class="section" data-takeaway="Pilotprojekte sind risikoarme Übergänge.">
-          <h2>4. Implementierung</h2>
-          <p>Dreistufig: Pilot, Evaluation, Skalierung.</p>
+        <section id="part4" class="section">
+          <h2>4. Implementierung: Wie fängt man praktisch an?</h2>
+          <p>
+            Start: lokale Pilotprojekte mit gelosten Bürgerräten in klar umrissenen Feldern (z. B. Bildung, Infrastruktur). Ergänzend: geloste Kontrollgremien für Exekutive-Reviews, verbindliche Reporting-Rhythmen, und deliberative Briefings.
+          </p>
+          <!-- Quelle: :contentReference[oaicite:6]{index=6} :contentReference[oaicite:7]{index=7} -->
         </section>
 
-        <section id="part5" class="section" data-takeaway="Legitimität hängt an Transparenz.">
-          <h2>5. Risiken</h2>
-          <p>Kritikpunkte adressierbar durch Offenheit.</p>
+        <section id="part5" class="section">
+          <h2>5. Herausforderungen & Missverständnisse</h2>
+          <p>
+            Kern-Einwände: historische Amnesie, Angst vor „Mob-Rule“ und Aufwand für Teilhabe. Lösung: Bildung, institutionalisiertes Design (rotierende Mandate, Interessenschecks) und Pflege einer Erinnerungskultur.
+          </p>
+          <!-- Quelle: :contentReference[oaicite:8]{index=8} :contentReference[oaicite:9]{index=9} -->
         </section>
 
-        <section id="part6" class="section" data-takeaway="Diskutieren, pilotieren, institutionalisieren.">
-          <h2>6. Fazit</h2>
-          <p>Handlung: lokale Projekte, Audits, Institutionalisierung.</p>
+        <section id="part6" class="section">
+          <h2>6. Fazit & Ausblick</h2>
+          <p>
+            Isonomie verteilt Verantwortung gerecht, reduziert Machtkämpfe und stärkt Anpassungsfähigkeit. Empfehlung: lokal starten, transparent auswerten und rechtlich verankern — evolutionär, nicht revolutionär.
+          </p>
+          <!-- Quelle: :contentReference[oaicite:10]{index=10} -->
         </section>
 
-        <!-- Distillate -->
-        <section id="distillate" class="section">
-          <h2>Kern-Argumente</h2>
-          <ul id="takeaway-list"></ul>
-          <noscript><p class="muted">Takeaways erfordern JavaScript.</p></noscript>
-        </section>
-
-        <!-- CTA -->
-        <section class="section">
-          <h2>Mitmachen</h2>
-          <p class="meta">Kleine Schritte, große Wirkung.</p>
-          <div>
-            <a class="btn" href="https://losdemokratie.de/antrag" target="_blank">Mitmachen</a>
-            <a class="btn secondary" href="mailto:info@losdemokratie.de">Kontakt</a>
-          </div>
-        </section>
+        <div class="audio-wrap">
+          <audio controls preload="metadata">
+            <source src="audio.m4a" type="audio/mp4">
+            Dein Browser unterstützt das Audio-Element nicht.
+          </audio>
+        </div>
       </article>
     </div>
   </main>
@@ -122,24 +101,6 @@
     </div>
   </footer>
 
-  <script>
-    // Minimal JS: Takeaways sammeln, Accent toggle
-    (function(){
-      const takeaways = [...document.querySelectorAll('[data-takeaway]')].map(s => s.dataset.takeaway);
-      const list = document.getElementById('takeaway-list');
-      takeaways.forEach(t => {
-        const li = document.createElement('li');
-        li.textContent = t;
-        list.appendChild(li);
-      });
-      document.getElementById('toggle-theme')?.addEventListener('click', () => {
-        const r = document.documentElement;
-        const a = getComputedStyle(r).getPropertyValue('--accent').trim();
-        const b = getComputedStyle(r).getPropertyValue('--accent-2').trim();
-        r.style.setProperty('--accent', b);
-        r.style.setProperty('--accent-2', a);
-      });
-    })();
-  </script>
+  <script src="main.js"></script>
 </body>
 </html>
