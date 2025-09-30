@@ -1,0 +1,105 @@
+/* main.css — root (no subfolders) */
+:root{
+  --bg: #071023;
+  --panel: #0d1b2b;
+  --fg: #e9eef6;
+  --muted: #9aa6b2;
+  --accent: #d43f3a;
+  --glass: rgba(255,255,255,0.03);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(180deg,var(--bg),#05121a 120%);
+  color:var(--fg);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  scroll-behavior:smooth;
+}
+
+.container{max-width:980px;margin:0 auto;padding:20px}
+
+/* Header */
+.hero{
+  padding:40px 20px;
+  text-align:center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.eyebrow{display:block;color:var(--muted);font-weight:600;margin-bottom:8px}
+.hero h1{font-size:2.2rem;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 18px}
+
+/* Buttons */
+.btn{
+  display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent);color:white;text-decoration:none;margin-right:8px;font-weight:600;
+}
+.btn.transparent{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--fg)}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:250px 1fr;gap:28px;align-items:start;margin-top:20px}
+.toc{position:sticky;top:22px;background:var(--panel);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+.toc h4{margin:0 0 10px;color:var(--muted)}
+.toc ul{list-style:none;padding:0;margin:0}
+.toc a{display:block;color:var(--muted);padding:8px;border-radius:6px;text-decoration:none;position:relative}
+.toc a:hover{color:var(--fg);background:rgba(255,255,255,0.02)}
+.toc a.active{color:var(--accent);font-weight:700;box-shadow:inset 3px 0 0 var(--accent);background:linear-gradient(90deg, rgba(212,63,58,0.03), transparent)}
+
+/* TOC preview tooltip using ::after and attr(data-preview) */
+.toc a::after{
+  content: attr(data-preview);
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 6px;
+  min-width:220px;
+  max-width:360px;
+  background:var(--panel);
+  border:1px solid rgba(255,255,255,0.03);
+  padding:10px;border-radius:8px;color:var(--muted);
+  opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .18s ease, transform .18s ease;
+  box-shadow:0 6px 18px rgba(2,8,23,0.6);
+  z-index:40;
+  white-space:normal;
+  font-size:0.92rem;
+}
+/* show on hover or focus */
+.toc a:hover::after,.toc a:focus::after{opacity:1;transform:none}
+
+/* Article */
+article{background:var(--glass);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+.section{padding:18px 0;border-bottom:1px dashed rgba(255,255,255,0.02)}
+.section h2{margin:0 0 8px;font-size:1.25rem}
+.audio-wrap{margin-top:18px}
+
+/* small copy anchor button styling (will be injected by JS) */
+.copy-anchor{
+  font-size:0.85rem;padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);
+  background:transparent;color:var(--muted);cursor:pointer;margin-left:8px;
+}
+
+/* Footer */
+footer{margin-top:30px;text-align:center;color:var(--muted);padding:24px 0}
+
+/* Responsiveness */
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr;gap:18px}
+  .toc{position:relative;top:auto}
+  .toc a::after{display:none}
+}
+
+/* Print styles — make onepager.html printable A4 */
+@media print{
+  body{background:white;color:#111}
+  .toc, .hero, footer, .audio-wrap, .btn{display:none}
+  .container{max-width:760px;padding:0}
+  article{background:transparent;border:none;padding:0}
+  .section{page-break-inside:avoid}
+  h1,h2{color:#111}
+  pre, code{white-space:pre-wrap}
+  @page { size: A4; margin: 20mm; }
+}
