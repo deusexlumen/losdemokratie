@@ -1,6 +1,5 @@
-/* main.js v6 — GSAP + ScrollTrigger + Audio Visualizer + Dock + Share Links */
+/* main.js v7 — refined, robustified, hero adjusted, audio-mapper + visualizer */
 (function () {
-  // Safeguard: if GSAP/ScrollTrigger missing, degrade gracefully
   const hasGSAP = (typeof window.gsap !== 'undefined');
   const hasScrollTrigger = (typeof window.ScrollTrigger !== 'undefined');
 
@@ -18,13 +17,11 @@
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
 
-    /* ---------- HERO PARALLAX & ENTRANCE ---------- */
+    /* ---------- HERO entrance & subtle parallax ---------- */
     if (!prefersReduced && hasGSAP) {
       const tl = gsap.timeline();
-      tl.from('.eyebrow', { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out' })
-        .from('.title', { y: 28, opacity: 0, duration: 0.9, ease: 'power3.out' }, '-=0.5')
-        .from('.lead', { y: 18, opacity: 0, duration: 0.9, ease: 'power3.out' }, '-=0.5')
-        .from('.hero-cta .btn', { y: 12, opacity: 0, stagger: 0.12, duration: 0.6, ease: 'power3.out' }, '-=0.4');
+      tl.from('.title', { y: 26, opacity: 0, duration: 0.9, ease: 'power3.out' })
+        .from('.lead', { y: 16, opacity: 0, duration: 0.9, ease: 'power3.out' }, '-=0.45');
     }
     const hero = document.getElementById('hero');
     window.addEventListener('scroll', () => {
@@ -34,14 +31,13 @@
       if (bg) bg.style.transform = `translateY(${y}px)`;
     }, { passive: true });
 
-    /* ---------- SECTION ENTRY ANIMATION & TOC ---------- */
+    /* ---------- SECTION ANIMATIONS & TOC ---------- */
     const sections = Array.from(document.querySelectorAll('.section'));
     const tocLinks = Array.from(document.querySelectorAll('.toc a'));
     const root = document.documentElement;
     const accentSet = ['#d43f3a', '#b54b8a', '#3aa7ff', '#27b27b', '#f39c12', '#7cc576'];
 
     if (hasGSAP && hasScrollTrigger && !prefersReduced) {
-      // per-section animation and toc highlight handled by individual ScrollTriggers in the cinematic timeline below.
       sections.forEach((sec, idx) => {
         gsap.fromTo(sec, { opacity: 0, y: 30, scale: 0.998 }, {
           opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power3.out',
@@ -52,7 +48,6 @@
             toggleActions: 'play none none reverse',
             onEnter: () => {
               tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${sec.id}`));
-              // change accent color per section for subtle mood shift
               const c = accentSet[idx % accentSet.length];
               gsap.to(root, { duration: 0.7, ease: 'power2.out', css: { '--accent': c } });
             },
@@ -63,7 +58,6 @@
         });
       });
     } else {
-      // fallback - reveal all
       sections.forEach(s => s.classList.add('visible'));
     }
 
@@ -78,7 +72,7 @@
       });
     });
 
-    /* ---------- CINEMATIC PINNED SCENE (Part 2 -> Part 3) ---------- */
+    /* ---------- CINEMATIC PINNED SCENE ---------- */
     if (hasGSAP && hasScrollTrigger && !prefersReduced) {
       const scene = gsap.timeline({
         scrollTrigger: {
@@ -95,12 +89,12 @@
         .to('.scene-title', { opacity: 1, y: -20, duration: 1 })
         .to('.scene-sub', { opacity: 1, y: -10, duration: 1 }, '-=0.5')
         .to('.scene-bg', { background: 'radial-gradient(circle at center, rgba(212,63,58,0.25), transparent 80%)', duration: 2 }, '-=0.5')
-        .to('.scene-keywords span', { opacity: 1, scale: 1, stagger: 0.3, duration: 1.2, ease: 'back.out(1.7)' }, '-=0.5')
+        .to('.scene-keywords span', { opacity: 1, scale: 1, stagger: 0.28, duration: 1.2, ease: 'back.out(1.7)' }, '-=0.5')
         .to('.scene-keywords span', { y: -30, opacity: 0, stagger: 0.2, duration: 1, ease: 'power2.in' })
         .to('.scene-title, .scene-sub', { opacity: 0, y: -40, duration: 1 }, '-=0.8');
     }
 
-    /* ---------- COPY-ANCHOR (per-section) ---------- */
+    /* ---------- COPY-ANCHOR ---------- */
     document.querySelectorAll('.copy-anchor').forEach(btn => {
       btn.addEventListener('click', (ev) => {
         const sec = ev.target.closest('.panel');
@@ -114,11 +108,11 @@
       });
     });
 
-    /* ---------- AUDIO VISUALIZER (Canvas) + DOCK ---------- */
+    /* ---------- AUDIO VISUALIZER + DOCK (robust) ---------- */
     const audios = Array.from(document.querySelectorAll('audio'));
     let audioContext = null;
     let analyser = null;
-    let sourceNode = null;
+    const audioToSource = new WeakMap();
     let dataArray = null;
     let rafId = null;
     let currentAudio = null;
@@ -133,39 +127,41 @@
     let canvasWidth = 0, canvasHeight = 0;
 
     function initAudioContext() {
-      if (!audioContext) {
-        const AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return null;
-        audioContext = new AC();
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 2048;
-        analyser.smoothingTimeConstant = 0.8;
-        dataArray = new Uint8Array(analyser.fftSize);
-      }
+      if (audioContext) return audioContext;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      audioContext = new AC();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.8;
+      dataArray = new Uint8Array(analyser.fftSize);
       return audioContext;
     }
 
     function connectAnalyserToElement(el) {
       if (!el) return;
       initAudioContext();
+      if (!audioContext || !analyser) return;
       try {
-        if (sourceNode) {
-          try { sourceNode.disconnect(); } catch (e) { /* ignore */ }
+        if (!audioToSource.has(el)) {
+          const srcNode = audioContext.createMediaElementSource(el);
+          audioToSource.set(el, srcNode);
+          srcNode.connect(analyser);
+        } else {
+          const srcNode = audioToSource.get(el);
+          try { srcNode.connect(analyser); } catch (e) { /* ignore */ }
         }
-        // createMediaElementSource can throw if element is cross-origin without CORS; our files are local
-        sourceNode = audioContext.createMediaElementSource(el);
-        sourceNode.connect(analyser);
-        analyser.connect(audioContext.destination);
+        try { analyser.connect(audioContext.destination); } catch (e) { /* ignore */ }
       } catch (err) {
-        console.warn('Could not create MediaElementSource:', err);
+        console.warn('MediaElementSource error (CORS or already used?):', err);
       }
     }
 
     function resizeCanvas() {
       if (!canvas || !ctx) return;
       const ratio = window.devicePixelRatio || 1;
-      canvasWidth = canvas.clientWidth;
-      canvasHeight = canvas.clientHeight;
+      canvasWidth = canvas.clientWidth || 800;
+      canvasHeight = canvas.clientHeight || 64;
       canvas.width = Math.floor(canvasWidth * ratio);
       canvas.height = Math.floor(canvasHeight * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -179,21 +175,23 @@
       analyser.getByteTimeDomainData(dataArray);
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-      // background subtle gradient
+      // subtle background
       const grad = ctx.createLinearGradient(0, 0, canvasWidth, 0);
-      grad.addColorStop(0, 'rgba(212,63,58,0.12)');
+      grad.addColorStop(0, 'rgba(212,63,58,0.10)');
       grad.addColorStop(0.5, 'rgba(181,75,138,0.06)');
-      grad.addColorStop(1, 'rgba(58,167,255,0.06)');
+      grad.addColorStop(1, 'rgba(58,167,255,0.04)');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-      // waveform line
+      // waveform
       ctx.lineWidth = 2;
-      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#d43f3a';
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d43f3a';
+      ctx.strokeStyle = accent;
       ctx.beginPath();
-      const sliceWidth = canvasWidth / dataArray.length;
+      const len = dataArray.length;
+      const sliceWidth = canvasWidth / len;
       let x = 0;
-      for (let i = 0; i < dataArray.length; i++) {
+      for (let i = 0; i < len; i++) {
         const v = dataArray[i] / 128.0; // 0..2
         const y = (v * canvasHeight) / 2;
         if (i === 0) ctx.moveTo(x, y);
@@ -203,10 +201,10 @@
       ctx.lineTo(canvasWidth, canvasHeight / 2);
       ctx.stroke();
 
-      // subtle fill under curve
-      ctx.globalAlpha = 0.12;
-      ctx.fillStyle = ctx.strokeStyle;
-      ctx.fill();
+      // faint fill
+      ctx.globalAlpha = 0.10;
+      ctx.fillStyle = accent;
+      ctx.fillRect(0, 0, 1, 0); // no-op to keep compositing stable
       ctx.globalAlpha = 1;
 
       rafId = requestAnimationFrame(drawVisualizer);
@@ -217,9 +215,7 @@
         cancelAnimationFrame(rafId);
         rafId = null;
       }
-      if (ctx) {
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-      }
+      if (ctx) ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     }
 
     function showDock(show = true) {
@@ -229,48 +225,43 @@
     }
 
     audios.forEach(a => {
-      // ensure audio has data-title fallback
       if (!a.dataset.title) {
         const src = a.querySelector('source')?.getAttribute('src') || '';
         a.dataset.title = decodeURIComponent(src.split('/').pop() || 'Audio');
       }
 
       a.addEventListener('play', async () => {
-        // Pause others
         audios.forEach(x => { if (x !== a) x.pause(); });
-
         currentAudio = a;
-        // highlight panel visually
+
+        // visual highlight
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('playing'));
         const panel = a.closest('.panel');
         if (panel) panel.classList.add('playing');
 
-        // start audio context and connect analyzer
+        // initialize audio context on gesture
         initAudioContext();
-        try {
-          await audioContext.resume();
-        } catch (e) { /* ignore */ }
+        try { await audioContext.resume(); } catch(e) { /* ignore */ }
 
-        try { connectAnalyserToElement(a); } catch (e) { console.warn(e); }
+        connectAnalyserToElement(a);
 
-        // update dock info
+        // update dock
         if (dockTitle) dockTitle.innerText = a.dataset.title || 'Audio';
         if (dockState) dockState.innerText = 'playing';
         const src = a.querySelector('source')?.getAttribute('src') || '#';
         if (dockDownload) { dockDownload.href = src; dockDownload.setAttribute('download', src.split('/').pop()); }
 
         showDock(true);
-        stopVisualizer(); // ensure only one loop
+        stopVisualizer();
         drawVisualizer();
+        if (dockPlay) dockPlay.innerText = '⏸';
       });
 
       a.addEventListener('pause', () => {
         if (dockState) dockState.innerText = 'paused';
-        if (currentAudio === a) {
-          // remove playing highlight
-          const panel = a.closest('.panel');
-          if (panel) panel.classList.remove('playing');
-        }
+        const panel = a.closest('.panel');
+        if (panel) panel.classList.remove('playing');
+        if (dockPlay) dockPlay.innerText = '▶';
         stopVisualizer();
       });
 
@@ -278,63 +269,57 @@
         if (dockState) dockState.innerText = 'stopped';
         const panel = a.closest('.panel');
         if (panel) panel.classList.remove('playing');
+        if (dockPlay) dockPlay.innerText = '▶';
         stopVisualizer();
       });
     });
 
-    // dock controls
+    // dock play/pause
     dockPlay?.addEventListener('click', () => {
       if (!currentAudio) return;
-      if (currentAudio.paused) currentAudio.play();
-      else currentAudio.pause();
+      if (currentAudio.paused) currentAudio.play(); else currentAudio.pause();
     });
 
-    // if user clicks audio element directly, ensure dock updates (play/pause handled by events above)
-    // Hide dock after inactivity
-    let dockHideTimer;
+    // auto-hide dock after inactivity
+    let dockTimer;
     document.addEventListener('mousemove', () => {
       if (!dock) return;
       if (dock.classList.contains('visible')) {
-        clearTimeout(dockHideTimer);
-        dockHideTimer = setTimeout(() => dock.classList.remove('visible'), 6000);
+        clearTimeout(dockTimer);
+        dockTimer = setTimeout(() => dock.classList.remove('visible'), 6000);
       }
     });
 
-    // canvas sizing init & redraw
+    // canvas initial sizing
     resizeCanvas();
 
-    /* ---------- small accessibility: first tab focus rings ---------- */
+    /* ---------- accessibility: focus rings after tab ---------- */
     function handleFirstTab(e) { if (e.key === 'Tab') { document.body.classList.add('show-focus'); window.removeEventListener('keydown', handleFirstTab); } }
     window.addEventListener('keydown', handleFirstTab);
 
-    /* ---------- Share Links (as requested) ---------- */
+    /* ---------- SHARE LINKS SETUP ---------- */
     function setupShareLinks() {
       const url = encodeURIComponent(window.location.href);
       const title = encodeURIComponent(document.title);
-      const shareEmail = document.getElementById('share-email') || document.getElementById('share-email');
-      const shareX = document.getElementById('share-x') || document.getElementById('share-x');
-      const shareFacebook = document.getElementById('share-facebook') || document.getElementById('share-facebook');
+      const shareEmail = document.getElementById('share-email');
+      const shareX = document.getElementById('share-x');
+      const shareFacebook = document.getElementById('share-facebook');
       if (shareEmail) shareEmail.href = `mailto:?subject=${title}&body=Schau dir dieses Dossier zur Isonomie an: ${url}`;
       if (shareX) shareX.href = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
       if (shareFacebook) shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
     }
     setupShareLinks();
 
-    /* ---------- Respect reduced-motion: stop heavy animations/visualizer if requested ---------- */
+    /* ---------- respect reduced-motion ---------- */
     if (prefersReduced) {
-      // disable ScrollTriggers
-      if (hasScrollTrigger) {
-        ScrollTrigger.getAll().forEach(st => st.disable());
-      }
-      // stop any ongoing visualizer
+      if (hasScrollTrigger) ScrollTrigger.getAll().forEach(st => st.disable());
       stopVisualizer();
     }
 
-    /* ---------- window unload cleanup ---------- */
+    /* ---------- cleanup ---------- */
     window.addEventListener('pagehide', () => {
       stopVisualizer();
-      if (sourceNode) try { sourceNode.disconnect(); } catch (e) {}
-      if (analyser) try { analyser.disconnect(); } catch (e) {}
+      try { audioToSource && audioToSource = null; } catch(e){}
       if (audioContext && audioContext.state !== 'closed') try { audioContext.close(); } catch (e) {}
     });
 
