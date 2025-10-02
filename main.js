@@ -1,27 +1,33 @@
-/* main.js v7 — refined, robustified, hero adjusted, audio-mapper + visualizer */
+/* main.js v8 — stabile/robuste Version mit Debug-Logs und fixes */
 (function () {
   const hasGSAP = (typeof window.gsap !== 'undefined');
   const hasScrollTrigger = (typeof window.ScrollTrigger !== 'undefined');
 
   document.addEventListener('DOMContentLoaded', () => {
+    console.info('Dossier v8 initializing — GSAP:', !!hasGSAP, 'ScrollTrigger:', !!hasScrollTrigger, 'WebAudio:', !!(window.AudioContext || window.webkitAudioContext));
+
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (hasGSAP && hasScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+    if (hasGSAP && hasScrollTrigger) try { gsap.registerPlugin(ScrollTrigger); } catch (e) { console.warn('GSAP registerPlugin failed', e); }
 
     /* ---------- READ PROGRESS ---------- */
     const progress = document.getElementById('read-progress');
     function updateProgress() {
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = Math.min(100, Math.max(0, (window.scrollY / Math.max(1, h)) * 100));
-      if (progress) progress.style.width = pct + '%';
+      try {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = Math.min(100, Math.max(0, (window.scrollY / Math.max(1, h)) * 100));
+        if (progress) progress.style.width = pct + '%';
+      } catch (e) { /* ignore */ }
     }
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
 
     /* ---------- HERO entrance & subtle parallax ---------- */
     if (!prefersReduced && hasGSAP) {
-      const tl = gsap.timeline();
-      tl.from('.title', { y: 26, opacity: 0, duration: 0.9, ease: 'power3.out' })
-        .from('.lead', { y: 16, opacity: 0, duration: 0.9, ease: 'power3.out' }, '-=0.45');
+      try {
+        const tl = gsap.timeline();
+        tl.from('.title', { y: 26, opacity: 0, duration: 0.9, ease: 'power3.out' })
+          .from('.lead', { y: 16, opacity: 0, duration: 0.9, ease: 'power3.out' }, '-=0.45');
+      } catch (e) { console.warn('Hero GSAP animation failed', e); }
     }
     const hero = document.getElementById('hero');
     window.addEventListener('scroll', () => {
@@ -39,23 +45,28 @@
 
     if (hasGSAP && hasScrollTrigger && !prefersReduced) {
       sections.forEach((sec, idx) => {
-        gsap.fromTo(sec, { opacity: 0, y: 30, scale: 0.998 }, {
-          opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sec,
-            start: 'top 72%',
-            end: 'bottom 28%',
-            toggleActions: 'play none none reverse',
-            onEnter: () => {
-              tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${sec.id}`));
-              const c = accentSet[idx % accentSet.length];
-              gsap.to(root, { duration: 0.7, ease: 'power2.out', css: { '--accent': c } });
-            },
-            onEnterBack: () => {
-              tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${sec.id}`));
+        try {
+          gsap.fromTo(sec, { opacity: 0, y: 30, scale: 0.998 }, {
+            opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: {
+              trigger: sec,
+              start: 'top 72%',
+              end: 'bottom 28%',
+              toggleActions: 'play none none reverse',
+              onEnter: () => {
+                tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${sec.id}`));
+                const c = accentSet[idx % accentSet.length];
+                try { gsap.to(root, { duration: 0.7, ease: 'power2.out', css: { '--accent': c } }); } catch (e) { document.documentElement.style.setProperty('--accent', c); }
+              },
+              onEnterBack: () => {
+                tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${sec.id}`));
+              }
             }
-          }
-        });
+          });
+        } catch (e) {
+          // fallback: simply reveal
+          sec.classList.add('visible');
+        }
       });
     } else {
       sections.forEach(s => s.classList.add('visible'));
@@ -74,24 +85,26 @@
 
     /* ---------- CINEMATIC PINNED SCENE ---------- */
     if (hasGSAP && hasScrollTrigger && !prefersReduced) {
-      const scene = gsap.timeline({
-        scrollTrigger: {
-          trigger: '#cinematic',
-          start: 'top top',
-          end: '+=200%',
-          scrub: true,
-          pin: true,
-          anticipatePin: 1
-        }
-      });
+      try {
+        const scene = gsap.timeline({
+          scrollTrigger: {
+            trigger: '#cinematic',
+            start: 'top top',
+            end: '+=200%',
+            scrub: true,
+            pin: true,
+            anticipatePin: 1
+          }
+        });
 
-      scene
-        .to('.scene-title', { opacity: 1, y: -20, duration: 1 })
-        .to('.scene-sub', { opacity: 1, y: -10, duration: 1 }, '-=0.5')
-        .to('.scene-bg', { background: 'radial-gradient(circle at center, rgba(212,63,58,0.25), transparent 80%)', duration: 2 }, '-=0.5')
-        .to('.scene-keywords span', { opacity: 1, scale: 1, stagger: 0.28, duration: 1.2, ease: 'back.out(1.7)' }, '-=0.5')
-        .to('.scene-keywords span', { y: -30, opacity: 0, stagger: 0.2, duration: 1, ease: 'power2.in' })
-        .to('.scene-title, .scene-sub', { opacity: 0, y: -40, duration: 1 }, '-=0.8');
+        scene
+          .to('.scene-title', { opacity: 1, y: -20, duration: 1 })
+          .to('.scene-sub', { opacity: 1, y: -10, duration: 1 }, '-=0.5')
+          .to('.scene-bg', { background: 'radial-gradient(circle at center, rgba(212,63,58,0.25), transparent 80%)', duration: 2 }, '-=0.5')
+          .to('.scene-keywords span', { opacity: 1, scale: 1, stagger: 0.28, duration: 1.2, ease: 'back.out(1.7)' }, '-=0.5')
+          .to('.scene-keywords span', { y: -30, opacity: 0, stagger: 0.2, duration: 1, ease: 'power2.in' })
+          .to('.scene-title, .scene-sub', { opacity: 0, y: -40, duration: 1 }, '-=0.8');
+      } catch (e) { console.warn('Cinematic scene failed to init', e); }
     }
 
     /* ---------- COPY-ANCHOR ---------- */
@@ -112,10 +125,10 @@
     const audios = Array.from(document.querySelectorAll('audio'));
     let audioContext = null;
     let analyser = null;
-    const audioToSource = new WeakMap();
     let dataArray = null;
     let rafId = null;
     let currentAudio = null;
+    let audioToSource = new WeakMap();
 
     const dock = document.querySelector('.audio-dock');
     const dockTitle = document.getElementById('dock-title');
@@ -140,20 +153,21 @@
 
     function connectAnalyserToElement(el) {
       if (!el) return;
-      initAudioContext();
-      if (!audioContext || !analyser) return;
+      if (!initAudioContext()) return;
       try {
         if (!audioToSource.has(el)) {
+          // createMediaElementSource may fail if the element is already connected to another AudioContext or CORS flagged
           const srcNode = audioContext.createMediaElementSource(el);
           audioToSource.set(el, srcNode);
           srcNode.connect(analyser);
         } else {
+          // ensure it's connected
           const srcNode = audioToSource.get(el);
           try { srcNode.connect(analyser); } catch (e) { /* ignore */ }
         }
         try { analyser.connect(audioContext.destination); } catch (e) { /* ignore */ }
       } catch (err) {
-        console.warn('MediaElementSource error (CORS or already used?):', err);
+        console.warn('MediaElementSource failed (possible CORS/already-in-use). Visualizer disabled for this audio. Error:', err);
       }
     }
 
@@ -175,7 +189,7 @@
       analyser.getByteTimeDomainData(dataArray);
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-      // subtle background
+      // background gradient
       const grad = ctx.createLinearGradient(0, 0, canvasWidth, 0);
       grad.addColorStop(0, 'rgba(212,63,58,0.10)');
       grad.addColorStop(0.5, 'rgba(181,75,138,0.06)');
@@ -183,38 +197,39 @@
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-      // waveform
+      // waveform path
       ctx.lineWidth = 2;
-      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d43f3a';
+      let accent = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#d43f3a';
+      accent = accent.trim() || '#d43f3a';
       ctx.strokeStyle = accent;
       ctx.beginPath();
       const len = dataArray.length;
       const sliceWidth = canvasWidth / len;
       let x = 0;
+      const midY = canvasHeight / 2;
       for (let i = 0; i < len; i++) {
-        const v = dataArray[i] / 128.0; // 0..2
-        const y = (v * canvasHeight) / 2;
+        const v = (dataArray[i] - 128) / 128.0; // -1 .. 1
+        const y = midY + v * midY * 0.9; // scale down a bit
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
         x += sliceWidth;
       }
-      ctx.lineTo(canvasWidth, canvasHeight / 2);
       ctx.stroke();
 
-      // faint fill
-      ctx.globalAlpha = 0.10;
+      // fill under curve
+      ctx.lineTo(canvasWidth, canvasHeight);
+      ctx.lineTo(0, canvasHeight);
+      ctx.closePath();
+      ctx.globalAlpha = 0.06;
       ctx.fillStyle = accent;
-      ctx.fillRect(0, 0, 1, 0); // no-op to keep compositing stable
+      ctx.fill();
       ctx.globalAlpha = 1;
 
       rafId = requestAnimationFrame(drawVisualizer);
     }
 
     function stopVisualizer() {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
       if (ctx) ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     }
 
@@ -231,6 +246,7 @@
       }
 
       a.addEventListener('play', async () => {
+        // pause others
         audios.forEach(x => { if (x !== a) x.pause(); });
         currentAudio = a;
 
@@ -239,17 +255,18 @@
         const panel = a.closest('.panel');
         if (panel) panel.classList.add('playing');
 
-        // initialize audio context on gesture
-        initAudioContext();
-        try { await audioContext.resume(); } catch(e) { /* ignore */ }
-
-        connectAnalyserToElement(a);
+        // init audio context and connect analyser
+        if (!initAudioContext()) { console.warn('WebAudio not available — visualizer disabled'); }
+        else {
+          try { await audioContext.resume(); } catch (e) { /* ignore */ }
+          connectAnalyserToElement(a);
+        }
 
         // update dock
         if (dockTitle) dockTitle.innerText = a.dataset.title || 'Audio';
         if (dockState) dockState.innerText = 'playing';
         const src = a.querySelector('source')?.getAttribute('src') || '#';
-        if (dockDownload) { dockDownload.href = src; dockDownload.setAttribute('download', src.split('/').pop()); }
+        if (dockDownload) { dockDownload.href = encodeURI(src); dockDownload.setAttribute('download', src.split('/').pop()); }
 
         showDock(true);
         stopVisualizer();
@@ -312,15 +329,16 @@
 
     /* ---------- respect reduced-motion ---------- */
     if (prefersReduced) {
-      if (hasScrollTrigger) ScrollTrigger.getAll().forEach(st => st.disable());
+      if (hasScrollTrigger) try { ScrollTrigger.getAll().forEach(st => st.disable()); } catch (e) {}
       stopVisualizer();
     }
 
     /* ---------- cleanup ---------- */
     window.addEventListener('pagehide', () => {
       stopVisualizer();
-      try { audioToSource && audioToSource = null; } catch(e){}
-      if (audioContext && audioContext.state !== 'closed') try { audioContext.close(); } catch (e) {}
+      // WeakMap will be garbage-collected; do not try to reassign consts
+      if (analyser) try { analyser.disconnect(); } catch (e) {}
+      if (audioContext && audioContext.state !== 'closed') try { audioContext.close().catch(()=>{}); } catch (e) {}
     });
 
   }); // DOMContentLoaded
