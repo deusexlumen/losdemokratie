@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Dossier zur Isonomie — Scrolltelling</title>
   <meta name="description" content="Interaktives Dossier zur Isonomie — Warum Gleichheit in der Gesetzgebung unsere Systeme krisenfest macht." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="main.css?v=8" />
-  <meta name="color-scheme" content="dark light">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css" />
+  <meta name="color-scheme" content="dark">
 </head>
 <body>
+
+  <div id="start-overlay">
+    <div class="start-box">
+      <h1>Dossier zur Isonomie</h1>
+      <p>Ein interaktives Erlebnis mit Audio. Klicken Sie, um zu starten.</p>
+      <button id="start-button" class="btn-cta">Erlebnis starten</button>
+    </div>
+  </div>
+
   <div id="read-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-  <!-- HERO: simplified & focused -->
   <header id="hero" class="hero" role="banner">
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="container hero-inner">
-      <div class="hero-top">
-        <div class="hero-controls" aria-hidden="false">
-          <button id="theme-toggle" class="icon-btn" aria-label="Theme wechseln">🌙</button>
-          <button id="accent-toggle" class="icon-btn" aria-label="Akzent wechseln">🎨</button>
-          <a class="btn btn-ghost" href="onepager.html" target="_blank" rel="noopener">One-Pager (Druckversion)</a>
-        </div>
-      </div>
-
       <h1 class="title">Dossier zur Isonomie</h1>
       <p class="lead">
         Warum echte Gleichheit in der Gesetzgebung (Isonomie) unsere Systeme krisenfest macht —
@@ -35,87 +35,71 @@
 
   <main id="main" class="container">
     <div class="layout">
-
-      <!-- SIDEBAR -->
       <aside class="sidebar" aria-label="Seiten-Navigation">
         <nav class="toc" aria-label="Inhaltsverzeichnis">
           <h4>Inhalt</h4>
           <ul>
+            <!-- data-preview wird von JS für die Chapter Card genutzt -->
             <li><a class="toc-link" href="#part1" data-preview="Machtkonzentration & Apathie">1. Die Krise unserer Zeit</a></li>
-            <li><a class="toc-link" href="#part2" data-preview="Isonomie = Gleichheit in der Gesetzgebung">2. Was ist Isonomie?</a></li>
-            <li><a class="toc-link" href="#part3" data-preview="Losbasierte Teilhabe reduziert Machtkämpfe">3. Wie Isonomie heilt</a></li>
-            <li><a class="toc-link" href="#part4" data-preview="Pilotprojekte & Rechtsverankerung">4. Implementierung</a></li>
+            <li><a class="toc-link" href="#part2" data-preview="Isonomie = Gleichheit im Gesetz">2. Was ist Isonomie?</a></li>
+            <li><a class="toc-link" href="#part3" data-preview="Losbasierte Teilhabe heilt">3. Wie Isonomie heilt</a></li>
+            <li><a class="toc-link" href="#part4" data-preview="Pilotprojekte & Verankerung">4. Implementierung</a></li>
             <li><a class="toc-link" href="#part5" data-preview="Kritik & Gegenmaßnahmen">5. Herausforderungen</a></li>
             <li><a class="toc-link" href="#part6" data-preview="Empfehlung & Ausblick">6. Fazit & Ausblick</a></li>
           </ul>
         </nav>
-
-        <section class="quick-links" aria-labelledby="tools-title">
-          <h5 id="tools-title">Ihre Werkzeugkiste</h5>
-          <p>Ressourcen, um tiefer einzutauchen:</p>
-          <ul>
-            <li><a href="https://losdemokratie.de/" target="_blank" rel="noopener noreferrer">Losdemokratie.de</a></li>
-            <li><a href="https://www.wallstein-verlag.de/9783835318717-david-van-reybrouck-gegen-wahlen.html" target="_blank" rel="noopener noreferrer">"Gegen Wahlen" — Van Reybrouck</a></li>
-            <li><a href="https://www.zeit.de/2017/04/rechtspopulismus-demokratie-wahlen-buergerversammlungen-politisches-system-griechenland/komplettansicht" target="_blank" rel="noopener noreferrer">"Demokratie ohne Wahlen?" (Zeit)</a></li>
-            <li><a href="https://youtube.com/@nuttlos6347" target="_blank" rel="noopener noreferrer">Nutt-Los auf YouTube</a></li>
-            <li><a href="https://deusexlumen.bio.link" target="_blank" rel="noopener noreferrer">deusexlumen.bio.link</a></li>
-          </ul>
-        </section>
+        <!-- Die Chapter Card wird hier von JS dynamisch eingefügt -->
+        <div id="chapter-card-container"></div>
       </aside>
 
-      <!-- STORY -->
       <article class="story" aria-live="polite">
-
+        <!-- ... (der Rest des article-Inhalts bleibt unverändert) ... -->
         <section id="part1" class="panel section" tabindex="-1">
-          <h2>1. Die Krise unserer Zeit: Ein System am Limit <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
-          <p>Moderne Gesellschaften leiden weniger an Ideenmangel als an Machtkonzentration: Entscheidungsgewalt bei wenigen Berufspolitikern und Eliten führt zu Blockaden, Stasis und politischer Apathie.</p>
+          <h2>1. Die Krise unserer Zeit <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
+          <p>Moderne Gesellschaften leiden weniger an Ideenmangel als an Machtkonzentration: Entscheidungsgewalt bei wenigen führt zu Blockaden und politischer Apathie.</p>
           <audio controls preload="metadata" data-title="TEIL EINS — Entlarvt die faktische Aristokratie">
             <source src="TEIL%20EINS__Isonomie__Entlarvt_die_faktische_Aristokratie_und_die_Falle_der_Politik.m4a" type="audio/mp4">
           </audio>
         </section>
 
         <section id="part2" class="panel section" tabindex="-1">
-          <h2>2. Die vergessene Lösung: Was ist Isonomie wirklich? <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
+          <h2>2. Die vergessene Lösung <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
           <p>Isonomie heißt Gleichheit in der Gesetzgebung — das Kerninstrument ist Sortition.</p>
           <audio controls preload="metadata" data-title="TEIL ZWEI — Stasis, Tyrannis, Idiotie">
             <source src="TEIL%20ZWEI__Stasis,_Tyrannis,_Idiotie__Die_düstere_Abwärtsspirale_der_Demokratie.m4a" type="audio/mp4">
           </audio>
         </section>
 
-        <!-- CINEMATIC SCENE (pinned scrub) -->
         <section id="cinematic" class="panel cinematic-scene" aria-hidden="true">
           <div class="scene-bg"></div>
           <div class="scene-inner">
             <h2 class="scene-title">Vom Prinzip zur Praxis</h2>
             <p class="scene-sub">Isonomie ist mehr als eine Idee — es ist ein lebendiger Prozess.</p>
             <div class="scene-keywords" aria-hidden="true">
-              <span>Gleichheit</span>
-              <span>Losverfahren</span>
-              <span>Teilhabe</span>
-              <span>Kollektiv</span>
+              <span>Gleichheit</span><span>Losverfahren</span><span>Teilhabe</span><span>Kollektiv</span>
             </div>
           </div>
         </section>
 
         <section id="part3" class="panel section" tabindex="-1">
-          <h2>3. Die Transformation: Wie Isonomie die Gesellschaft heilt <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
-          <p>Geloste Gremien reduzieren destruktive Machtkämpfe, erhöhen institutionelle Lernfähigkeit und schaffen anpassungsfähige Regeln.</p>
+          <h2>3. Die Transformation <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
+          <p>Geloste Gremien reduzieren destruktive Machtkämpfe und erhöhen institutionelle Lernfähigkeit.</p>
           <audio controls preload="metadata" data-title="TEIL DREI — Die vergessene Lösung">
             <source src="TEIL%20DREI__Isonomie_%26_Losverfahren__Die_vergessene_Lösung_für_politische_Gleichheit_.m4a" type="audio/mp4">
           </audio>
         </section>
 
         <section id="part4" class="panel section" tabindex="-1">
-          <h2>4. Implementierung: Wie fängt man praktisch an? <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
-          <p>Pragmatisch: lokale Pilotprojekte, geloste Kontrollgremien, verbindliche Reportings & deliberative Briefings.</p>
+          <h2>4. Implementierung <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
+          <p>Pragmatisch: lokale Pilotprojekte, geloste Kontrollgremien und deliberative Briefings.</p>
           <audio controls preload="metadata" data-title="TEIL VIER — Eine Heilung für Gesellschaft und Psyche">
             <source src="TEIL%20VIER__Isonomie_durch_Losverfahren__Eine_Heilung_für_Gesellschaft_und_Psyche_.m4a" type="audio/mp4">
           </audio>
         </section>
 
         <section id="part5" class="panel section" tabindex="-1">
-          <h2>5. Herausforderungen & Missverständnisse <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
-          <p>Kern-Einwände: historische Amnesie, Angst vor „Mob-Rule“ und hoher Aufwand. Gegenmaßnahmen: Bildung, Rotations-Design, Interessenschecks.</p>
+          <h2>5. Herausforderungen <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
+          <p>Kern-Einwände: historische Amnesie und Angst vor „Mob-Rule“. Gegenmaßnahmen: Bildung, Rotations-Design.</p>
           <audio controls preload="metadata" data-title="TEIL FÜNF — Warum wir politische Gleichheit vergessen haben">
             <source src="TEIL%20FÜNF__Isonomie__Warum_wir_politische_Gleichheit_durch_Losverfahren_vergessen_haben_-_Risiken,_Missverständ.m4a" type="audio/mp4">
           </audio>
@@ -123,43 +107,10 @@
 
         <section id="part6" class="panel section" tabindex="-1">
           <h2>6. Fazit & Ausblick <button class="copy-anchor" title="Link kopieren">🔗</button></h2>
-          <p>Isonomie verteilt Verantwortung gerecht, reduziert Machtkämpfe und stärkt Anpassungsfähigkeit. Kurz: lokal starten, evaluieren, verankern.</p>
+          <p>Isonomie verteilt Verantwortung gerecht und stärkt Anpassungsfähigkeit. Starten, evaluieren, verankern.</p>
           <audio controls preload="metadata" data-title="TEIL SECHS — Quantensprung zur politischen Mündigkeit">
             <source src="TEIL%20SECHS__Isonomie_und_Losverfahren__Der_Quantensprung_zur_politischen_Mündigkeit.m4a" type="audio/mp4">
           </audio>
-        </section>
-
-        <!-- RESOURCES / MISSION -->
-        <section id="resources" class="panel resources-section" tabindex="-1">
-          <div class="resources-inner">
-            <div class="resources-left">
-              <h3>Ihre Werkzeugkiste</h3>
-              <p>Hier finden Sie eine Auswahl an Ressourcen, um tiefer in die Welt der Losdemokratie einzutauchen:</p>
-              <ul>
-                <li><strong>Webseite:</strong> <a href="https://losdemokratie.de/" target="_blank" rel="noopener noreferrer">Losdemokratie.de</a></li>
-                <li><strong>Buch:</strong> <a href="https://www.wallstein-verlag.de/9783835318717-david-van-reybrouck-gegen-wahlen.html" target="_blank" rel="noopener noreferrer">"Gegen Wahlen" — David Van Reybrouck</a></li>
-                <li><strong>Artikel:</strong> <a href="https://www.zeit.de/2017/04/rechtspopulismus-demokratie-wahlen-buergerversammlungen-politisches-system-griechenland/komplettansicht" target="_blank" rel="noopener noreferrer">"Demokratie ohne Wahlen?" (Zeit)</a></li>
-                <li><strong>Video:</strong> <a href="https://youtube.com/@nuttlos6347" target="_blank" rel="noopener noreferrer">Nutt-Los auf YouTube</a></li>
-              </ul>
-            </div>
-            <div class="resources-right">
-              <h3>Ihre Mission</h3>
-              <p>Wissen ist der erste Schritt, Handeln der nächste. Hier sind Ihre ersten Missionen:</p>
-              <ul>
-                <li><strong>Teilen:</strong> Senden Sie dieses Dossier an eine Person, die politikverdrossen ist.</li>
-                <li><strong>Fragen:</strong> Kontaktieren Sie Ihren lokalen Abgeordneten — wie steht er/sie zu Bürgerräten?</li>
-                <li><strong>Vertiefen:</strong> Nutze die Ressourcen, bilde dir eine Meinung und bring die Idee ins Gespräch.</li>
-              </ul>
-
-              <a class="btn btn-cta" href="https://losdemokratie.de/antrag" target="_blank" rel="noopener">Teil der Bewegung werden</a>
-
-              <div class="share-buttons" aria-label="Teilen">
-                <a href="#" id="share-email" class="share-btn" role="button" aria-label="Dieses Dossier per E-Mail teilen" target="_blank" rel="noopener noreferrer">📧 <span>E-Mail</span></a>
-                <a href="#" id="share-x" class="share-btn" role="button" aria-label="Dieses Dossier auf X/Twitter teilen" target="_blank" rel="noopener noreferrer">🐦 <span>X/Twitter</span></a>
-                <a href="#" id="share-facebook" class="share-btn" role="button" aria-label="Dieses Dossier auf Facebook teilen" target="_blank" rel="noopener noreferrer">📘 <span>Facebook</span></a>
-              </div>
-            </div>
-          </div>
         </section>
 
       </article>
@@ -167,19 +118,16 @@
   </main>
 
   <footer class="page-footer">
-    <div class="container">
-      <p>created by <a href="https://youtube.com/@deusexlumen" target="_blank" rel="noopener noreferrer">deus.ex.lumen</a> · 2025 — <a href="https://deusexlumen.bio.link" target="_blank" rel="noopener noreferrer">deusexlumen.bio.link</a></p>
-    </div>
+    <p>created by <a href="https://youtube.com/@deusexlumen" target="_blank" rel="noopener noreferrer">deus.ex.lumen</a> · 2025</p>
   </footer>
 
-  <!-- persistent audio dock with canvas visualizer -->
   <div class="audio-dock" aria-hidden="true">
     <div class="dock-left">
       <strong id="dock-title">—</strong>
-      <span id="dock-state" class="muted">stopped</span>
+      <span id="dock-state">stopped</span>
     </div>
     <div class="dock-visual">
-      <canvas id="wave-canvas" width="800" height="64" aria-hidden="true"></canvas>
+      <canvas id="wave-canvas" width="800" height="64"></canvas>
     </div>
     <div class="dock-controls">
       <button id="dock-play" class="icon-btn" aria-label="Play/Pause">▶</button>
@@ -187,10 +135,8 @@
     </div>
   </div>
 
-  <!-- GSAP + ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-  <script src="main.js?v=8"></script>
+  <script src="main.js"></script>
 </body>
 </html>
