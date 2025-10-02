@@ -1,345 +1,290 @@
-/* main.js v8 — stabile/robuste Version mit Debug-Logs und fixes */
+// main.js v10 — Refactored, Modular, and Observer-driven
 (function () {
-  const hasGSAP = (typeof window.gsap !== 'undefined');
-  const hasScrollTrigger = (typeof window.ScrollTrigger !== 'undefined');
+  'use strict';
 
-  document.addEventListener('DOMContentLoaded', () => {
-    console.info('Dossier v8 initializing — GSAP:', !!hasGSAP, 'ScrollTrigger:', !!hasScrollTrigger, 'WebAudio:', !!(window.AudioContext || window.webkitAudioContext));
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const accentColors = ['#d43f3a', '#b54b8a', '#3aa7ff', '#27b27b', '#f39c12', '#7cc576'];
 
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (hasGSAP && hasScrollTrigger) try { gsap.registerPlugin(ScrollTrigger); } catch (e) { console.warn('GSAP registerPlugin failed', e); }
+  // --- MODUL: AudioPlayer ---
+  // Kapselt alle Audio-bezogenen Funktionen und Zustände
+  const AudioPlayer = {
+    audioContext: null,
+    analyser: null,
+    sourceNodeCache: new WeakMap(),
+    currentAudio: null,
+    isReady: false,
+    dockHideTimer: null,
 
-    /* ---------- READ PROGRESS ---------- */
-    const progress = document.getElementById('read-progress');
-    function updateProgress() {
-      try {
-        const h = document.documentElement.scrollHeight - window.innerHeight;
-        const pct = Math.min(100, Math.max(0, (window.scrollY / Math.max(1, h)) * 100));
-        if (progress) progress.style.width = pct + '%';
-      } catch (e) { /* ignore */ }
-    }
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    updateProgress();
+    init() {
+      this.dock.el = document.querySelector('.audio-dock');
+      this.dock.title = document.getElementById('dock-title');
+      this.dock.state = document.getElementById('dock-state');
+      this.dock.playBtn = document.getElementById('dock-play');
+      this.dock.download = document.getElementById('dock-download');
+      this.dock.canvas = document.getElementById('wave-canvas');
+      if (this.dock.canvas) this.dock.ctx = this.dock.canvas.getContext('2d');
 
-    /* ---------- HERO entrance & subtle parallax ---------- */
-    if (!prefersReduced && hasGSAP) {
-      try {
-        const tl = gsap.timeline();
-        tl.from('.title', { y: 26, opacity: 0, duration: 0.9, ease: 'power3.out' })
-          .from('.lead', { y: 16, opacity: 0, duration: 0.9, ease: 'power3.out' }, '-=0.45');
-      } catch (e) { console.warn('Hero GSAP animation failed', e); }
-    }
-    const hero = document.getElementById('hero');
-    window.addEventListener('scroll', () => {
-      if (!hero) return;
-      const y = Math.min(120, window.scrollY * 0.06);
-      const bg = hero.querySelector('.hero-bg');
-      if (bg) bg.style.transform = `translateY(${y}px)`;
-    }, { passive: true });
+      this.bindDockEvents();
+      this.bindAudioEvents();
+      window.addEventListener('resize', () => this.resizeCanvas());
+      this.resizeCanvas();
+    },
 
-    /* ---------- SECTION ANIMATIONS & TOC ---------- */
-    const sections = Array.from(document.querySelectorAll('.section'));
-    const tocLinks = Array.from(document.querySelectorAll('.toc a'));
-    const root = document.documentElement;
-    const accentSet = ['#d43f3a', '#b54b8a', '#3aa7ff', '#27b27b', '#f39c12', '#7cc576'];
-
-    if (hasGSAP && hasScrollTrigger && !prefersReduced) {
-      sections.forEach((sec, idx) => {
-        try {
-          gsap.fromTo(sec, { opacity: 0, y: 30, scale: 0.998 }, {
-            opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power3.out',
-            scrollTrigger: {
-              trigger: sec,
-              start: 'top 72%',
-              end: 'bottom 28%',
-              toggleActions: 'play none none reverse',
-              onEnter: () => {
-                tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${sec.id}`));
-                const c = accentSet[idx % accentSet.length];
-                try { gsap.to(root, { duration: 0.7, ease: 'power2.out', css: { '--accent': c } }); } catch (e) { document.documentElement.style.setProperty('--accent', c); }
-              },
-              onEnterBack: () => {
-                tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${sec.id}`));
-              }
-            }
-          });
-        } catch (e) {
-          // fallback: simply reveal
-          sec.classList.add('visible');
-        }
-      });
-    } else {
-      sections.forEach(s => s.classList.add('visible'));
-    }
-
-    // TOC smooth scrolling
-    tocLinks.forEach(a => {
-      a.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        const target = document.querySelector(a.getAttribute('href'));
-        if (!target) return;
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        target.focus({ preventScroll: true });
-      });
-    });
-
-    /* ---------- CINEMATIC PINNED SCENE ---------- */
-    if (hasGSAP && hasScrollTrigger && !prefersReduced) {
-      try {
-        const scene = gsap.timeline({
-          scrollTrigger: {
-            trigger: '#cinematic',
-            start: 'top top',
-            end: '+=200%',
-            scrub: true,
-            pin: true,
-            anticipatePin: 1
-          }
-        });
-
-        scene
-          .to('.scene-title', { opacity: 1, y: -20, duration: 1 })
-          .to('.scene-sub', { opacity: 1, y: -10, duration: 1 }, '-=0.5')
-          .to('.scene-bg', { background: 'radial-gradient(circle at center, rgba(212,63,58,0.25), transparent 80%)', duration: 2 }, '-=0.5')
-          .to('.scene-keywords span', { opacity: 1, scale: 1, stagger: 0.28, duration: 1.2, ease: 'back.out(1.7)' }, '-=0.5')
-          .to('.scene-keywords span', { y: -30, opacity: 0, stagger: 0.2, duration: 1, ease: 'power2.in' })
-          .to('.scene-title, .scene-sub', { opacity: 0, y: -40, duration: 1 }, '-=0.8');
-      } catch (e) { console.warn('Cinematic scene failed to init', e); }
-    }
-
-    /* ---------- COPY-ANCHOR ---------- */
-    document.querySelectorAll('.copy-anchor').forEach(btn => {
-      btn.addEventListener('click', (ev) => {
-        const sec = ev.target.closest('.panel');
-        if (!sec || !sec.id) return;
-        const url = `${location.origin}${location.pathname}#${sec.id}`;
-        navigator.clipboard?.writeText(url).then(() => {
-          const old = ev.target.innerText;
-          ev.target.innerText = '✅';
-          setTimeout(() => ev.target.innerText = old, 1100);
-        }).catch(() => prompt('Link kopieren:', url));
-      });
-    });
-
-    /* ---------- AUDIO VISUALIZER + DOCK (robust) ---------- */
-    const audios = Array.from(document.querySelectorAll('audio'));
-    let audioContext = null;
-    let analyser = null;
-    let dataArray = null;
-    let rafId = null;
-    let currentAudio = null;
-    let audioToSource = new WeakMap();
-
-    const dock = document.querySelector('.audio-dock');
-    const dockTitle = document.getElementById('dock-title');
-    const dockState = document.getElementById('dock-state');
-    const dockPlay = document.getElementById('dock-play');
-    const dockDownload = document.getElementById('dock-download');
-    const canvas = document.getElementById('wave-canvas');
-    const ctx = canvas ? canvas.getContext('2d') : null;
-    let canvasWidth = 0, canvasHeight = 0;
-
-    function initAudioContext() {
-      if (audioContext) return audioContext;
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return null;
-      audioContext = new AC();
-      analyser = audioContext.createAnalyser();
-      analyser.fftSize = 2048;
-      analyser.smoothingTimeConstant = 0.8;
-      dataArray = new Uint8Array(analyser.fftSize);
-      return audioContext;
-    }
-
-    function connectAnalyserToElement(el) {
-      if (!el) return;
-      if (!initAudioContext()) return;
-      try {
-        if (!audioToSource.has(el)) {
-          // createMediaElementSource may fail if the element is already connected to another AudioContext or CORS flagged
-          const srcNode = audioContext.createMediaElementSource(el);
-          audioToSource.set(el, srcNode);
-          srcNode.connect(analyser);
-        } else {
-          // ensure it's connected
-          const srcNode = audioToSource.get(el);
-          try { srcNode.connect(analyser); } catch (e) { /* ignore */ }
-        }
-        try { analyser.connect(audioContext.destination); } catch (e) { /* ignore */ }
-      } catch (err) {
-        console.warn('MediaElementSource failed (possible CORS/already-in-use). Visualizer disabled for this audio. Error:', err);
+    async setupContext() {
+      if (this.isReady) return;
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext && !this.audioContext) {
+        this.audioContext = new AudioContext();
+        this.analyser = this.audioContext.createAnalyser();
+        this.analyser.fftSize = 2048;
+        this.analyser.smoothingTimeConstant = 0.85;
       }
-    }
+      if (this.audioContext && this.audioContext.state === 'suspended') {
+        await this.audioContext.resume();
+      }
+      this.isReady = true;
+      console.log('Audio Context is ready.');
+    },
+    
+    bindDockEvents() {
+      this.dock.playBtn?.addEventListener('click', () => {
+        if (this.currentAudio) {
+          this.currentAudio.paused ? this.currentAudio.play() : this.currentAudio.pause();
+        }
+      });
+      // Auto-hide Dock
+      document.addEventListener('mousemove', () => this.resetHideTimer());
+    },
 
-    function resizeCanvas() {
-      if (!canvas || !ctx) return;
-      const ratio = window.devicePixelRatio || 1;
-      canvasWidth = canvas.clientWidth || 800;
-      canvasHeight = canvas.clientHeight || 64;
-      canvas.width = Math.floor(canvasWidth * ratio);
-      canvas.height = Math.floor(canvasHeight * ratio);
-      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    bindAudioEvents() {
+      document.querySelectorAll('audio').forEach(audio => {
+        audio.addEventListener('play', () => this.handlePlay(audio));
+        audio.addEventListener('pause', () => this.handlePause(audio));
+        audio.addEventListener('ended', () => this.handleEnded(audio));
+      });
+    },
 
-    function drawVisualizer() {
-      if (!analyser || !ctx) return;
-      analyser.getByteTimeDomainData(dataArray);
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    handlePlay(audio) {
+      if (!this.isReady) {
+        audio.pause();
+        alert('Bitte klicken Sie zuerst auf "Erlebnis starten", um Audio zu aktivieren.');
+        return;
+      }
+      if (this.currentAudio && this.currentAudio !== audio) this.currentAudio.pause();
+      this.currentAudio = audio;
 
-      // background gradient
-      const grad = ctx.createLinearGradient(0, 0, canvasWidth, 0);
-      grad.addColorStop(0, 'rgba(212,63,58,0.10)');
-      grad.addColorStop(0.5, 'rgba(181,75,138,0.06)');
-      grad.addColorStop(1, 'rgba(58,167,255,0.04)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      if (this.analyser) {
+        if (!this.sourceNodeCache.has(audio)) {
+          const sourceNode = this.audioContext.createMediaElementSource(audio);
+          this.sourceNodeCache.set(audio, sourceNode);
+          sourceNode.connect(this.analyser);
+          this.analyser.connect(this.audioContext.destination);
+        }
+        this.startVisualizer();
+      }
+      
+      audio.closest('.panel')?.classList.add('playing');
+      this.dock.update(audio);
+      this.dock.setState('playing');
+      this.dock.show(true);
+      this.resetHideTimer();
+    },
 
-      // waveform path
-      ctx.lineWidth = 2;
-      let accent = getComputedStyle(document.documentElement).getPropertyValue('--accent') || '#d43f3a';
-      accent = accent.trim() || '#d43f3a';
-      ctx.strokeStyle = accent;
-      ctx.beginPath();
-      const len = dataArray.length;
-      const sliceWidth = canvasWidth / len;
+    handlePause(audio) {
+      audio.closest('.panel')?.classList.remove('playing');
+      if (audio === this.currentAudio) {
+        this.dock.setState('paused');
+        this.stopVisualizer();
+      }
+    },
+    
+    handleEnded(audio) {
+      this.handlePause(audio); // Gleiches Verhalten wie bei Pause
+      if (audio === this.currentAudio) this.dock.setState('ended');
+    },
+
+    dock: {
+      show(visible) { this.el?.classList.toggle('visible', visible); },
+      update(audio) {
+        this.title.textContent = audio.dataset.title || 'Audio Track';
+        const source = audio.querySelector('source')?.getAttribute('src') || '#';
+        this.download.href = source;
+        this.download.download = source.split('/').pop();
+      },
+      setState(newState) {
+        this.state.textContent = newState;
+        this.playBtn.textContent = newState === 'playing' ? '⏸' : '▶';
+      }
+    },
+    
+    resetHideTimer() {
+        clearTimeout(this.dockHideTimer);
+        if (this.dock.el?.classList.contains('visible') && this.currentAudio && !this.currentAudio.paused) {
+            this.dockHideTimer = setTimeout(() => this.dock.show(false), 4000);
+        }
+    },
+
+    resizeCanvas() {
+        if (!this.dock.canvas) return;
+        const ratio = window.devicePixelRatio || 1;
+        this.dock.canvas.width = this.dock.canvas.clientWidth * ratio;
+        this.dock.canvas.height = this.dock.canvas.clientHeight * ratio;
+        this.dock.ctx?.scale(ratio, ratio);
+    },
+
+    startVisualizer() { this.stopVisualizer(); this.drawVisualizer(); },
+    stopVisualizer() { cancelAnimationFrame(this.dock.rafId); },
+    drawVisualizer() {
+      if (!this.analyser || !this.dock.ctx) return;
+      const bufferLength = this.analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      this.analyser.getByteTimeDomainData(dataArray);
+
+      const { width, height } = this.dock.canvas;
+      this.dock.ctx.clearRect(0, 0, width, height);
+
+      const gradient = this.dock.ctx.createLinearGradient(0, 0, width, 0);
+      gradient.addColorStop(0, getComputedStyle(document.documentElement).getPropertyValue('--accent').trim());
+      gradient.addColorStop(1, '#3aa7ff');
+      this.dock.ctx.strokeStyle = gradient;
+      this.dock.ctx.lineWidth = 2;
+
+      this.dock.ctx.beginPath();
+      const sliceWidth = width / bufferLength;
       let x = 0;
-      const midY = canvasHeight / 2;
-      for (let i = 0; i < len; i++) {
-        const v = (dataArray[i] - 128) / 128.0; // -1 .. 1
-        const y = midY + v * midY * 0.9; // scale down a bit
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+      for (let i = 0; i < bufferLength; i++) {
+        const v = dataArray[i] / 128.0; // normalize to -1..1
+        const y = v * height / 2;
+        i === 0 ? this.dock.ctx.moveTo(x, y) : this.dock.ctx.lineTo(x, y);
         x += sliceWidth;
       }
-      ctx.stroke();
-
-      // fill under curve
-      ctx.lineTo(canvasWidth, canvasHeight);
-      ctx.lineTo(0, canvasHeight);
-      ctx.closePath();
-      ctx.globalAlpha = 0.06;
-      ctx.fillStyle = accent;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-
-      rafId = requestAnimationFrame(drawVisualizer);
+      this.dock.ctx.lineTo(width, height / 2);
+      this.dock.ctx.stroke();
+      this.dock.rafId = requestAnimationFrame(() => this.drawVisualizer());
     }
+  };
 
-    function stopVisualizer() {
-      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-      if (ctx) ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  // --- Allgemeine Initialisierung ---
+  document.addEventListener('DOMContentLoaded', () => {
+    setupStartOverlay();
+    setupReadingProgress();
+    setupTOCInteraction();
+    setupCopyAnchors();
+    setupAccessibility();
+
+    if (!prefersReducedMotion && window.gsap) {
+        initAnimations();
+    } else {
+        document.querySelectorAll('.section').forEach(el => el.classList.add('is-visible'));
     }
+  });
 
-    function showDock(show = true) {
-      if (!dock) return;
-      dock.classList.toggle('visible', show);
-      dock.setAttribute('aria-hidden', show ? 'false' : 'true');
-    }
+  function setupStartOverlay() {
+    const overlay = document.getElementById('start-overlay');
+    const startBtn = document.getElementById('start-button');
+    startBtn?.addEventListener('click', () => {
+      AudioPlayer.setupContext();
+      AudioPlayer.init();
+      gsap.to(overlay, { opacity: 0, duration: 0.5, onComplete: () => overlay.remove() });
+      animateHero();
+    }, { once: true });
+  }
 
-    audios.forEach(a => {
-      if (!a.dataset.title) {
-        const src = a.querySelector('source')?.getAttribute('src') || '';
-        a.dataset.title = decodeURIComponent(src.split('/').pop() || 'Audio');
+  function setupTOCInteraction() {
+    const tocLinks = document.querySelectorAll('.toc a');
+    const cardContainer = document.getElementById('chapter-card-container');
+    if (!tocLinks.length || !cardContainer) return;
+    
+    // Erstelle die Karte einmal
+    const card = document.createElement('div');
+    card.className = 'chapter-card';
+    cardContainer.appendChild(card);
+    
+    tocLinks.forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        card.innerHTML = `<strong>${link.textContent}</strong><p>${link.dataset.preview}</p>`;
+        card.style.top = `${link.offsetTop}px`;
+        card.classList.add('visible');
+      });
+      link.addEventListener('mouseleave', () => card.classList.remove('visible'));
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector(link.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  }
+  
+  // ... (andere Helferfunktionen wie setupReadingProgress etc. hier einfügen) ...
+    function setupReadingProgress() {
+    const progress = document.getElementById('read-progress');
+    if (!progress) return;
+    const updateProgress = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = `${(window.scrollY / Math.max(1, scrollHeight)) * 100}%`;
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  }
+  
+  function setupCopyAnchors() {
+    document.querySelectorAll('.copy-anchor').forEach(btn => {
+      btn.addEventListener('click', (ev) => {
+        const url = `${location.href.split('#')[0]}#${ev.target.closest('.panel').id}`;
+        navigator.clipboard.writeText(url).then(() => {
+          btn.textContent = '✅';
+          setTimeout(() => { btn.textContent = '🔗'; }, 1200);
+        });
+      });
+    });
+  }
+  
+  function setupAccessibility() {
+    const handleFirstTab = (e) => {
+      if (e.key === 'Tab') {
+        document.body.classList.add('show-focus');
+        window.removeEventListener('keydown', handleFirstTab);
       }
-
-      a.addEventListener('play', async () => {
-        // pause others
-        audios.forEach(x => { if (x !== a) x.pause(); });
-        currentAudio = a;
-
-        // visual highlight
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('playing'));
-        const panel = a.closest('.panel');
-        if (panel) panel.classList.add('playing');
-
-        // init audio context and connect analyser
-        if (!initAudioContext()) { console.warn('WebAudio not available — visualizer disabled'); }
-        else {
-          try { await audioContext.resume(); } catch (e) { /* ignore */ }
-          connectAnalyserToElement(a);
-        }
-
-        // update dock
-        if (dockTitle) dockTitle.innerText = a.dataset.title || 'Audio';
-        if (dockState) dockState.innerText = 'playing';
-        const src = a.querySelector('source')?.getAttribute('src') || '#';
-        if (dockDownload) { dockDownload.href = encodeURI(src); dockDownload.setAttribute('download', src.split('/').pop()); }
-
-        showDock(true);
-        stopVisualizer();
-        drawVisualizer();
-        if (dockPlay) dockPlay.innerText = '⏸';
-      });
-
-      a.addEventListener('pause', () => {
-        if (dockState) dockState.innerText = 'paused';
-        const panel = a.closest('.panel');
-        if (panel) panel.classList.remove('playing');
-        if (dockPlay) dockPlay.innerText = '▶';
-        stopVisualizer();
-      });
-
-      a.addEventListener('ended', () => {
-        if (dockState) dockState.innerText = 'stopped';
-        const panel = a.closest('.panel');
-        if (panel) panel.classList.remove('playing');
-        if (dockPlay) dockPlay.innerText = '▶';
-        stopVisualizer();
-      });
-    });
-
-    // dock play/pause
-    dockPlay?.addEventListener('click', () => {
-      if (!currentAudio) return;
-      if (currentAudio.paused) currentAudio.play(); else currentAudio.pause();
-    });
-
-    // auto-hide dock after inactivity
-    let dockTimer;
-    document.addEventListener('mousemove', () => {
-      if (!dock) return;
-      if (dock.classList.contains('visible')) {
-        clearTimeout(dockTimer);
-        dockTimer = setTimeout(() => dock.classList.remove('visible'), 6000);
-      }
-    });
-
-    // canvas initial sizing
-    resizeCanvas();
-
-    /* ---------- accessibility: focus rings after tab ---------- */
-    function handleFirstTab(e) { if (e.key === 'Tab') { document.body.classList.add('show-focus'); window.removeEventListener('keydown', handleFirstTab); } }
+    };
     window.addEventListener('keydown', handleFirstTab);
+  }
 
-    /* ---------- SHARE LINKS SETUP ---------- */
-    function setupShareLinks() {
-      const url = encodeURIComponent(window.location.href);
-      const title = encodeURIComponent(document.title);
-      const shareEmail = document.getElementById('share-email');
-      const shareX = document.getElementById('share-x');
-      const shareFacebook = document.getElementById('share-facebook');
-      if (shareEmail) shareEmail.href = `mailto:?subject=${title}&body=Schau dir dieses Dossier zur Isonomie an: ${url}`;
-      if (shareX) shareX.href = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
-      if (shareFacebook) shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-    }
-    setupShareLinks();
+  // --- Animationen ---
+  function animateHero() {
+    gsap.timeline()
+      .from('.title', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' })
+      .from('.lead', { y: 20, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6');
+    gsap.to('.hero-bg', { y: 100, scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+  }
+  
+  function initAnimations() {
+    // Section-Animationen mit IntersectionObserver
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const section = entry.target;
+          section.classList.add('is-visible');
+          
+          // Akzentfarbe & TOC-Update
+          const sectionId = section.id;
+          const activeLink = document.querySelector(`.toc a[href="#${sectionId}"]`);
+          document.querySelectorAll('.toc a').forEach(a => a.classList.remove('active'));
+          activeLink?.classList.add('active');
 
-    /* ---------- respect reduced-motion ---------- */
-    if (prefersReduced) {
-      if (hasScrollTrigger) try { ScrollTrigger.getAll().forEach(st => st.disable()); } catch (e) {}
-      stopVisualizer();
-    }
+          const sectionIndex = Array.from(section.parentElement.children).indexOf(section);
+          gsap.to(':root', { '--accent': accentColors[sectionIndex % accentColors.length], duration: 0.5, ease: 'power2.out' });
+        }
+      });
+    }, { rootMargin: "0px 0px -25% 0px" }); // Trigger bei 75% Sichtbarkeit von unten
 
-    /* ---------- cleanup ---------- */
-    window.addEventListener('pagehide', () => {
-      stopVisualizer();
-      // WeakMap will be garbage-collected; do not try to reassign consts
-      if (analyser) try { analyser.disconnect(); } catch (e) {}
-      if (audioContext && audioContext.state !== 'closed') try { audioContext.close().catch(()=>{}); } catch (e) {}
-    });
+    document.querySelectorAll('.section').forEach(section => observer.observe(section));
 
-  }); // DOMContentLoaded
+    // Cinematic Scene mit GSAP ScrollTrigger
+    gsap.timeline({ scrollTrigger: { trigger: '#cinematic', start: 'top top', end: '+=250%', scrub: true, pin: true } })
+      .to('.scene-title, .scene-sub', { opacity: 1, y: 0, duration: 1 })
+      .to('#cinematic', { '--scene-accent': 'rgba(212, 63, 58, 0.2)', duration: 2 }, '<')
+      .to('.scene-keywords span', { opacity: 1, scale: 1, stagger: 0.2, duration: 1.2, ease: 'back.out(1.7)' }, '-=0.5')
+      .to('.scene-keywords span', { y: -20, opacity: 0, stagger: 0.15, duration: 1, ease: 'power2.in' }, '+=1')
+      .to('.scene-title, .scene-sub', { opacity: 0, y: -20, duration: 1 }, '<');
+  }
+
 })();
