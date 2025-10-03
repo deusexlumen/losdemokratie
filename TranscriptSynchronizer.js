@@ -8,11 +8,17 @@ export class TranscriptSynchronizer {
         this.toggleBtn = this.audioBox.querySelector('.transcript-toggle-btn');
 
         if (!this.audioElement || !this.transcriptContainer || !this.toggleBtn) {
-            // No transcript for this audio box, so we do nothing.
+            console.warn('TranscriptSynchronizer: Missing required elements for a feature box. Skipping initialization.');
             return;
         }
 
         this.transcriptParts = this.parseTranscript();
+        if (this.transcriptParts.length === 0) {
+            this.toggleBtn.disabled = true;
+            this.toggleBtn.style.display = 'none';
+            return;
+        }
+
         this.currentSpeakingEl = null;
 
         // Bind 'this' context for event handlers
@@ -27,11 +33,15 @@ export class TranscriptSynchronizer {
         const parts = [];
         const elements = this.transcriptContainer.querySelectorAll('[data-start]');
         elements.forEach(el => {
-            parts.push({
-                start: parseFloat(el.dataset.start),
-                end: parseFloat(el.dataset.end),
-                element: el
-            });
+            const start = parseFloat(el.dataset.start);
+            const end = parseFloat(el.dataset.end);
+            if (!isNaN(start) && !isNaN(end)) {
+                parts.push({
+                    start: start,
+                    end: end,
+                    element: el
+                });
+            }
         });
         return parts;
     }
@@ -67,7 +77,9 @@ export class TranscriptSynchronizer {
 
         if (newElement) {
             newElement.classList.add('is-speaking');
-            newElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (this.transcriptContainer.offsetParent !== null) { // only scroll if visible
+                newElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
         
         this.currentSpeakingEl = newElement;
@@ -79,17 +91,16 @@ export class TranscriptSynchronizer {
             const startTime = parseFloat(target.dataset.start);
             this.audioElement.currentTime = startTime;
             if (this.audioElement.paused) {
-                // We need to access the play/pause button from the parent to update its state
-                const playPauseBtn = this.audioBox.querySelector('.play-pause-btn');
-                this.audioElement.play().catch(e => console.error("Error playing audio:", e));
-                if (playPauseBtn) playPauseBtn.closest('.custom-audio-player').classList.add('is-playing');
+                // Find the corresponding play button and click it to maintain central state
+                const playBtn = this.audioBox.querySelector('.play-pause-btn');
+                if (playBtn) playBtn.click();
             }
         }
     }
 
     handleToggleClick() {
         const isExpanded = this.toggleBtn.getAttribute('aria-expanded') === 'true';
-        this.toggleBtn.setAttribute('aria-expanded', !isExpanded);
+        this.toggleBtn.setAttribute('aria-expanded', String(!isExpanded));
         this.transcriptContainer.hidden = isExpanded;
         this.toggleBtn.textContent = isExpanded ? 'Transkript anzeigen' : 'Transkript ausblenden';
     }
