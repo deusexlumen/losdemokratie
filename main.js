@@ -1,4 +1,5 @@
 // FILE: main.js
+// VALIDIERTE VERSION: Phoenix Edition v4.8.1 (Vollständig & Korrigiert)
 
 import { TranscriptSynchronizer } from './TranscriptSynchronizer.js';
 
@@ -74,12 +75,272 @@ class PhoenixDossier {
         this.checkInitialPerfMode();
         this.setupBentoInteractions();
         this.setupTranscripts();
+        this.setupShareLinks();
     }
-
+    
+    // NEU: Initialisiert die Transcript-Module
     setupTranscripts() {
         this.DOM.audioBoxes.forEach(box => {
             this.transcriptSynchronizers.push(new TranscriptSynchronizer(box));
         });
+    }
+
+    // VOLLSTÄNDIGE METHODEN FOLGEN:
+
+    setupEventListeners() {
+        window.addEventListener('resize', this.debouncedRefresh);
+        document.addEventListener('scroll', () => {
+            if (!this.state.isTicking) {
+                window.requestAnimationFrame(() => {
+                    this.onScroll();
+                    this.state.isTicking = false;
+                });
+                this.state.isTicking = true;
+            }
+        });
+
+        if (this.DOM.perfToggleBtn) {
+            this.DOM.perfToggleBtn.addEventListener('click', () => this.togglePerformanceMode());
+        }
+    }
+    
+    onScroll() {
+        const scrollPercentage = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+        this.DOM.progressBar.style.transform = `scaleX(${scrollPercentage})`;
+
+        if (!this.state.isLowPerfMode) {
+            const lerpAmount = Math.min(window.scrollY / 500, 1);
+            this.DOM.root.style.setProperty('--scroll-lerp', lerpAmount);
+        }
+    }
+
+    setupIntersectionObserver() {
+        const options = { rootMargin: '-50% 0px -50% 0px' };
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const navLink = this.DOM.navLinks.find(link => link.hash === `#${id}`);
+                if (entry.isIntersecting) {
+                    this.state.activeSectionId = id;
+                    navLink?.classList.add('is-active');
+                    this.DOM.liveRegion.textContent = `Sie befinden sich jetzt im Abschnitt: ${navLink?.querySelector('h3').textContent}`;
+                } else {
+                    navLink?.classList.remove('is-active');
+                }
+            });
+        }, options);
+
+        this.DOM.sections.forEach(section => observer.observe(section));
+
+        const completionObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    if (!this.state.completedSections.has(id)) {
+                        this.state.completedSections.add(id);
+                        this.updateKnowledgeDistillate();
+                    }
+                }
+            });
+        }, { threshold: 0.8 });
+
+        this.DOM.sections.forEach(section => completionObserver.observe(section));
+        
+        const distillateObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    this.DOM.distillateContainer.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.2 });
+        distillateObserver.observe(this.DOM.distillateContainer);
+    }
+    
+    updateKnowledgeDistillate() {
+        this.DOM.distillateList.innerHTML = '';
+        this.DOM.sections.forEach(section => {
+            const id = section.id;
+            if (this.state.completedSections.has(id)) {
+                const takeaway = section.dataset.takeaway;
+                if (takeaway) {
+                    const li = document.createElement('li');
+                    li.textContent = takeaway;
+                    this.DOM.distillateList.appendChild(li);
+                }
+            }
+        });
+    }
+
+    setupCustomAudioPlayers() {
+        this.DOM.audioBoxes.forEach(box => {
+            const audio = box.querySelector('.audio-player-hidden');
+            const playPauseBtn = box.querySelector('.play-pause-btn');
+            const skipBtns = box.querySelectorAll('.skip-btn');
+            const progressBar = box.querySelector('.audio-progress-bar');
+            const progressContainer = box.querySelector('.audio-progress-container');
+            const currentTimeEl = box.querySelector('.current-time');
+            const totalTimeEl = box.querySelector('.total-time');
+            const speedBtn = box.querySelector('.speed-btn');
+            const visualizer = box.querySelector('.audio-visualizer');
+            const playerContainer = box.querySelector('.custom-audio-player');
+            const playbackRates = [1, 1.25, 1.5, 1.75, 2, 0.75];
+            let currentRateIndex = 0;
+
+            audio.addEventListener('loadedmetadata', () => {
+                totalTimeEl.textContent = this.formatTime(audio.duration);
+            });
+
+            playPauseBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play();
+                } else {
+                    audio.pause();
+                }
+            });
+
+            audio.addEventListener('play', () => {
+                playerContainer.classList.add('is-playing');
+                playPauseBtn.setAttribute('aria-label', 'Pause');
+                this.setupAudioVisualizer(audio, visualizer);
+            });
+            audio.addEventListener('pause', () => {
+                playerContainer.classList.remove('is-playing');
+                playPauseBtn.setAttribute('aria-label', 'Abspielen');
+            });
+
+            audio.addEventListener('timeupdate', () => {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+                currentTimeEl.textContent = this.formatTime(audio.currentTime);
+            });
+
+            skipBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    audio.currentTime += parseFloat(btn.dataset.skip);
+                });
+            });
+
+            progressContainer.addEventListener('click', (e) => {
+                const rect = progressContainer.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const percentage = (clickX / rect.width);
+                audio.currentTime = audio.duration * percentage;
+            });
+            
+            speedBtn.addEventListener('click', () => {
+                currentRateIndex = (currentRateIndex + 1) % playbackRates.length;
+                audio.playbackRate = playbackRates[currentRateIndex];
+                speedBtn.textContent = `${playbackRates[currentRateIndex]}x`;
+            });
+        });
+    }
+    
+    formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    setupAudioVisualizer(audioElement, canvas) {
+        if (this.state.isLowPerfMode || !canvas) return;
+        if (!this.audioContext) {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.analysers.has(audioElement)) return;
+
+        const source = this.audioContext.createMediaElementSource(audioElement);
+        const analyser = this.audioContext.createAnalyser();
+        analyser.fftSize = 128;
+        source.connect(analyser);
+        analyser.connect(this.audioContext.destination);
+        this.sources.set(audioElement, source);
+        this.analysers.set(audioElement, analyser);
+
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        const ctx = canvas.getContext('2d');
+        const draw = () => {
+            if (audioElement.paused) return;
+            requestAnimationFrame(draw);
+            analyser.getByteFrequencyData(dataArray);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const barWidth = (canvas.width / bufferLength) * 1.5;
+            let x = 0;
+            for (let i = 0; i < bufferLength; i++) {
+                const barHeight = (dataArray[i] / 255) * canvas.height;
+                const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+                gradient.addColorStop(0, this.state.currentColor);
+                gradient.addColorStop(1, '#67e8f9');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 2;
+            }
+        };
+        draw();
+    }
+
+    checkInitialPerfMode() {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+            this.state.isLowPerfMode = true;
+            this.DOM.body.classList.add('low-performance-mode');
+            this.DOM.perfToggleBtn.setAttribute('aria-pressed', 'true');
+            this.DOM.perfToggleBtn.textContent = '✨ Animationen aus';
+            ScrollTrigger.getAll().forEach(st => st.disable());
+        } else {
+            this.setupAnimations();
+        }
+    }
+
+    togglePerformanceMode() {
+        this.state.isLowPerfMode = !this.state.isLowPerfMode;
+        this.DOM.body.classList.toggle('low-performance-mode', this.state.isLowPerfMode);
+        this.DOM.perfToggleBtn.setAttribute('aria-pressed', String(this.state.isLowPerfMode));
+        this.DOM.perfToggleBtn.textContent = this.state.isLowPerfMode ? '✨ Animationen aus' : '✨ Animationen an';
+        
+        if (this.state.isLowPerfMode) {
+            ScrollTrigger.getAll().forEach(st => st.disable());
+            gsap.killTweensOf('*');
+        } else {
+            ScrollTrigger.getAll().forEach(st => st.enable());
+            this.setupAnimations();
+        }
+    }
+    
+    setupBentoInteractions() {
+        this.DOM.navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+    
+    setupShareLinks() {
+        const url = window.location.href;
+        const title = document.title;
+        document.getElementById('share-email').href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent('Schau dir dieses Dossier an: ' + url)}`;
+        document.getElementById('share-x').href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+        document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    }
+    
+    animateColors(colors) {
+        if (this.state.currentColor !== colors.primary) {
+            this.state.currentColor = colors.primary;
+            gsap.to(this.DOM.root, {
+                '--primary-color': colors.primary,
+                '--secondary-color': colors.secondary,
+                duration: 1.5,
+                ease: 'sine.inOut'
+            });
+        }
     }
 
     splitMainHeader() {
@@ -90,7 +351,7 @@ class PhoenixDossier {
             originalText.split('').forEach(char => {
                 const charSpan = document.createElement('span');
                 charSpan.className = 'char';
-                charSpan.textContent = char === ' ' ? '\u00A0' : char; // Non-breaking space
+                charSpan.textContent = char === ' ' ? '\u00A0' : char;
                 mainHeader.appendChild(charSpan);
             });
             mainHeader.dataset.split = 'true';
@@ -123,20 +384,16 @@ class PhoenixDossier {
 
     generateNarrativePath() {
         if (!this.DOM.narrativePath || !this.DOM.focusPane || this.DOM.sections.length === 0) return;
-
         const pathX = 20;
         let pathData = `M ${pathX} 0`;
-
         this.DOM.sections.forEach((section) => {
             const h2 = section.querySelector('h2');
             if (!h2) return;
             const h2Y = h2.offsetTop + (h2.offsetHeight / 2);
             pathData += ` L ${pathX} ${h2Y}`;
         });
-
         const totalHeight = this.DOM.focusPane.scrollHeight;
         pathData += ` L ${pathX} ${totalHeight}`;
-
         this.DOM.narrativePath.setAttribute('d', pathData);
         this.DOM.narrativePath.closest('svg').style.height = `${totalHeight}px`;
     }
@@ -232,14 +489,6 @@ class PhoenixDossier {
             gsap.from(document.querySelectorAll('.final-actions-grid > div'), { scrollTrigger: { trigger: finalSection, start: 'top 70%', toggleActions: 'play none none none' }, opacity: 0, y: 30, duration: 1, stagger: 0.2, ease: 'power2.out' });
         }
     }
-    
-    // Placeholder for other methods from the original file
-    setupEventListeners() { /* Add full method from original file */ }
-    setupIntersectionObserver() { /* Add full method from original file */ }
-    setupCustomAudioPlayers() { /* Add full method from original file */ }
-    checkInitialPerfMode() { /* Add full method from original file */ }
-    setupBentoInteractions() { /* Add full method from original file */ }
-    animateColors(colors) { /* Add full method from original file */ }
 }
 
 document.addEventListener('DOMContentLoaded', () => new PhoenixDossier());
