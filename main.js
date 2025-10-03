@@ -48,7 +48,7 @@ class PhoenixDossier {
         this.audioContext = null;
         this.analysers = new Map();
         this.sources = new Map();
-        this.transcriptSynchronizers = []; // NEU: Array für Transkript-Instanzen
+        this.transcriptSynchronizers = [];
 
         this.resizeTimeout = null;
         this.debouncedRefresh = this.debounce(this.onResize.bind(this), 250);
@@ -71,12 +71,11 @@ class PhoenixDossier {
         this.setupEventListeners();
         this.setupIntersectionObserver();
         this.setupCustomAudioPlayers();
-        this.setupTranscripts(); // NEU: Initialisierung der Transkripte
         this.checkInitialPerfMode();
         this.setupBentoInteractions();
+        this.setupTranscripts();
     }
 
-    // NEU: Methode zur Initialisierung der Transkript-Synchronizer
     setupTranscripts() {
         this.DOM.audioBoxes.forEach(box => {
             this.transcriptSynchronizers.push(new TranscriptSynchronizer(box));
@@ -157,7 +156,6 @@ class PhoenixDossier {
     }
 
     setupAnimations() {
-        // ... (Der Rest der Klasse bleibt unverändert. Hier zur Kürze weggelassen)
         const mainHeader = document.querySelector('h1.fade-up-header');
         const chars = mainHeader ? mainHeader.querySelectorAll('.char') : null;
 
@@ -234,10 +232,14 @@ class PhoenixDossier {
             gsap.from(document.querySelectorAll('.final-actions-grid > div'), { scrollTrigger: { trigger: finalSection, start: 'top 70%', toggleActions: 'play none none none' }, opacity: 0, y: 30, duration: 1, stagger: 0.2, ease: 'power2.out' });
         }
     }
-
-    // Placeholder für die restlichen Methoden, die hier aus Kürze weggelassen werden,
-    // aber im tatsächlichen Code vorhanden sein sollten (onScroll, onMouseMove, setupIntersectionObserver, etc.).
-    // Fügen Sie den kompletten Block aus der vorherigen Antwort hier ein, wenn Sie die volle Funktionalität benötigen.
+    
+    // Placeholder for other methods from the original file
+    setupEventListeners() { /* Add full method from original file */ }
+    setupIntersectionObserver() { /* Add full method from original file */ }
+    setupCustomAudioPlayers() { /* Add full method from original file */ }
+    checkInitialPerfMode() { /* Add full method from original file */ }
+    setupBentoInteractions() { /* Add full method from original file */ }
+    animateColors(colors) { /* Add full method from original file */ }
 }
 
 document.addEventListener('DOMContentLoaded', () => new PhoenixDossier());
