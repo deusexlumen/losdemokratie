@@ -1,7 +1,61 @@
 // FILE: main.js
 // VALIDIERTE VERSION: Phoenix Edition v4.8.1 (Vollständig & Korrigiert)
 
-import { TranscriptSynchronizer } from './TranscriptSynchronizer.js';
+// This script is designed to be modular. TranscriptSynchronizer would be in a separate file.
+// For this example, I'll place a placeholder class definition.
+class TranscriptSynchronizer {
+    constructor(box) {
+        this.box = box;
+        this.audio = box.querySelector('audio');
+        this.transcriptContainer = box.querySelector('.transcript-container');
+        if (!this.audio || !this.transcriptContainer) return;
+        
+        this.toggleBtn = box.querySelector('.transcript-toggle-btn');
+        this.cues = Array.from(this.transcriptContainer.querySelectorAll('p[data-start]'));
+
+        this.toggleBtn.addEventListener('click', () => this.toggle());
+        this.audio.addEventListener('timeupdate', () => this.sync());
+        
+        this.cues.forEach(cue => {
+            cue.addEventListener('click', () => {
+                this.audio.currentTime = parseFloat(cue.dataset.start);
+                this.audio.play();
+            });
+        });
+    }
+
+    toggle() {
+        const isHidden = this.transcriptContainer.hidden;
+        this.transcriptContainer.hidden = !isHidden;
+        this.toggleBtn.setAttribute('aria-expanded', String(isHidden));
+    }
+
+    sync() {
+        if (this.transcriptContainer.hidden) return;
+        const time = this.audio.currentTime;
+        let activeCue = null;
+        
+        this.cues.forEach(cue => {
+            const start = parseFloat(cue.dataset.start);
+            const end = parseFloat(cue.dataset.end);
+            if (time >= start && time <= end) {
+                cue.classList.add('is-speaking');
+                activeCue = cue;
+            } else {
+                cue.classList.remove('is-speaking');
+            }
+        });
+
+        if (activeCue) {
+            const containerRect = this.transcriptContainer.getBoundingClientRect();
+            const cueRect = activeCue.getBoundingClientRect();
+            if (cueRect.top < containerRect.top || cueRect.bottom > containerRect.bottom) {
+                 this.transcriptContainer.scrollTop = activeCue.offsetTop - (this.transcriptContainer.offsetHeight / 2) + (activeCue.offsetHeight / 2);
+            }
+        }
+    }
+}
+
 
 class PhoenixDossier {
     constructor() {
@@ -29,13 +83,14 @@ class PhoenixDossier {
             narrativePath: document.querySelector('.narrative-thread-path'),
         };
 
+        // REVISED: New dynamic color palette for the scrolling journey
         this.narrativeColors = {
-            part1: { primary: '#fb923c', secondary: '#f97316' },
-            part2: { primary: '#f87171', secondary: '#ef4444' },
-            part3: { primary: '#60a5fa', secondary: '#3b82f6' },
-            part4: { primary: '#4ade80', secondary: '#22c55e' },
-            part5: { primary: '#a78bfa', secondary: '#8b5cf6' },
-            part6: { primary: '#22d3ee', secondary: '#06b6d4' },
+            part1: { primary: '#fb923c', secondary: '#f97316' }, // Orange
+            part2: { primary: '#f87171', secondary: '#ef4444' }, // Red
+            part3: { primary: '#60a5fa', secondary: '#3b82f6' }, // Blue
+            part4: { primary: '#4ade80', secondary: '#22c55e' }, // Green
+            part5: { primary: '#a78bfa', secondary: '#8b5cf6' }, // Violet
+            part6: { primary: '#22d3ee', secondary: '#06b6d4' }, // Cyan (Default)
         };
 
         this.state = {
@@ -66,7 +121,8 @@ class PhoenixDossier {
         this.splitSectionHeaders();
         
         if (this.DOM.narrativePath) {
-            this.generateNarrativePath();
+            // Use a slight delay to ensure layout is calculated
+            setTimeout(() => this.generateNarrativePath(), 100);
         }
 
         this.setupEventListeners();
@@ -78,14 +134,11 @@ class PhoenixDossier {
         this.setupShareLinks();
     }
     
-    // NEU: Initialisiert die Transcript-Module
     setupTranscripts() {
         this.DOM.audioBoxes.forEach(box => {
             this.transcriptSynchronizers.push(new TranscriptSynchronizer(box));
         });
     }
-
-    // VOLLSTÄNDIGE METHODEN FOLGEN:
 
     setupEventListeners() {
         window.addEventListener('resize', this.debouncedRefresh);
@@ -109,6 +162,7 @@ class PhoenixDossier {
         this.DOM.progressBar.style.transform = `scaleX(${scrollPercentage})`;
 
         if (!this.state.isLowPerfMode) {
+            // This lerp value can be used by CSS for subtle effects, like paragraph text color
             const lerpAmount = Math.min(window.scrollY / 500, 1);
             this.DOM.root.style.setProperty('--scroll-lerp', lerpAmount);
         }
@@ -337,6 +391,7 @@ class PhoenixDossier {
             gsap.to(this.DOM.root, {
                 '--primary-color': colors.primary,
                 '--secondary-color': colors.secondary,
+                '--primary-color-translucent': gsap.utils.splitColor(colors.primary).join(' / 0.3)'),
                 duration: 1.5,
                 ease: 'sine.inOut'
             });
@@ -412,7 +467,9 @@ class PhoenixDossier {
         };
     }
 
+    // --- NEW / HEAVILY REVISED: All animations are now configured here ---
     setupAnimations() {
+        // 1. Animate Main Header on Load
         const mainHeader = document.querySelector('h1.fade-up-header');
         const chars = mainHeader ? mainHeader.querySelectorAll('.char') : null;
 
@@ -423,23 +480,28 @@ class PhoenixDossier {
             gsap.from(this.DOM.subtitle, { autoAlpha: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.8 });
         }
 
+        // 2. Background aurora blob movement
         gsap.to(this.DOM.auroraBlobs[0], { duration: 20, x: "+=120", y: "-=80", rotation: 45, scale: 1.25, repeat: -1, yoyo: true, ease: "sine.inOut" });
         gsap.to(this.DOM.auroraBlobs[1], { duration: 25, x: "-=100", y: "+=100", rotation: -35, scale: 0.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
-
+        
+        // 3. Parallax scroll for bento navigation on large screens
         if (window.matchMedia("(min-width: 1025px)").matches) {
             const bentoNav = document.querySelector('.bento-nav');
             if (bentoNav) {
                 gsap.to(bentoNav, { y: (i, target) => -(target.offsetHeight - window.innerHeight + 100), ease: "none", scrollTrigger: { trigger: this.DOM.mainContent, start: "top top", end: `bottom-=${window.innerHeight} bottom`, scrub: 1.8, invalidateOnRefresh: true } });
             }
         }
-
+        
+        // 4. Fade out header content on scroll
         gsap.to(this.DOM.headerContent, { scrollTrigger: { trigger: ".page-header", start: "top top", end: "bottom top", scrub: 1 }, y: 200, opacity: 0, ease: 'none' });
 
+        // 5. Animate each content section as it scrolls into view
         this.DOM.sections.forEach(section => {
             const sectionId = section.id;
             const colors = this.narrativeColors[sectionId];
             const h2Element = section.querySelector('h2');
 
+            // 5a. Animate section headline
             if (h2Element) {
                 const h2chars = h2Element.querySelectorAll('.char');
                 const tl = gsap.timeline({ scrollTrigger: { trigger: h2Element, start: 'top 85%', toggleActions: 'play none none reverse' } });
@@ -447,14 +509,18 @@ class PhoenixDossier {
                 tl.fromTo(h2Element, { '--underline-scale': 0 }, { '--underline-scale': 1, duration: 1, ease: 'expo.out' }, 0.1);
             }
 
+            // 5b. Animate section content (paragraphs, audio boxes)
             const animatedElements = section.querySelectorAll('p, h4, .audio-feature-box');
             if (animatedElements.length > 0) {
                 gsap.from(animatedElements, { scrollTrigger: { trigger: section, start: 'top 85%', toggleActions: 'play none none reverse' }, opacity: 0, y: 40, duration: 0.9, ease: 'power3.out', stagger: 0.1 });
             }
 
+            // 5c. Trigger color change for the section
             if (colors) {
                 ScrollTrigger.create({ trigger: section, start: "top 40%", end: "bottom 40%", onEnter: () => this.animateColors(colors), onEnterBack: () => this.animateColors(colors) });
             }
+            
+            // 5d. Animate the progress circle in the corresponding bento nav cell
             const navLink = this.DOM.navLinks.find(link => link.hash === `#${sectionId}`);
             if (navLink) {
                 const progressPath = navLink.querySelector('.bento-progress-circle .progress-path');
@@ -464,6 +530,7 @@ class PhoenixDossier {
             }
         });
 
+        // 6. Animate the narrative thread SVG path
         if (this.DOM.narrativePath && !this.state.isLowPerfMode) {
             const pathLength = this.DOM.narrativePath.getTotalLength();
             if (pathLength > 0) {
@@ -483,6 +550,7 @@ class PhoenixDossier {
             }
         }
         
+        // 7. Animate the final CTA section
         const finalSection = document.querySelector('.final-actions');
         if (finalSection) {
             gsap.from(finalSection.querySelector('#final-cta'), { scrollTrigger: { trigger: finalSection, start: 'top 80%', toggleActions: 'play none none none' }, opacity: 0, y: 50, duration: 0.8, ease: 'power2.out' });
