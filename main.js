@@ -83,7 +83,6 @@ class PhoenixDossier {
             narrativePath: document.querySelector('.narrative-thread-path'),
         };
 
-        // REVISED: New dynamic color palette for the scrolling journey
         this.narrativeColors = {
             part1: { primary: '#fb923c', secondary: '#f97316' }, // Orange
             part2: { primary: '#f87171', secondary: '#ef4444' }, // Red
@@ -128,7 +127,7 @@ class PhoenixDossier {
         this.setupEventListeners();
         this.setupIntersectionObserver();
         this.setupCustomAudioPlayers();
-        this.checkInitialPerfMode();
+        this.checkInitialPerfMode(); // This will now always enable animations
         this.setupBentoInteractions();
         this.setupTranscripts();
         this.setupShareLinks();
@@ -162,7 +161,6 @@ class PhoenixDossier {
         this.DOM.progressBar.style.transform = `scaleX(${scrollPercentage})`;
 
         if (!this.state.isLowPerfMode) {
-            // This lerp value can be used by CSS for subtle effects, like paragraph text color
             const lerpAmount = Math.min(window.scrollY / 500, 1);
             this.DOM.root.style.setProperty('--scroll-lerp', lerpAmount);
         }
@@ -333,17 +331,10 @@ class PhoenixDossier {
         draw();
     }
 
+    // --- OPTIMIZED: "prefers-reduced-motion" check removed as requested ---
+    // This ensures animations are always initialized.
     checkInitialPerfMode() {
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReducedMotion) {
-            this.state.isLowPerfMode = true;
-            this.DOM.body.classList.add('low-performance-mode');
-            this.DOM.perfToggleBtn.setAttribute('aria-pressed', 'true');
-            this.DOM.perfToggleBtn.textContent = '✨ Animationen aus';
-            ScrollTrigger.getAll().forEach(st => st.disable());
-        } else {
-            this.setupAnimations();
-        }
+        this.setupAnimations();
     }
 
     togglePerformanceMode() {
@@ -467,9 +458,7 @@ class PhoenixDossier {
         };
     }
 
-    // --- NEW / HEAVILY REVISED: All animations are now configured here ---
     setupAnimations() {
-        // 1. Animate Main Header on Load
         const mainHeader = document.querySelector('h1.fade-up-header');
         const chars = mainHeader ? mainHeader.querySelectorAll('.char') : null;
 
@@ -480,11 +469,10 @@ class PhoenixDossier {
             gsap.from(this.DOM.subtitle, { autoAlpha: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.8 });
         }
 
-        // 2. Background aurora blob movement
         gsap.to(this.DOM.auroraBlobs[0], { duration: 20, x: "+=120", y: "-=80", rotation: 45, scale: 1.25, repeat: -1, yoyo: true, ease: "sine.inOut" });
         gsap.to(this.DOM.auroraBlobs[1], { duration: 25, x: "-=100", y: "+=100", rotation: -35, scale: 0.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
         
-        // 3. Parallax scroll for bento navigation on large screens
+        // Parallax for bento nav is correctly limited to desktop screens
         if (window.matchMedia("(min-width: 1025px)").matches) {
             const bentoNav = document.querySelector('.bento-nav');
             if (bentoNav) {
@@ -492,16 +480,13 @@ class PhoenixDossier {
             }
         }
         
-        // 4. Fade out header content on scroll
         gsap.to(this.DOM.headerContent, { scrollTrigger: { trigger: ".page-header", start: "top top", end: "bottom top", scrub: 1 }, y: 200, opacity: 0, ease: 'none' });
 
-        // 5. Animate each content section as it scrolls into view
         this.DOM.sections.forEach(section => {
             const sectionId = section.id;
             const colors = this.narrativeColors[sectionId];
             const h2Element = section.querySelector('h2');
 
-            // 5a. Animate section headline
             if (h2Element) {
                 const h2chars = h2Element.querySelectorAll('.char');
                 const tl = gsap.timeline({ scrollTrigger: { trigger: h2Element, start: 'top 85%', toggleActions: 'play none none reverse' } });
@@ -509,18 +494,15 @@ class PhoenixDossier {
                 tl.fromTo(h2Element, { '--underline-scale': 0 }, { '--underline-scale': 1, duration: 1, ease: 'expo.out' }, 0.1);
             }
 
-            // 5b. Animate section content (paragraphs, audio boxes)
             const animatedElements = section.querySelectorAll('p, h4, .audio-feature-box');
             if (animatedElements.length > 0) {
                 gsap.from(animatedElements, { scrollTrigger: { trigger: section, start: 'top 85%', toggleActions: 'play none none reverse' }, opacity: 0, y: 40, duration: 0.9, ease: 'power3.out', stagger: 0.1 });
             }
 
-            // 5c. Trigger color change for the section
             if (colors) {
                 ScrollTrigger.create({ trigger: section, start: "top 40%", end: "bottom 40%", onEnter: () => this.animateColors(colors), onEnterBack: () => this.animateColors(colors) });
             }
             
-            // 5d. Animate the progress circle in the corresponding bento nav cell
             const navLink = this.DOM.navLinks.find(link => link.hash === `#${sectionId}`);
             if (navLink) {
                 const progressPath = navLink.querySelector('.bento-progress-circle .progress-path');
@@ -530,7 +512,7 @@ class PhoenixDossier {
             }
         });
 
-        // 6. Animate the narrative thread SVG path
+        // The narrative thread animation will only run if the element is visible (hidden on phones via CSS)
         if (this.DOM.narrativePath && !this.state.isLowPerfMode) {
             const pathLength = this.DOM.narrativePath.getTotalLength();
             if (pathLength > 0) {
@@ -550,7 +532,6 @@ class PhoenixDossier {
             }
         }
         
-        // 7. Animate the final CTA section
         const finalSection = document.querySelector('.final-actions');
         if (finalSection) {
             gsap.from(finalSection.querySelector('#final-cta'), { scrollTrigger: { trigger: finalSection, start: 'top 80%', toggleActions: 'play none none none' }, opacity: 0, y: 50, duration: 0.8, ease: 'power2.out' });
