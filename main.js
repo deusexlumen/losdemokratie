@@ -1,5 +1,5 @@
 // FILE: main.js
-// VALIDIERTE VERSION: Phoenix Edition v4.8.2 (Kontrast und Preloader)
+// VALIDIERTE VERSION: Phoenix Edition v4.8.3 (Preloader-Fix durch Entfernen von SplitText)
 
 // === Helper Class: TranscriptSynchronizer ===
 class TranscriptSynchronizer {
@@ -291,21 +291,46 @@ class PhoenixDossier {
         });
     }
 
+    // === NEUE HELPER-FUNKTION: Manueller Text-Split ===
+    /**
+     * Splittet den Textinhalt eines Elements manuell in <span>-Tags für jeden Buchstaben.
+     * @param {HTMLElement} element - Das Element, dessen Text gesplittet werden soll.
+     * @returns {Array<HTMLElement>} - Ein Array der neuen Char-Span-Elemente.
+     */
+    manualSplitText(element) {
+        if (!element) return [];
+        const originalText = element.textContent;
+        element.textContent = ''; // Leert das Element
+        const chars = [];
+        
+        originalText.split('').forEach(char => {
+            const charSpan = document.createElement('span');
+            charSpan.className = 'char-anim';
+            charSpan.style.display = 'inline-block'; // Wichtig für GSAP
+            charSpan.textContent = (char === ' ') ? '\u00A0' : char; // Leerzeichen beibehalten
+            element.appendChild(charSpan);
+            chars.push(charSpan);
+        });
+        return chars;
+    }
+
     // === GSAP Animationen ===
     setupGSAPAnimations() {
         // Registriere GSAP Plugins
-        gsap.registerPlugin(ScrollTrigger, SplitText);
+        // KORREKTUR: SplitText entfernt
+        gsap.registerPlugin(ScrollTrigger);
 
         // 1. Split Text Animationen für Überschriften
-        const mainSplit = new SplitText(this.DOM.mainTitle, { type: 'words,chars', charsClass: 'char-anim' });
-        const subSplit = new SplitText(this.DOM.subTitle, { type: 'words,chars', charsClass: 'char-anim' });
+        // KORREKTUR: Verwende die manuelle Split-Funktion statt new SplitText()
+        const mainChars = this.manualSplitText(this.DOM.mainTitle);
+        const subChars = this.manualSplitText(this.DOM.subTitle);
 
         gsap.set([this.DOM.mainTitle, this.DOM.subTitle], { opacity: 1 }); // Elemente sichtbar machen
-        gsap.set(mainSplit.chars, { opacity: 0, y: '100%', rotationX: -90, transformOrigin: 'center center -50px' });
-        gsap.set(subSplit.chars, { opacity: 0, y: '100%' });
+        gsap.set(mainChars, { opacity: 0, y: '100%', rotationX: -90, transformOrigin: 'center center -50px' });
+        gsap.set(subChars, { opacity: 0, y: '100%' });
 
         // Haupt-Titel Animation (Eingeflogen)
-        gsap.to(mainSplit.chars, {
+        gsap.to(mainChars, {
             opacity: 1,
             y: '0%',
             rotationX: 0,
@@ -316,7 +341,7 @@ class PhoenixDossier {
         });
 
         // Untertitel Animation (Eingeblendet)
-        gsap.to(subSplit.chars, {
+        gsap.to(subChars, {
             opacity: 1,
             y: '0%',
             duration: 0.5,
