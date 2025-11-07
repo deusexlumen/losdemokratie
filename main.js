@@ -1,5 +1,5 @@
 // FILE: main.js
-// VALIDIERTE VERSION: Phoenix Edition v4.8.4 (Originalinhalt + Preloader)
+// VALIDIERTE VERSION: Phoenix Edition v4.8.3 (Preloader-Fix durch Entfernen von SplitText)
 
 // === Helper Class: TranscriptSynchronizer ===
 class TranscriptSynchronizer {
@@ -12,6 +12,7 @@ class TranscriptSynchronizer {
         this.toggleBtn = box.querySelector('.transcript-toggle-btn');
         this.cues = Array.from(this.transcriptContainer.querySelectorAll('p[data-start]'));
 
+        // Event Listener initialisieren
         this.toggleBtn.addEventListener('click', () => this.toggle());
         this.audio.addEventListener('timeupdate', () => this.sync());
         
@@ -21,554 +22,418 @@ class TranscriptSynchronizer {
                 this.audio.play();
             });
         });
+        
+        // Initialer Zustand
+        this.toggleBtn.textContent = 'Transkript einblenden';
     }
 
     toggle() {
         const isHidden = this.transcriptContainer.hidden;
         this.transcriptContainer.hidden = !isHidden;
         this.toggleBtn.setAttribute('aria-expanded', String(isHidden));
+        this.toggleBtn.textContent = isHidden ? 'Transkript ausblenden' : 'Transkript einblenden';
     }
 
     sync() {
-        if (this.transcriptContainer.hidden) return;
+        if (this.transcriptContainer.hidden || this.audio.paused) return;
         const time = this.audio.currentTime;
         let activeCue = null;
         
         this.cues.forEach(cue => {
             const start = parseFloat(cue.dataset.start);
-            const end = parseFloat(cue.dataset.end);
-            if (time >= start && time <= end) {
-                cue.classList.add('is-speaking');
+            const end = parseFloat(cue.dataset.end || Infinity); // Annahme: Letztes Cue hat kein End
+            
+            // Finde das aktuell aktive Cue
+            if (time >= start && time < end) {
                 activeCue = cue;
-            } else {
-                cue.classList.remove('is-speaking');
             }
+            
+            // CSS Klassen aktualisieren
+            cue.classList.toggle('active-cue', time >= start && time < end);
         });
 
+        // Scrolle zum aktiven Cue, falls es nicht sichtbar ist
         if (activeCue) {
-            const containerRect = this.transcriptContainer.getBoundingClientRect();
-            const cueRect = activeCue.getBoundingClientRect();
-            // Nur scrollen, wenn das Cue außerhalb des sichtbaren Bereichs ist
-            if (cueRect.top < containerRect.top || cueRect.bottom > containerRect.bottom) {
-                 this.transcriptContainer.scrollTop = activeCue.offsetTop - (this.transcriptContainer.offsetHeight / 2) + (activeCue.offsetHeight / 2);
+            const container = this.transcriptContainer;
+            const containerScrollTop = container.scrollTop;
+            const containerHeight = container.clientHeight;
+            const cueOffsetTop = activeCue.offsetTop;
+            const cueHeight = activeCue.offsetHeight;
+
+            if (cueOffsetTop < containerScrollTop || cueOffsetTop + cueHeight > containerScrollTop + containerHeight) {
+                // Scrolle, um das Element in der Mitte des Containers zu positionieren
+                container.scrollTop = cueOffsetTop - (containerHeight / 2) + (cueHeight / 2);
             }
         }
     }
 }
-
 
 // === Hauptklasse: PhoenixDossier ===
 class PhoenixDossier {
     constructor() {
-        gsap.registerPlugin(ScrollTrigger);
-
         this.DOM = {
             preloader: document.getElementById('preloader'), // NEU: Preloader
             body: document.body,
-            root: document.documentElement,
-            progressBar: document.querySelector('.scroll-progress-bar'),
-            liveRegion: document.querySelector('[aria-live="polite"]'),
-            sections: Array.from(document.querySelectorAll('.content-section')),
-            navLinks: Array.from(document.querySelectorAll('.bento-nav .bento-cell')),
-            perfToggleBtn: document.getElementById('perf-toggle'),
-            aurora: document.querySelector('.aurora-background'),
-            headerContent: document.querySelector('.header-content'),
-            subtitle: document.querySelector('.page-header .subtitle'),
-            audioBoxes: document.querySelectorAll('.audio-feature-box'),
-            mainContent: document.getElementById('main-content'),
-            distillateContainer: document.querySelector('#knowledge-distillate'),
-            distillateList: document.querySelector('#knowledge-distillate ul'),
-            h2s: document.querySelectorAll('.content-section h2'),
-            auroraBlobs: document.querySelectorAll('.aurora-background .blob'),
             focusPane: document.querySelector('.focus-pane'),
-            narrativeThreadContainer: document.querySelector('.narrative-thread-container'),
+            perfToggle: document.getElementById('perf-toggle'),
+            mainTitle: document.getElementById('title-split'),
+            subTitle: document.getElementById('subtitle-split'),
             narrativePath: document.querySelector('.narrative-thread-path'),
         };
 
-        this.narrativeColors = {
-            part1: { primary: '#fb923c', secondary: '#f97316' }, // Orange
-            part2: { primary: '#f87171', secondary: '#ef4444' }, // Red
-            part3: { primary: '#60a5fa', secondary: '#3b82f6' }, // Blue
-            part4: { primary: '#4ade80', secondary: '#22c55e' }, // Green
-            part5: { primary: '#a78bfa', secondary: '#8b5cf6' }, // Violet
-            part6: { primary: '#22d3ee', secondary: '#06b6d4' }, // Cyan (Default)
-        };
-
         this.state = {
-            activeSectionId: null,
-            completedSections: new Set(),
             isLowPerfMode: false,
-            isTicking: false,
-            currentColor: getComputedStyle(this.DOM.root).getPropertyValue('--primary-color').trim(),
         };
 
-        this.audioContext = null;
-        this.analysers = new Map();
-        this.sources = new Map();
-        this.transcriptSynchronizers = [];
-
-        this.resizeTimeout = null;
-        this.debouncedRefresh = this.debounce(this.onResize.bind(this), 250);
-
-        if (this.DOM.distillateList) {
-            this.init();
-        } else {
-            console.error("Initialisierung fehlgeschlagen: Wissens-Destillat-Liste nicht gefunden.");
-        }
+        // Ruft die Initialisierung auf
+        this.init();
     }
 
     init() {
-        // NEU: Stelle sicher, dass der Preloader sichtbar ist
-        if (this.DOM.preloader) {
-            this.DOM.preloader.classList.remove('hidden');
-        }
-
+        this.hidePreloader(); // Setzt den Preloader auf sichtbar und fügt die Klasse 'hidden' später hinzu
+        this.setupPerfToggle(); // Setze zuerst den Performance-Modus
+        this.setupAudioPlayers(); // Initialisiere alle Audio-Boxen
+        
         try {
-            this.splitMainHeader();
-            this.splitSectionHeaders();
-            
-            if (this.DOM.narrativePath) {
-                setTimeout(() => this.generateNarrativePath(), 100);
+            // Führe GSAP-Initialisierung nur aus, wenn der Low-Perf-Modus nicht aktiv ist
+            if (!this.state.isLowPerfMode) {
+                this.setupGSAPAnimations();
+            } else {
+                // Wenn Low-Perf aktiv ist, die Split-Elemente sofort zeigen
+                gsap.set([this.DOM.mainTitle, this.DOM.subTitle], { opacity: 1 });
+                console.log('Low Performance Mode aktiv: GSAP Animationen übersprungen.');
             }
-
-            this.setupEventListeners();
-            this.setupIntersectionObserver();
-            this.setupCustomAudioPlayers();
-            this.checkInitialPerfMode(); // This will now always enable animations
-            this.setupBentoInteractions();
-            this.setupTranscripts();
-            this.setupShareLinks();
-        
         } catch (error) {
-            console.error("Fehler bei der Initialisierung:", error);
-        
+            console.error("Fehler bei der GSAP-Initialisierung:", error);
+            // Fallback: Stelle sicher, dass der Text sichtbar ist, auch wenn die Animation fehlschlägt
+            if (this.DOM.mainTitle && this.DOM.subTitle) {
+                 gsap.set([this.DOM.mainTitle, this.DOM.subTitle], { opacity: 1 });
+            }
         } finally {
-            // NEU: Preloader sicher ausblenden
-            if (this.DOM.preloader) {
-                this.DOM.preloader.classList.add('hidden');
-                this.DOM.preloader.addEventListener('transitionend', () => {
-                    this.DOM.preloader.style.display = 'none';
-                }, { once: true });
-            }
-        }
-    }
-    
-    setupTranscripts() {
-        this.DOM.audioBoxes.forEach(box => {
-            this.transcriptSynchronizers.push(new TranscriptSynchronizer(box));
-        });
-    }
-
-    setupEventListeners() {
-// ... existing code ...
-        window.addEventListener('resize', this.debouncedRefresh);
-        document.addEventListener('scroll', () => {
-            if (!this.state.isTicking) {
-// ... existing code ...
-            }
-        });
-
-        if (this.DOM.perfToggleBtn) {
-// ... existing code ...
-        }
-    }
-    
-    onScroll() {
-// ... existing code ...
-        this.DOM.progressBar.style.transform = `scaleX(${scrollPercentage})`;
-
-        if (!this.state.isLowPerfMode) {
-// ... existing code ...
-        }
-    }
-
-    setupIntersectionObserver() {
-// ... existing code ...
-        const options = { rootMargin: '-50% 0px -50% 0px' };
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-// ... existing code ...
-                if (entry.isIntersecting) {
-                    this.state.activeSectionId = id;
-                    navLink?.classList.add('is-active');
-// ... existing code ...
-                } else {
-                    navLink?.classList.remove('is-active');
-                }
-// ... existing code ...
-        }, options);
-
-        this.DOM.sections.forEach(section => observer.observe(section));
-
-// ... existing code ...
-        const completionObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-// ... existing code ...
-                    if (!this.state.completedSections.has(id)) {
-                        this.state.completedSections.add(id);
-                        this.updateKnowledgeDistillate();
-                    }
-                }
-            });
-        }, { threshold: 0.8 });
-
-        this.DOM.sections.forEach(section => completionObserver.observe(section));
-        
-// ... existing code ...
-        const distillateObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    this.DOM.distillateContainer.classList.add('is-visible');
-                }
-            });
-        }, { threshold: 0.2 });
-        distillateObserver.observe(this.DOM.distillateContainer);
-    }
-    
-    updateKnowledgeDistillate() {
-// ... existing code ...
-        this.DOM.distillateList.innerHTML = '';
-        this.DOM.sections.forEach(section => {
-            const id = section.id;
-// ... existing code ...
-            if (this.state.completedSections.has(id)) {
-                const takeaway = section.dataset.takeaway;
-                if (takeaway) {
-// ... existing code ...
-                    li.textContent = takeaway;
-                    this.DOM.distillateList.appendChild(li);
-                }
-            }
-        });
-    }
-
-    setupCustomAudioPlayers() {
-        this.DOM.audioBoxes.forEach(box => {
-// ... existing code ...
-            const audio = box.querySelector('.audio-player-hidden');
-            const playPauseBtn = box.querySelector('.play-pause-btn');
-// ... existing code ...
-            const playerContainer = box.querySelector('.custom-audio-player');
-            const playbackRates = [1, 1.25, 1.5, 1.75, 2, 0.75];
-            let currentRateIndex = 0;
-
-            audio.addEventListener('loadedmetadata', () => {
-// ... existing code ...
-            });
-
-            playPauseBtn.addEventListener('click', () => {
-                if (audio.paused) {
-// ... existing code ...
-                } else {
-                    audio.pause();
-                }
-            });
-
-            audio.addEventListener('play', () => {
-// ... existing code ...
-                playPauseBtn.setAttribute('aria-label', 'Pause');
-                this.setupAudioVisualizer(audio, visualizer);
-            });
-            audio.addEventListener('pause', () => {
-// ... existing code ...
-                playPauseBtn.setAttribute('aria-label', 'Abspielen');
-            });
-
-            audio.addEventListener('timeupdate', () => {
-// ... existing code ...
-                progressBar.style.width = `${progress}%`;
-                currentTimeEl.textContent = this.formatTime(audio.currentTime);
-            });
-
-            skipBtns.forEach(btn => {
-// ... existing code ...
-            });
-
-            progressContainer.addEventListener('click', (e) => {
-// ... existing code ...
-                const clickX = e.clientX - rect.left;
-                const percentage = (clickX / rect.width);
-                audio.currentTime = audio.duration * percentage;
-            });
+            // NEU: Sicheres Ausblenden des Preloaders
+            // Dies stellt sicher, dass der Preloader *immer* ausgeblendet wird,
+            // auch wenn die Animationen (try-Block) fehlschlagen.
+            this.DOM.preloader.classList.add('hidden');
             
-            speedBtn.addEventListener('click', () => {
-// ... existing code ...
-                audio.playbackRate = playbackRates[currentRateIndex];
-                speedBtn.textContent = `${playbackRates[currentRateIndex]}x`;
-            });
+            // Entferne das Preloader-Element nach der Transition, um Klicks zu verhindern
+            this.DOM.preloader.addEventListener('transitionend', () => {
+                 this.DOM.preloader.style.display = 'none';
+            }, { once: true });
+        }
+        
+        this.setupLinkCopy(); // Fügt die Kopierfunktion hinzu
+        
+        console.log('Dossier vollständig initialisiert.');
+    }
+    
+    // NEU: Methode zur Vorbereitung des Preloaders
+    hidePreloader() {
+        // Das ist eigentlich 'showPreloader', aber wir wollen sicherstellen, dass es anfangs sichtbar ist.
+        // Die 'hidden'-Klasse wird erst am Ende von init() hinzugefügt.
+        this.DOM.preloader.classList.remove('hidden');
+    }
+
+
+    // === Audio-Player & Visualizer Setup ===
+    setupAudioPlayers() {
+        const audioBoxes = document.querySelectorAll('.audio-box');
+        audioBoxes.forEach(box => {
+            const synchronizer = new TranscriptSynchronizer(box);
+            this.setupAudioControls(box, synchronizer);
+            // Wir überspringen den Visualizer-Setup im Low-Perf-Modus und auf Mobilgeräten (via CSS)
+            if (!this.state.isLowPerfMode && window.innerWidth > 1024) {
+                this.setupAudioVisualizer(box);
+            }
         });
     }
-    
-    formatTime(seconds) {
-// ... existing code ...
-        const minutes = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    
-    setupAudioVisualizer(audioElement, canvas) {
-// ... existing code ...
-        if (this.state.isLowPerfMode || !canvas) return;
-        if (!this.audioContext) {
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-// ... existing code ...
-        if (this.analysers.has(audioElement)) return;
 
-        // Fehlerbehandlung für AudioContext, der Interaktion erfordert
-        if (this.audioContext.state === 'suspended') {
-            this.audioContext.resume();
-        }
+    setupAudioControls(box, synchronizer) {
+        const audio = box.querySelector('audio');
+        const playPauseBtn = box.querySelector('.audio-play-pause-btn');
+        const progressBar = box.querySelector('.audio-progress-bar');
+        const timeDisplay = box.querySelector('.audio-time');
+        
+        // Initialisiere die Zeitanzeige, sobald Metadaten verfügbar sind
+        audio.onloadedmetadata = () => {
+            timeDisplay.textContent = this.formatTime(audio.currentTime) + ' / ' + this.formatTime(audio.duration);
+            progressBar.max = audio.duration;
+        };
 
-        const source = this.audioContext.createMediaElementSource(audioElement);
-// ... existing code ...
-        analyser.fftSize = 128;
-        source.connect(analyser);
-        analyser.connect(this.audioContext.destination);
-// ... existing code ...
-        this.analysers.set(audioElement, analyser);
-
-        const bufferLength = analyser.frequencyBinCount;
-// ... existing code ...
-        const ctx = canvas.getContext('2d');
-        const draw = () => {
-            if (audioElement.paused) return;
-// ... existing code ...
-            analyser.getByteFrequencyData(dataArray);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const barWidth = (canvas.width / bufferLength) * 1.5;
-// ... existing code ...
-            for (let i = 0; i < bufferLength; i++) {
-                const barHeight = (dataArray[i] / 255) * canvas.height;
-                const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-// ... existing code ...
-                gradient.addColorStop(1, '#67e8f9');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-// ... existing code ...
+        playPauseBtn.onclick = () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = '⏸️ Pause';
+                playPauseBtn.setAttribute('aria-label', 'Audio pausieren');
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = '▶️ Play';
+                playPauseBtn.setAttribute('aria-label', 'Audio abspielen');
             }
         };
-        draw();
+
+        audio.ontimeupdate = () => {
+            progressBar.value = audio.currentTime;
+            timeDisplay.textContent = this.formatTime(audio.currentTime) + ' / ' + this.formatTime(audio.duration);
+            synchronizer.sync();
+        };
+
+        progressBar.oninput = () => {
+            audio.currentTime = progressBar.value;
+        };
+
+        audio.onended = () => {
+            playPauseBtn.innerHTML = '▶️ Play';
+            playPauseBtn.setAttribute('aria-label', 'Audio abspielen');
+            audio.currentTime = 0;
+        };
     }
 
-// ... existing code ...
-    // This ensures animations are always initialized.
-    checkInitialPerfMode() {
-        // Prüfen, ob der Modus im LocalStorage gespeichert ist
+    setupAudioVisualizer(box) {
+        // Überprüfen, ob AudioContext verfügbar ist (Robustheit)
+        if (!window.AudioContext && !window.webkitAudioContext) {
+            console.warn("AudioContext nicht verfügbar. Visualizer deaktiviert.");
+            box.querySelector('.audio-visualizer-container').style.display = 'none';
+            return;
+        }
+        
+        const canvas = box.querySelector('.audio-visualizer');
+        const audio = box.querySelector('audio');
+        const container = box.querySelector('.audio-visualizer-container');
+
+        if (!canvas) return; // Kann durch Responsive CSS ausgeblendet sein
+
+        const ctx = canvas.getContext('2d');
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaElementSource(audio);
+
+        // Verbinde Audio-Quelle mit Analyser und dem Audio-Ziel
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        // Setze Analyser-Parameter
+        analyser.fftSize = 256;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        // Funktion zum Zeichnen der Visualisierung
+        const draw = () => {
+            requestAnimationFrame(draw);
+            
+            // Stelle sicher, dass die Canvas-Größe aktuell ist
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            analyser.getByteFrequencyData(dataArray);
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0)'; // Klarer Hintergrund (transparent)
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let barX = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                const barHeight = dataArray[i] / 2;
+                
+                // Cyan zu Violett Farbverlauf basierend auf der Frequenz (i)
+                const r = Math.floor(255 - (i / bufferLength) * 200); 
+                const g = Math.floor(100 + (i / bufferLength) * 150); 
+                const b = Math.floor(200 + (i / bufferLength) * 55); 
+                ctx.fillStyle = `rgb(6, 182, 212)`; // Einfacher Cyan-Farbton
+
+                // Zeichne den Balken
+                ctx.fillRect(barX, canvas.height - barHeight, barWidth, barHeight);
+
+                barX += barWidth + 1;
+            }
+        };
+
+        // Starte das Zeichnen, aber pausiere den AudioContext initial, wenn es notwendig ist
+        if (audioContext.state === 'suspended') {
+            const resumeAudio = () => {
+                audioContext.resume().then(() => {
+                    draw();
+                    document.body.removeEventListener('click', resumeAudio);
+                });
+            };
+            // Starte AudioContext erst nach einer Benutzerinteraktion
+            document.body.addEventListener('click', resumeAudio);
+        } else {
+            draw();
+        }
+
+        // Listener für die Fenstergröße, um die Canvas-Größe anzupassen
+        window.addEventListener('resize', () => {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        });
+    }
+
+    formatTime(seconds) {
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    }
+
+    // === Performance Toggle ===
+    setupPerfToggle() {
         const isLowPerf = localStorage.getItem('lowPerfMode') === 'true';
         this.state.isLowPerfMode = isLowPerf;
-        this.DOM.body.classList.toggle('low-performance-mode', isLowPerf);
-        if (this.DOM.perfToggleBtn) {
-            this.DOM.perfToggleBtn.setAttribute('aria-pressed', String(isLowPerf));
-            this.DOM.perfToggleBtn.textContent = isLowPerf ? '✨ Animationen aus' : '✨ Animationen an';
-        }
+        this.DOM.perfToggle.setAttribute('aria-pressed', isLowPerf);
+        this.DOM.perfToggle.textContent = isLowPerf ? '💤 Animationen aus' : '✨ Animationen an';
+        this.DOM.body.classList.toggle('low-perf-mode', isLowPerf);
 
-        if (!isLowPerf) {
-            this.setupAnimations();
-        } else {
-            console.log("Low Performance Mode ist aktiv. Animationen werden übersprungen.");
-        }
+        this.DOM.perfToggle.addEventListener('click', () => {
+            this.state.isLowPerfMode = !this.state.isLowPerfMode;
+            localStorage.setItem('lowPerfMode', this.state.isLowPerfMode);
+            // Einfacher Reload, um GSAP korrekt zu (de)initialisieren
+            window.location.reload(); 
+        });
     }
 
-    togglePerformanceMode() {
-// ... existing code ...
-        this.state.isLowPerfMode = !this.state.isLowPerfMode;
-        this.DOM.body.classList.toggle('low-performance-mode', this.state.isLowPerfMode);
-        this.DOM.perfToggleBtn.setAttribute('aria-pressed', String(this.state.isLowPerfMode));
-// ... existing code ...
+    // === NEUE HELPER-FUNKTION: Manueller Text-Split ===
+    /**
+     * Splittet den Textinhalt eines Elements manuell in <span>-Tags für jeden Buchstaben.
+     * @param {HTMLElement} element - Das Element, dessen Text gesplittet werden soll.
+     * @returns {Array<HTMLElement>} - Ein Array der neuen Char-Span-Elemente.
+     */
+    manualSplitText(element) {
+        if (!element) return [];
+        const originalText = element.textContent;
+        element.textContent = ''; // Leert das Element
+        const chars = [];
         
-        if (this.state.isLowPerfMode) {
-            ScrollTrigger.getAll().forEach(st => st.disable());
-// ... existing code ...
-        } else {
-            ScrollTrigger.getAll().forEach(st => st.enable());
-            this.setupAnimations();
-        }
-        // Speichere die Wahl des Nutzers
-        localStorage.setItem('lowPerfMode', this.state.isLowPerfMode);
-    }
-    
-    setupBentoInteractions() {
-// ... existing code ...
-    }
-    
-    setupShareLinks() {
-// ... existing code ...
-        const url = window.location.href;
-        const title = document.title;
-        document.getElementById('share-email').href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent('Schau dir dieses Dossier an: ' + url)}`;
-// ... existing code ...
-        document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    }
-    
-    animateColors(colors) {
-// ... existing code ...
-        if (this.state.currentColor !== colors.primary) {
-            this.state.currentColor = colors.primary;
-            gsap.to(this.DOM.root, {
-// ... existing code ...
-                '--primary-color-translucent': gsap.utils.splitColor(colors.primary).join(' / 0.3)'),
-                duration: 1.5,
-                ease: 'sine.inOut'
-// ... existing code ...
-        }
+        originalText.split('').forEach(char => {
+            const charSpan = document.createElement('span');
+            charSpan.className = 'char-anim';
+            charSpan.style.display = 'inline-block'; // Wichtig für GSAP
+            charSpan.textContent = (char === ' ') ? '\u00A0' : char; // Leerzeichen beibehalten
+            element.appendChild(charSpan);
+            chars.push(charSpan);
+        });
+        return chars;
     }
 
-    splitMainHeader() {
-// ... existing code ...
-        const mainHeader = document.querySelector('h1.fade-up-header');
-        if (mainHeader && !mainHeader.dataset.split) {
-            const originalText = mainHeader.textContent;
-// ... existing code ...
-            originalText.split('').forEach(char => {
-                const charSpan = document.createElement('span');
-                charSpan.className = 'char';
-                charSpan.textContent = char === ' ' ? '\u00A0' : char;
-// ... existing code ...
-            });
-            mainHeader.dataset.split = 'true';
-        }
-    }
+    // === GSAP Animationen ===
+    setupGSAPAnimations() {
+        // Registriere GSAP Plugins
+        // KORREKTUR: SplitText entfernt
+        gsap.registerPlugin(ScrollTrigger);
 
-    splitSectionHeaders() {
-// ... existing code ...
-        this.DOM.h2s.forEach(h2 => {
-            if (h2.dataset.split) return;
-            const originalText = h2.textContent;
-// ... existing code ...
-            const words = originalText.split(' ');
-            words.forEach((word, index) => {
-                const wordSpan = document.createElement('span');
-// ... existing code ...
-                word.split('').forEach(char => {
-                    const charSpan = document.createElement('span');
-                    charSpan.className = 'char';
-// ... existing code ...
-                    wordSpan.appendChild(charSpan);
+        // 1. Split Text Animationen für Überschriften
+        // KORREKTUR: Verwende die manuelle Split-Funktion statt new SplitText()
+        const mainChars = this.manualSplitText(this.DOM.mainTitle);
+        const subChars = this.manualSplitText(this.DOM.subTitle);
+
+        gsap.set([this.DOM.mainTitle, this.DOM.subTitle], { opacity: 1 }); // Elemente sichtbar machen
+        gsap.set(mainChars, { opacity: 0, y: '100%', rotationX: -90, transformOrigin: 'center center -50px' });
+        gsap.set(subChars, { opacity: 0, y: '100%' });
+
+        // Haupt-Titel Animation (Eingeflogen)
+        gsap.to(mainChars, {
+            opacity: 1,
+            y: '0%',
+            rotationX: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            stagger: 0.03,
+            delay: 0.5 // Startet nach dem Preloader
+        });
+
+        // Untertitel Animation (Eingeblendet)
+        gsap.to(subChars, {
+            opacity: 1,
+            y: '0%',
+            duration: 0.5,
+            ease: 'power1.out',
+            stagger: 0.01,
+            delay: 1.0
+        });
+        
+        // 2. Parallax für die Kapitel-Überschriften
+        document.querySelectorAll('.chapter-section').forEach(section => {
+            const title = section.querySelector('.chapter-title');
+            if (title) {
+                 gsap.from(title, {
+                    y: 100,
+                    opacity: 0,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                        end: "top 20%",
+                        scrub: true,
+                        toggleActions: "play none none reverse",
+                    }
                 });
-                h2.appendChild(wordSpan);
-// ... existing code ...
-                   h2.appendChild(document.createTextNode(' '));
-                }
-            });
-            h2.dataset.split = 'true';
-// ... existing code ...
-    }
-
-    generateNarrativePath() {
-        if (!this.DOM.narrativePath || !this.DOM.focusPane || this.DOM.sections.length === 0) return;
-// ... existing code ...
-        let pathData = `M ${pathX} 0`;
-        this.DOM.sections.forEach((section) => {
-            const h2 = section.querySelector('h2');
-// ... existing code ...
-            const h2Y = h2.offsetTop + (h2.offsetHeight / 2);
-            pathData += ` L ${pathX} ${h2Y}`;
-        });
-// ... existing code ...
-        pathData += ` L ${pathX} ${totalHeight}`;
-        this.DOM.narrativePath.setAttribute('d', pathData);
-        this.DOM.narrativePath.closest('svg').style.height = `${totalHeight}px`;
-    }
-    
-    onResize() {
-// ... existing code ...
-        if (this.DOM.narrativePath) {
-            this.generateNarrativePath();
-        }
-// ... existing code ...
-    }
-    
-    debounce(func, delay) {
-// ... existing code ...
-    }
-
-    setupAnimations() {
-        const mainHeader = document.querySelector('h1.fade-up-header');
-// ... existing code ...
-
-        if (chars && chars.length > 0) {
-            const tl = gsap.timeline({delay: 0.2});
-// ... existing code ...
-            tl.from(chars, { yPercent: 100, opacity: 0, stagger: 0.05, duration: 0.8, ease: 'power2.out' }, 0.2);
-            gsap.from(this.DOM.subtitle, { autoAlpha: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.8 });
-        }
-
-// ... existing code ...
-        gsap.to(this.DOM.auroraBlobs[1], { duration: 25, x: "-=100", y: "+=100", rotation: -35, scale: 0.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
-        
-        // Parallax for bento nav is correctly limited to desktop screens
-// ... existing code ...
-        if (window.matchMedia("(min-width: 1025px)").matches) {
-            const bentoNav = document.querySelector('.bento-nav');
-            if (bentoNav) {
-// ... existing code ...
-            }
-        }
-        
-        gsap.to(this.DOM.headerContent, { scrollTrigger: { trigger: ".page-header", start: "top top", end: "bottom top", scrub: 1 }, y: 200, opacity: 0, ease: 'none' });
-
-// ... existing code ...
-            const sectionId = section.id;
-            const colors = this.narrativeColors[sectionId];
-            const h2Element = section.querySelector('h2');
-
-// ... existing code ...
-            if (h2Element) {
-                const h2chars = h2Element.querySelectorAll('.char');
-                const tl = gsap.timeline({ scrollTrigger: { trigger: h2Element, start: 'top 85%', toggleActions: 'play none none reverse' } });
-// ... existing code ...
-                tl.fromTo(h2Element, { '--underline-scale': 0 }, { '--underline-scale': 1, duration: 1, ease: 'expo.out' }, 0.1);
-            }
-
-            const animatedElements = section.querySelectorAll('p, h4, .audio-feature-box');
-// ... existing code ...
-            if (animatedElements.length > 0) {
-                gsap.from(animatedElements, { scrollTrigger: { trigger: section, start: 'top 85%', toggleActions: 'play none none reverse' }, opacity: 0, y: 40, duration: 0.9, ease: 'power3.out', stagger: 0.1 });
-            }
-
-            if (colors) {
-// ... existing code ...
-            }
-            
-            const navLink = this.DOM.navLinks.find(link => link.hash === `#${sectionId}`);
-// ... existing code ...
-            if (navLink) {
-                const progressPath = navLink.querySelector('.bento-progress-circle .progress-path');
-                if (progressPath) {
-// ... existing code ...
-                }
             }
         });
 
-// ... existing code ...
-        // The narrative thread animation will only run if the element is visible (hidden on phones via CSS)
+        // 3. Narrative Thread (SVG-Linien-Animation)
+        // Läuft nur, wenn das Element sichtbar ist (auf Mobilgeräten via CSS ausgeblendet)
         if (this.DOM.narrativePath && !this.state.isLowPerfMode) {
             const pathLength = this.DOM.narrativePath.getTotalLength();
-// ... existing code ...
             if (pathLength > 0) {
                 this.DOM.narrativePath.style.strokeDasharray = pathLength;
                 this.DOM.narrativePath.style.strokeDashoffset = pathLength;
-// ... existing code ...
+                gsap.to(this.DOM.narrativePath, {
                     strokeDashoffset: 0,
                     ease: "none",
                     scrollTrigger: {
-// ... existing code ...
+                        trigger: this.DOM.focusPane,
+                        start: "top top",
                         end: "bottom bottom",
                         scrub: 1,
                         invalidateOnRefresh: true
-// ... existing code ...
+                    }
                 });
             }
         }
         
-// ... existing code ...
+        // 4. Final Actions Animation
         const finalSection = document.querySelector('.final-actions');
         if (finalSection) {
             gsap.from(finalSection.querySelector('#final-cta'), { scrollTrigger: { trigger: finalSection, start: 'top 80%', toggleActions: 'play none none none' }, opacity: 0, y: 50, duration: 0.8, ease: 'power2.out' });
-// ... existing code ...
+            gsap.from(document.querySelectorAll('.final-actions-grid > div'), { scrollTrigger: { trigger: finalSection, start: 'top 70%', toggleActions: 'play none none none' }, opacity: 0, y: 30, duration: 1, stagger: 0.2, ease: 'power2.out' });
         }
+    }
+    
+    // === Link Copy Funktion ===
+    setupLinkCopy() {
+        const copyButton = document.querySelector('.cta-button');
+        if (!copyButton) return;
+
+        copyButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const linkToCopy = window.location.href; 
+            
+            // Versuche, in die Zwischenablage zu kopieren
+            try {
+                // Verwenden der veralteten execCommand-Methode als Fallback/in Canvas
+                const tempInput = document.createElement('input');
+                tempInput.value = linkToCopy;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                // Visuelles Feedback
+                const originalText = copyButton.textContent;
+                copyButton.textContent = 'Link kopiert! ✅';
+                
+                setTimeout(() => {
+                    copyButton.textContent = originalText;
+                }, 2000);
+                
+            } catch (err) {
+                console.error('Kopieren fehlgeschlagen:', err);
+                copyButton.textContent = 'Kopieren fehlgeschlagen ❌';
+            }
+        });
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => new PhoenixDoss
+document.addEventListener('DOMContentLoaded', () => {
+    // Wenn das Fenster vollständig geladen ist und das DOM bereit ist, initialisiere das Dossier
+    window.dossier = new PhoenixDossier();
+});
