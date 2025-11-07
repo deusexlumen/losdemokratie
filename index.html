@@ -27,17 +27,17 @@
 </head>
 <body>
     <!-- 
-        PRELOADER: Wird ganz am Anfang des Bodys platziert, um den FOUC zu verhindern.
-        Wird nach erfolgreicher Initialisierung in main.js ausgeblendet.
+      NEU: Preloader HTML
+      Wird am Anfang des Bodys platziert, um FOUC zu verhindern.
     -->
     <div id="preloader" class="preloader">
         <div class="spinner"></div>
         <p class="loading-text">Dossier wird geladen...</p>
     </div>
 
-    <!-- Skip-Link für Barrierefreiheit -->
     <a href="#main-content" class="skip-link">Zum Inhalt springen</a>
-
+    
+    <div class="aurora-background" aria-hidden="true">
     <!-- Haupt-Layout-Container -->
     <div class="narrative-interface">
         
