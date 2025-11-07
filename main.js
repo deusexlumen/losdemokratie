@@ -94,23 +94,32 @@ class PhoenixDossier {
         this.setupPerfToggle(); // Setze zuerst den Performance-Modus
         this.setupAudioPlayers(); // Initialisiere alle Audio-Boxen
         
-        // Führe GSAP-Initialisierung nur aus, wenn der Low-Perf-Modus nicht aktiv ist
-        if (!this.state.isLowPerfMode) {
-            this.setupGSAPAnimations();
-        } else {
-            // Wenn Low-Perf aktiv ist, die Split-Elemente sofort zeigen
-            gsap.set([this.DOM.mainTitle, this.DOM.subTitle], { opacity: 1 });
-            console.log('Low Performance Mode aktiv: GSAP Animationen übersprungen.');
+        try {
+            // Führe GSAP-Initialisierung nur aus, wenn der Low-Perf-Modus nicht aktiv ist
+            if (!this.state.isLowPerfMode) {
+                this.setupGSAPAnimations();
+            } else {
+                // Wenn Low-Perf aktiv ist, die Split-Elemente sofort zeigen
+                gsap.set([this.DOM.mainTitle, this.DOM.subTitle], { opacity: 1 });
+                console.log('Low Performance Mode aktiv: GSAP Animationen übersprungen.');
+            }
+        } catch (error) {
+            console.error("Fehler bei der GSAP-Initialisierung:", error);
+            // Fallback: Stelle sicher, dass der Text sichtbar ist, auch wenn die Animation fehlschlägt
+            if (this.DOM.mainTitle && this.DOM.subTitle) {
+                 gsap.set([this.DOM.mainTitle, this.DOM.subTitle], { opacity: 1 });
+            }
+        } finally {
+            // NEU: Sicheres Ausblenden des Preloaders
+            // Dies stellt sicher, dass der Preloader *immer* ausgeblendet wird,
+            // auch wenn die Animationen (try-Block) fehlschlagen.
+            this.DOM.preloader.classList.add('hidden');
+            
+            // Entferne das Preloader-Element nach der Transition, um Klicks zu verhindern
+            this.DOM.preloader.addEventListener('transitionend', () => {
+                 this.DOM.preloader.style.display = 'none';
+            }, { once: true });
         }
-
-        // NEU: Verzögertes Ausblenden des Preloaders
-        // Dies stellt sicher, dass alle Skripte und die GSAP-Initialisierung abgeschlossen sind.
-        this.DOM.preloader.classList.add('hidden');
-        
-        // Entferne das Preloader-Element nach der Transition, um Klicks zu verhindern
-        this.DOM.preloader.addEventListener('transitionend', () => {
-             this.DOM.preloader.style.display = 'none';
-        }, { once: true });
         
         this.setupLinkCopy(); // Fügt die Kopierfunktion hinzu
         
