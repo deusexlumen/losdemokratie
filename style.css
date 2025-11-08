@@ -47,6 +47,18 @@ body {
     position: relative; /* Für Preloader */
 }
 
+/* --- NEU: Low Performance Mode --- */
+.low-perf-mode * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+}
+.low-perf-mode .narrative-thread-container,
+.low-perf-mode .audio-visualizer {
+    display: none !important;
+}
+
+
 a {
     color: var(--highlight-color);
     text-decoration: none;
@@ -204,6 +216,13 @@ li {
     text-decoration: none;
 }
 
+/* --- NEU: Aktiver Navigationspunkt --- */
+.nav-item.active {
+    background-color: var(--primary-color-translucent);
+    box-shadow: var(--shadow-glow);
+    color: var(--highlight-color);
+}
+
 .nav-item-cta {
     background-color: var(--cta-color);
     margin-top: auto;
@@ -357,7 +376,7 @@ li {
     padding: 20px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: var(--border-radius);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     box-shadow: var(--shadow-glow);
     transition: box-shadow 1.5s ease;
     margin: 3rem 0;
