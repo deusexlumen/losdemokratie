@@ -1,7 +1,7 @@
 --- START OF FILE main.js ---
 
-// VALIDIERTE VERSION: Phoenix Edition v4.8.5 (Robuster Preloader-Fix durch Entkopplung)
-// KORREKTUR: Die Preloader-Logik ist jetzt von der Klassen-Initialisierung entkoppelt, um Fehler-Anfälligkeit zu eliminieren.
+// VALIDIERTE VERSION: Phoenix Edition v4.8.6 (Hardened Edition)
+// KORREKTUR: Null-Prüfungen für alle DOM-Selektoren hinzugefügt, um die App-Initialisierung maximal fehlertolerant zu machen.
 
 // === Helper Class: TranscriptSynchronizer ===
 class TranscriptSynchronizer {
@@ -14,7 +14,9 @@ class TranscriptSynchronizer {
         this.toggleBtn = box.querySelector('.transcript-toggle-btn');
         this.cues = Array.from(this.transcriptContainer.querySelectorAll('p[data-start]'));
 
-        this.toggleBtn.addEventListener('click', () => this.toggle());
+        if (this.toggleBtn) {
+            this.toggleBtn.addEventListener('click', () => this.toggle());
+        }
         this.audio.addEventListener('timeupdate', () => this.sync());
         
         this.cues.forEach(cue => {
@@ -26,10 +28,13 @@ class TranscriptSynchronizer {
             });
         });
         
-        this.toggleBtn.textContent = 'Transkript anzeigen';
+        if (this.toggleBtn) {
+            this.toggleBtn.textContent = 'Transkript anzeigen';
+        }
     }
 
     toggle() {
+        if (!this.transcriptContainer || !this.toggleBtn) return;
         const isHidden = this.transcriptContainer.hidden;
         this.transcriptContainer.hidden = !isHidden;
         this.toggleBtn.setAttribute('aria-expanded', String(isHidden));
@@ -37,7 +42,7 @@ class TranscriptSynchronizer {
     }
 
     sync() {
-        if (this.transcriptContainer.hidden || this.audio.paused) return;
+        if (!this.transcriptContainer || this.transcriptContainer.hidden || !this.audio || this.audio.paused) return;
         const time = this.audio.currentTime;
         let activeCue = null;
         
@@ -69,7 +74,6 @@ class TranscriptSynchronizer {
 class PhoenixDossier {
     constructor() {
         this.DOM = {
-            // ENTFERNT: Preloader wird nicht mehr von der Klasse verwaltet.
             body: document.body,
             focusPane: document.querySelector('.focus-pane'),
             perfToggle: document.getElementById('perf-toggle'),
@@ -86,22 +90,21 @@ class PhoenixDossier {
     }
 
     init() {
-        // ENTFERNT: Die Preloader-Logik (`hidePreloader` und der `finally`-Block) wurde ausgelagert.
         this.setupPerfToggle();
         this.setupAudioPlayers();
         
         try {
-            if (!this.state.isLowPerfMode) {
+            if (!this.state.isLowPerfMode && window.gsap) { // Prüfen, ob GSAP geladen ist
                 this.setupGSAPAnimations();
             } else {
-                gsap.set([this.DOM.mainTitle, this.DOM.subTitle], { opacity: 1 });
-                console.log('Low Performance Mode aktiv: GSAP Animationen übersprungen.');
+                if(this.DOM.mainTitle) this.DOM.mainTitle.style.opacity = 1;
+                if(this.DOM.subTitle) this.DOM.subTitle.style.opacity = 1;
+                console.log('Low Performance Mode aktiv oder GSAP nicht gefunden: Animationen übersprungen.');
             }
         } catch (error) {
             console.error("Fehler bei der GSAP-Initialisierung:", error);
-            if (this.DOM.mainTitle && this.DOM.subTitle) {
-                 gsap.set([this.DOM.mainTitle, this.DOM.subTitle], { opacity: 1 });
-            }
+            if(this.DOM.mainTitle) this.DOM.mainTitle.style.opacity = 1;
+            if(this.DOM.subTitle) this.DOM.subTitle.style.opacity = 1;
         }
         
         this.setupShareButtons();
@@ -122,24 +125,38 @@ class PhoenixDossier {
     setupAudioControls(box) {
         const audio = box.querySelector('audio');
         const playPauseBtn = box.querySelector('.play-pause-btn');
+        const progressContainer = box.querySelector('.audio-progress-container');
+        const totalTimeEl = box.querySelector('.total-time');
+        const speedBtn = box.querySelector('.speed-btn');
+
+        // Guard: Stellt sicher, dass essentielle Elemente vorhanden sind
+        if (!audio || !playPauseBtn || !progressContainer || !totalTimeEl) {
+            console.warn('Ein Audio-Player konnte nicht initialisiert werden: Essentielle Elemente fehlen.', box);
+            return;
+        }
+
         const iconPlay = playPauseBtn.querySelector('.icon-play');
         const iconPause = playPauseBtn.querySelector('.icon-pause');
         const progressBar = box.querySelector('.audio-progress-bar');
-        const progressContainer = box.querySelector('.audio-progress-container');
         const currentTimeEl = box.querySelector('.current-time');
-        const totalTimeEl = box.querySelector('.total-time');
         const skipBtns = box.querySelectorAll('.skip-btn');
-        const speedBtn = box.querySelector('.speed-btn');
-
+        
         const updatePlayPauseIcon = () => {
             const isPaused = audio.paused;
-            iconPlay.style.display = isPaused ? 'block' : 'none';
-            iconPause.style.display = isPaused ? 'none' : 'block';
+            if(iconPlay) iconPlay.style.display = isPaused ? 'block' : 'none';
+            if(iconPause) iconPause.style.display = isPaused ? 'none' : 'block';
             playPauseBtn.setAttribute('aria-label', isPaused ? 'Abspielen' : 'Pausieren');
         };
         
         audio.addEventListener('loadedmetadata', () => {
             totalTimeEl.textContent = this.formatTime(audio.duration);
+        });
+        
+        // UX-Verbesserung: Fehlerbehandlung für Audio
+        audio.addEventListener('error', () => {
+            console.error(`Audio-Datei konnte nicht geladen werden: ${audio.src}`);
+            const audioBox = audio.closest('.audio-feature-box');
+            if (audioBox) audioBox.innerHTML += '<p style="color:red;">Fehler: Die Audiodatei konnte nicht geladen werden.</p>';
         });
 
         playPauseBtn.addEventListener('click', () => {
@@ -154,9 +171,13 @@ class PhoenixDossier {
         });
 
         audio.addEventListener('timeupdate', () => {
-            const progress = (audio.currentTime / audio.duration) * 100;
-            progressBar.style.width = `${progress}%`;
-            currentTimeEl.textContent = this.formatTime(audio.currentTime);
+            if (progressBar) {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            if (currentTimeEl) {
+                currentTimeEl.textContent = this.formatTime(audio.currentTime);
+            }
         });
 
         progressContainer.addEventListener('click', (e) => {
@@ -169,18 +190,20 @@ class PhoenixDossier {
         skipBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const skipAmount = parseFloat(btn.dataset.skip);
-                audio.currentTime += skipAmount;
+                audio.currentTime = Math.max(0, Math.min(audio.duration, audio.currentTime + skipAmount));
             });
         });
 
-        const speeds = [1, 1.25, 1.5, 1.75, 2, 0.75];
-        let currentSpeedIndex = 0;
-        speedBtn.addEventListener('click', () => {
-            currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
-            const newSpeed = speeds[currentSpeedIndex];
-            audio.playbackRate = newSpeed;
-            speedBtn.textContent = `${newSpeed}x`;
-        });
+        if (speedBtn) {
+            const speeds = [1, 1.25, 1.5, 1.75, 2, 0.75];
+            let currentSpeedIndex = 0;
+            speedBtn.addEventListener('click', () => {
+                currentSpeedIndex = (currentSpeedIndex + 1) % speeds.length;
+                const newSpeed = speeds[currentSpeedIndex];
+                audio.playbackRate = newSpeed;
+                speedBtn.textContent = `${newSpeed}x`;
+            });
+        }
 
         updatePlayPauseIcon();
     }
@@ -188,23 +211,30 @@ class PhoenixDossier {
     setupAudioVisualizer(box) {
          if (!window.AudioContext && !window.webkitAudioContext) {
             console.warn("AudioContext nicht verfügbar. Visualizer deaktiviert.");
-            box.querySelector('.audio-visualizer').style.display = 'none';
+            const visualizer = box.querySelector('.audio-visualizer');
+            if (visualizer) visualizer.style.display = 'none';
             return;
         }
 
         const canvas = box.querySelector('.audio-visualizer');
         const audio = box.querySelector('audio');
-        if (!canvas) return;
+        if (!canvas || !audio) return;
 
         const ctx = canvas.getContext('2d');
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const analyser = audioContext.createAnalyser();
         
         if (!audio.dataset.audioSourceConnected) {
-            const source = audioContext.createMediaElementSource(audio);
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            audio.dataset.audioSourceConnected = 'true';
+            try {
+                const source = audioContext.createMediaElementSource(audio);
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
+                audio.dataset.audioSourceConnected = 'true';
+            } catch (e) {
+                // Fehler kann auftreten, wenn die Audioquelle bereits verbunden ist oder das Element nicht bereit ist
+                console.error("Fehler beim Verbinden der Audio-Quelle für den Visualizer:", e);
+                return;
+            }
         }
 
         analyser.fftSize = 128;
@@ -212,8 +242,9 @@ class PhoenixDossier {
         const dataArray = new Uint8Array(bufferLength);
         
         const draw = () => {
-            if (audio.paused) {
-                requestAnimationFrame(draw);
+            if (audio.paused || audio.ended) {
+                // Leert die Canvas, wenn pausiert
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 return;
             }
             requestAnimationFrame(draw);
@@ -239,20 +270,26 @@ class PhoenixDossier {
         };
         
         audio.addEventListener('play', startVisualizer);
+        audio.addEventListener('timeupdate', () => {
+            if (!audio.paused) draw();
+        });
     }
     
     formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return '00:00';
         const min = Math.floor(seconds / 60);
         const sec = Math.floor(seconds % 60);
         return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
     }
 
     setupPerfToggle() {
+        if (!this.DOM.perfToggle) return; // <-- HIER IST DIE KORREKTUR
+        
         const isLowPerf = localStorage.getItem('lowPerfMode') === 'true';
         this.state.isLowPerfMode = isLowPerf;
         this.DOM.perfToggle.setAttribute('aria-pressed', String(isLowPerf));
         this.DOM.perfToggle.textContent = isLowPerf ? '💤 Animationen aus' : '✨ Animationen an';
-        this.DOM.body.classList.toggle('low-perf-mode', isLowPerf);
+        if (this.DOM.body) this.DOM.body.classList.toggle('low-perf-mode', isLowPerf);
 
         this.DOM.perfToggle.addEventListener('click', () => {
             this.state.isLowPerfMode = !this.state.isLowPerfMode;
@@ -264,7 +301,7 @@ class PhoenixDossier {
     manualSplitText(element) {
         if (!element) return [];
         const originalText = element.textContent;
-        element.textContent = '';
+        element.innerHTML = ''; // innerHTML verwenden, um sicherzustellen, dass alles leer ist
         const chars = [];
         
         originalText.split('').forEach(char => {
@@ -279,6 +316,8 @@ class PhoenixDossier {
     }
 
     setupGSAPAnimations() {
+        if (!this.DOM.mainTitle || !this.DOM.subTitle) return; // <-- HIER IST DIE KORREKTUR
+
         gsap.registerPlugin(ScrollTrigger);
 
         const mainChars = this.manualSplitText(this.DOM.mainTitle);
@@ -300,7 +339,7 @@ class PhoenixDossier {
         
         document.querySelectorAll('.chapter-section').forEach(section => {
             const title = section.querySelector('.chapter-title');
-            if (title) {
+            if (title) { // Diese Prüfung war bereits vorhanden und ist gut
                  gsap.from(title, {
                     y: 100, opacity: 0, ease: "power2.out",
                     scrollTrigger: {
@@ -311,7 +350,7 @@ class PhoenixDossier {
             }
         });
 
-        if (this.DOM.narrativePath && !this.state.isLowPerfMode && window.innerWidth > 1024) {
+        if (this.DOM.narrativePath && this.DOM.focusPane) { // <-- HIER IST DIE KORREKTUR
             const pathLength = this.DOM.narrativePath.getTotalLength();
             if (pathLength > 0) {
                 this.DOM.narrativePath.style.strokeDasharray = pathLength;
@@ -327,9 +366,11 @@ class PhoenixDossier {
         }
         
         const finalSection = document.querySelector('.final-actions');
-        if (finalSection) {
-            gsap.from(finalSection.querySelector('#final-cta'), { scrollTrigger: { trigger: finalSection, start: 'top 80%', toggleActions: 'play none none none' }, opacity: 0, y: 50, duration: 0.8, ease: 'power2.out' });
-            gsap.from(document.querySelectorAll('.final-actions-grid > .action-card'), { scrollTrigger: { trigger: finalSection, start: 'top 70%', toggleActions: 'play none none none' }, opacity: 0, y: 30, duration: 1, stagger: 0.2, ease: 'power2.out' });
+        if (finalSection) { // Diese Prüfung war bereits vorhanden und ist gut
+            const finalCta = finalSection.querySelector('#final-cta');
+            const actionCards = document.querySelectorAll('.final-actions-grid > .action-card');
+            if(finalCta) gsap.from(finalCta, { scrollTrigger: { trigger: finalSection, start: 'top 80%', toggleActions: 'play none none none' }, opacity: 0, y: 50, duration: 0.8, ease: 'power2.out' });
+            if(actionCards.length > 0) gsap.from(actionCards, { scrollTrigger: { trigger: finalSection, start: 'top 70%', toggleActions: 'play none none none' }, opacity: 0, y: 30, duration: 1, stagger: 0.2, ease: 'power2.out' });
         }
     }
     
@@ -349,7 +390,7 @@ class PhoenixDossier {
     
     generateTakeaways() {
         const container = document.querySelector('#knowledge-distillate ul');
-        if (!container) return;
+        if (!container) return; // Diese Prüfung war bereits vorhanden und ist gut
         
         const sections = document.querySelectorAll('section[data-takeaway]');
         sections.forEach((section, index) => {
@@ -367,7 +408,6 @@ window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
     if (preloader) {
         preloader.classList.add('hidden');
-        // Entferne das Element komplett aus dem DOM, nachdem die CSS-Transition beendet ist.
         preloader.addEventListener('transitionend', () => {
             preloader.style.display = 'none';
         }, { once: true });
