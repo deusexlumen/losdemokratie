@@ -1,7 +1,5 @@
---- START OF FILE main.js ---
-
-// VALIDIERTE VERSION: Phoenix Edition v4.8.6 (Hardened Edition)
-// KORREKTUR: Null-Prüfungen für alle DOM-Selektoren hinzugefügt, um die App-Initialisierung maximal fehlertolerant zu machen.
+// VALIDIERTE VERSION: Phoenix Edition v4.9.0 (Synthesized & Hardened)
+// UPGRADE: Scroll-Spy-Navigation implementiert, Lade-Event optimiert, Low-Perf-Mode-Bug (CSS) behoben.
 
 // === Helper Class: TranscriptSynchronizer ===
 class TranscriptSynchronizer {
@@ -80,6 +78,8 @@ class PhoenixDossier {
             mainTitle: document.getElementById('title-split'),
             subTitle: document.getElementById('subtitle-split'),
             narrativePath: document.querySelector('.narrative-thread-path'),
+            navItems: document.querySelectorAll('.bento-nav .nav-item'),
+            sections: document.querySelectorAll('.chapter-section')
         };
 
         this.state = {
@@ -94,7 +94,7 @@ class PhoenixDossier {
         this.setupAudioPlayers();
         
         try {
-            if (!this.state.isLowPerfMode && window.gsap) { // Prüfen, ob GSAP geladen ist
+            if (!this.state.isLowPerfMode && window.gsap) {
                 this.setupGSAPAnimations();
             } else {
                 if(this.DOM.mainTitle) this.DOM.mainTitle.style.opacity = 1;
@@ -109,6 +109,7 @@ class PhoenixDossier {
         
         this.setupShareButtons();
         this.generateTakeaways();
+        this.setupScrollSpy(); // NEU: Initialisierung des Scroll-Spys
         console.log('Synthetisiertes Dossier vollständig initialisiert.');
     }
     
@@ -129,7 +130,6 @@ class PhoenixDossier {
         const totalTimeEl = box.querySelector('.total-time');
         const speedBtn = box.querySelector('.speed-btn');
 
-        // Guard: Stellt sicher, dass essentielle Elemente vorhanden sind
         if (!audio || !playPauseBtn || !progressContainer || !totalTimeEl) {
             console.warn('Ein Audio-Player konnte nicht initialisiert werden: Essentielle Elemente fehlen.', box);
             return;
@@ -152,7 +152,6 @@ class PhoenixDossier {
             totalTimeEl.textContent = this.formatTime(audio.duration);
         });
         
-        // UX-Verbesserung: Fehlerbehandlung für Audio
         audio.addEventListener('error', () => {
             console.error(`Audio-Datei konnte nicht geladen werden: ${audio.src}`);
             const audioBox = audio.closest('.audio-feature-box');
@@ -204,7 +203,6 @@ class PhoenixDossier {
                 speedBtn.textContent = `${newSpeed}x`;
             });
         }
-
         updatePlayPauseIcon();
     }
     
@@ -231,7 +229,6 @@ class PhoenixDossier {
                 analyser.connect(audioContext.destination);
                 audio.dataset.audioSourceConnected = 'true';
             } catch (e) {
-                // Fehler kann auftreten, wenn die Audioquelle bereits verbunden ist oder das Element nicht bereit ist
                 console.error("Fehler beim Verbinden der Audio-Quelle für den Visualizer:", e);
                 return;
             }
@@ -243,7 +240,6 @@ class PhoenixDossier {
         
         const draw = () => {
             if (audio.paused || audio.ended) {
-                // Leert die Canvas, wenn pausiert
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 return;
             }
@@ -283,7 +279,7 @@ class PhoenixDossier {
     }
 
     setupPerfToggle() {
-        if (!this.DOM.perfToggle) return; // <-- HIER IST DIE KORREKTUR
+        if (!this.DOM.perfToggle) return;
         
         const isLowPerf = localStorage.getItem('lowPerfMode') === 'true';
         this.state.isLowPerfMode = isLowPerf;
@@ -301,7 +297,7 @@ class PhoenixDossier {
     manualSplitText(element) {
         if (!element) return [];
         const originalText = element.textContent;
-        element.innerHTML = ''; // innerHTML verwenden, um sicherzustellen, dass alles leer ist
+        element.innerHTML = '';
         const chars = [];
         
         originalText.split('').forEach(char => {
@@ -316,7 +312,7 @@ class PhoenixDossier {
     }
 
     setupGSAPAnimations() {
-        if (!this.DOM.mainTitle || !this.DOM.subTitle) return; // <-- HIER IST DIE KORREKTUR
+        if (!this.DOM.mainTitle || !this.DOM.subTitle) return;
 
         gsap.registerPlugin(ScrollTrigger);
 
@@ -339,7 +335,7 @@ class PhoenixDossier {
         
         document.querySelectorAll('.chapter-section').forEach(section => {
             const title = section.querySelector('.chapter-title');
-            if (title) { // Diese Prüfung war bereits vorhanden und ist gut
+            if (title) {
                  gsap.from(title, {
                     y: 100, opacity: 0, ease: "power2.out",
                     scrollTrigger: {
@@ -350,7 +346,7 @@ class PhoenixDossier {
             }
         });
 
-        if (this.DOM.narrativePath && this.DOM.focusPane) { // <-- HIER IST DIE KORREKTUR
+        if (this.DOM.narrativePath && this.DOM.focusPane) {
             const pathLength = this.DOM.narrativePath.getTotalLength();
             if (pathLength > 0) {
                 this.DOM.narrativePath.style.strokeDasharray = pathLength;
@@ -366,7 +362,7 @@ class PhoenixDossier {
         }
         
         const finalSection = document.querySelector('.final-actions');
-        if (finalSection) { // Diese Prüfung war bereits vorhanden und ist gut
+        if (finalSection) {
             const finalCta = finalSection.querySelector('#final-cta');
             const actionCards = document.querySelectorAll('.final-actions-grid > .action-card');
             if(finalCta) gsap.from(finalCta, { scrollTrigger: { trigger: finalSection, start: 'top 80%', toggleActions: 'play none none none' }, opacity: 0, y: 50, duration: 0.8, ease: 'power2.out' });
@@ -374,6 +370,35 @@ class PhoenixDossier {
         }
     }
     
+    // NEU: Scroll-Spy-Logik zur Hervorhebung des aktiven Navigationspunkts
+    setupScrollSpy() {
+        if (!this.DOM.sections.length || !this.DOM.navItems.length) return;
+
+        const observerOptions = {
+            root: null, // beobachtet im Viewport des Browsers
+            rootMargin: '0px',
+            threshold: 0.3 // Auslösen, wenn 30% der Sektion sichtbar sind
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    const activeNavItem = document.querySelector(`.nav-item[href="#${id}"]`);
+
+                    if (activeNavItem) {
+                        this.DOM.navItems.forEach(item => item.classList.remove('active'));
+                        activeNavItem.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        this.DOM.sections.forEach(section => {
+            observer.observe(section);
+        });
+    }
+
     setupShareButtons() {
         const url = encodeURIComponent(window.location.href);
         const title = encodeURIComponent(document.title);
@@ -390,7 +415,7 @@ class PhoenixDossier {
     
     generateTakeaways() {
         const container = document.querySelector('#knowledge-distillate ul');
-        if (!container) return; // Diese Prüfung war bereits vorhanden und ist gut
+        if (!container) return;
         
         const sections = document.querySelectorAll('section[data-takeaway]');
         sections.forEach((section, index) => {
@@ -402,9 +427,9 @@ class PhoenixDossier {
     }
 }
 
-// === INITIALISIERUNG (NEUE, ROBUSTE ARCHITEKTUR) ===
-window.addEventListener('load', () => {
-    // 1. Verstecke den Preloader ZUERST. Dieser Code ist einfach und hat keine Abhängigkeiten.
+// === INITIALISIERUNG (VERBESSERT) ===
+// OPTIMIERUNG: Wechsel von 'load' zu 'DOMContentLoaded' für eine schnellere Initialisierung.
+window.addEventListener('DOMContentLoaded', () => {
     const preloader = document.getElementById('preloader');
     if (preloader) {
         preloader.classList.add('hidden');
@@ -413,8 +438,6 @@ window.addEventListener('load', () => {
         }, { once: true });
     }
 
-    // 2. Initialisiere die komplexe Hauptanwendung DANACH.
-    // Selbst wenn hier ein Fehler auftritt, ist der Preloader bereits verschwunden.
     try {
         window.dossier = new PhoenixDossier();
     } catch (e) {
